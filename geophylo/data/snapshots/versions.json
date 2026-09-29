@@ -1,0 +1,42 @@
+{
+  "schema_version": 2,
+  "baseline": "2026/06",
+  "versions": {
+    "2024/12": {
+      "file": "ics_chart-2024-12.json",
+      "chart_version": "2024/12",
+      "snapshot_revision": 1,
+      "generator": {
+        "name": "geophylo-snapshot",
+        "version": "0.1.0"
+      },
+      "payload_sha256": "ef099225bc1ef356e45f95cd1c74eb89f8498ea2f3392250a8273c08a7591c14",
+      "provenance_sha256": "7dde6bbe4823a375db20f8a08ad23230c6c427f383cff7e46ec8a2fb7c13916b",
+      "derived_from": {
+        "chart_version": "2026/06",
+        "method": "revert-upstream-change-notes",
+        "source_file": "tools/source/ics-chart-v2026-06.5.ttl",
+        "note": "No archived upstream release was fetched: the boundary values were back-reverted from the skos:changeNotes of the pinned 2026/06 input, plus the documented Wuchiapingian margin restoration. The source block is therefore byte-identical to the 2026/06 snapshot. See geophylo/data/snapshots/PROVENANCE.md and docs/data-policy.md.",
+        "generation_log": "tools/build-logs/ics_chart-2024-12.log.json",
+        "generator_flag": "--to 2024/12",
+        "reverted_boundary_count": 10
+      }
+    },
+    "2026/06": {
+      "file": "ics_chart-2026-06.json",
+      "chart_version": "2026/06",
+      "snapshot_revision": 1,
+      "generator": {
+        "name": "geophylo-snapshot",
+        "version": "0.1.0"
+      },
+      "payload_sha256": "4e5603d30aa397c86d469077a8ede7bd454470d3a31d179b2544debb05861fb0",
+      "provenance_sha256": "0eadb237d38a813b36f84ef961c1e39926dcb5483c700d5838ecb11e46f881c9"
+    }
+  },
+  "pinned_input": {
+    "file": "tools/source/ics-chart-v2026-06.5.ttl",
+    "sha256": "0158959e8fdae2a8bdbb14ca3e424d2370362cd8dfc8af86e7be73c74368b355",
+    "bytes": 654321
+  }
+}

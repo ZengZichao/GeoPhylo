@@ -1,0 +1,65 @@
+# 发行物清单：sdist 必须可自测
+#
+# NOTICE 与 docs/data-policy.md 都要求"从发行包复核生成链"，因此 sdist 必须
+# 携带：完整测试套件（含 tests/conftest.py 与视觉基准图）、生成器与其钉住的
+# 上游 TTL 与构建日志、许可文本、以及 README/RELEASE/CHANGELOG 等治理文件。
+# 缺任何一项，`python -m pytest` 在解包的 sdist 里就会整片报错。
+#
+# 这份清单同时被 tests/test_packaging.py::TestSdistManifest 逐条静态校验，
+# 并由 tests/packaging/check_wheel.py 对**真正构建出来的** sdist/wheel 复检。
+
+# --- 治理与许可文件 -------------------------------------------------------
+# 每份治理文档都同时提供英文（权威版）与中文版，两份一起进 sdist。
+include README.md
+include README.zh-CN.md
+include LICENSE
+include NOTICE
+include CHANGELOG.md
+include CHANGELOG.zh-CN.md
+include CITATION.cff
+include CONTRIBUTING.md
+include CONTRIBUTING.zh-CN.md
+include RELEASE.md
+include RELEASE.zh-CN.md
+include MANIFEST.in
+include .zenodo.json
+include pyproject.toml
+recursive-include LICENSES *.txt
+
+# --- 文档（含 ADR；tests/test_docs_values.py 与 test_packaging.py 会读它们）---
+recursive-include docs *.md
+
+# --- 示例（tests/test_packaging.py 真的执行它们）--------------------------
+recursive-include examples *.py
+
+# --- 测试套件：conftest 提供全部夹具，baseline_images 供 --mpl 比较 --------
+include tests/conftest.py
+include tests/update_baselines.py
+recursive-include tests *.py
+recursive-include tests/baseline_images *.png
+
+# --- 生成链：pinned TTL + 构建器 + 构建日志 + diff 生成器 ------------------
+include tools/build_snapshot.py
+include tools/make_diff.py
+include tools/source/*.ttl
+recursive-include tools/build-logs *.json
+
+# --- 快照随包数据（package-data 已覆盖 wheel，这里保证 sdist 也带上）------
+include geophylo/data/snapshots/*.json
+include geophylo/data/snapshots/PROVENANCE.md
+
+# --- CI 配置（test_packaging.py 断言其存在）------------------------------
+include .github/workflows/ci.yml
+
+# --- 明确排除：缓存、本地产物 -------------------------------------------
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude .DS_Store
+global-exclude .pytest_cache
+global-exclude .ruff_cache
+global-exclude .mypy_cache
+global-exclude *.egg-info
+prune build
+prune dist
+exclude examples/_output_*.png
+exclude .gitignore

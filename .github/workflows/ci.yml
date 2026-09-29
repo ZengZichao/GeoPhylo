@@ -1,0 +1,240 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # 每周一 03:00 UTC 跑**全部** job（核心矩阵 + 可选依赖矩阵 + 性能 + 打包 +
+    # --pre 前瞻）。前瞻/基准 job 用 continue-on-error 明确标注为非阻塞，因此
+    # 定时运行不会因上游波动变红（注释与行为必须一致）。
+    - cron: "0 3 * * 1"
+  workflow_dispatch: # 手工全量复现定时任务
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# 阻塞门禁命令（唯一权威定义；RELEASE.md 与 tests/update_baselines.py 都指向它）：
+#
+#   pytest -m "not performance" -v --mpl --mpl-baseline-path=tests/baseline_images
+#
+# - `-m "not performance"`：性能基准只在 performance job 里跑（非阻塞）。
+# - 实验性测试同样进入阻塞门禁：环形路径已是 README/examples 声明的交付能力。
+# - `--mpl`：没有这个旗标，pytest-mpl 只执行函数体、不做任何像素比较，
+#   基准图被删或被替换 CI 依然绿。基准图缺失时另有一条测试直接变红
+#   （tests/test_visual.py::test_every_visual_test_has_a_baseline_image）。
+
+jobs:
+  lint:
+    # 单一 lint/类型检查 job：核心矩阵的 4 个 Python 版本共用一次检查。
+    # 工具版本只由 pyproject 的 dev extra 声明，不在 ci.yml 里手工重复。
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install (dev extra)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Lint
+        # 显式列出库的四棵子树（发行与门禁范围一致）。范围内任何文件未格式化即红，
+        # 因此提交前先按同样范围本地跑一遍 `ruff format`。
+        run: |
+          ruff check geophylo tests tools examples
+          ruff format --check geophylo tests tools examples
+      - name: Type check (library, blocking)
+        run: mypy
+      - name: Type check (tests and tools, advisory)
+        # tests/ 与 tools/ 的类型标注只服务测试与工具代码，不该挡住库的发布门，
+        # 因此先以 advisory（continue-on-error）纳入 CI；告警清空后删掉
+        # continue-on-error 即转为阻塞。
+        continue-on-error: true
+        run: mypy tests tools
+
+  core-current:
+    # 当前依赖 × 全部受支持 Python（3.11–3.14）。阻塞门禁。
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+      - name: Test (blocking gate)
+        env:
+          MPLBACKEND: Agg
+        run: pytest -m "not performance" -v --mpl --mpl-baseline-path=tests/baseline_images
+
+  core-min:
+    # 最低支持组合：最老 Python × **每个**声明下界的依赖。pytest/pytest-mpl/biopython
+    # 也必须钉住，否则它们解析到最新版，"最低支持组合"名不副实。
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install with minimum dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+          pip install \
+            "matplotlib==3.10.*" \
+            "numpy==1.25.*" \
+            "pytest==8.*" \
+            "pytest-mpl==0.17.*" \
+            "biopython==1.88.*"
+      - name: Show resolved minimum versions
+        run: python -m pip list
+      - name: Test (blocking gate, minimum deps)
+        env:
+          MPLBACKEND: Agg
+        run: pytest -m "not performance" -v --mpl --mpl-baseline-path=tests/baseline_images
+
+  optional:
+    # 可选依赖矩阵。optional-all 是唯一同时装齐 biopython+pyrolite+iplotx(+ete4)
+    # 的 job，并强制可选集成测试真的执行（不许静默 skip）。
+    name: ${{ matrix.name }}
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: optional-min
+            python-version: "3.11"
+            extras: "test,biopython,pyrolite"
+            pins: "biopython==1.88.* pyrolite==0.3.7"
+          - name: optional-current
+            python-version: "3.13"
+            extras: "test,biopython,iplotx"
+            pins: ""
+          - name: optional-all
+            python-version: "3.13"
+            extras: "test,biopython,pyrolite,iplotx"
+            pins: ""
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[${{ matrix.extras }}]"
+          if [ -n "${{ matrix.pins }}" ]; then
+            # shellcheck disable=SC2086
+            pip install ${{ matrix.pins }}
+          fi
+          python -m pip list
+      - name: Test
+        env:
+          MPLBACKEND: Agg
+        run: pytest -m "not performance" -v --mpl --mpl-baseline-path=tests/baseline_images
+      - name: Optional integrations must actually run
+        if: matrix.name == 'optional-all'
+        env:
+          MPLBACKEND: Agg
+        run: |
+          set -euo pipefail
+          pytest tests/test_adapter_iplotx.py tests/test_adapter_iplotx_contract.py \
+            tests/test_pyrolite_backend.py -q -rs | tee optional-integrations.log
+          if grep -q "skipped" optional-integrations.log; then
+            echo "::error::optional-all 已装齐 biopython+pyrolite+iplotx+ete4，但可选集成测试仍被跳过"
+            exit 1
+          fi
+
+  performance:
+    # 本库增量耗时：定期基准，**非阻塞**。
+    # test_performance.py 断言的是共享 runner 上的墙钟比值，机器波动会让它偶发红，
+    # 所以用 continue-on-error 让 job 显示为 unstable，而不是把断言写成永真。
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+      - name: Performance tests (advisory)
+        env:
+          MPLBACKEND: Agg
+        run: pytest -m performance -v
+
+  packaging:
+    # wheel/sdist 构建 + 清洁安装 + package-data 与许可证检查 + sdist 自测。
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: |
+          python -m pip install --upgrade pip build
+          pip install -e ".[dev]"
+      - name: Build distributions
+        run: python -m build
+      - name: Inspect artifacts (wheel + sdist contents)
+        run: python tests/packaging/check_wheel.py dist
+      - name: Clean-room install (wheel) and verify
+        run: |
+          python -m venv clean-room
+          clean-room/bin/pip install --upgrade pip
+          clean-room/bin/pip install dist/*.whl
+          clean-room/bin/python tests/packaging/check_wheel.py dist
+      - name: Clean-room install (sdist) and verify
+        run: |
+          clean-room/bin/pip uninstall -y geophylo
+          clean-room/bin/pip install dist/*.tar.gz
+          clean-room/bin/python tests/packaging/check_wheel.py dist
+      - name: sdist is self-testable
+        run: |
+          set -euo pipefail
+          python -m venv sdist-room
+          # 只装 sdist 本身 + 它声明的 test extra：装不上即元数据不完整。
+          # 注意 glob 不加引号，让 shell 展开成 path[extras] 形式。
+          sdist-room/bin/pip install --upgrade pip
+          sdist-room/bin/pip install dist/*.tar.gz[test]
+          rm -rf "$RUNNER_TEMP/sdist-selftest"
+          mkdir -p "$RUNNER_TEMP/sdist-selftest"
+          tar -xzf dist/*.tar.gz -C "$RUNNER_TEMP/sdist-selftest"
+          cd "$RUNNER_TEMP/sdist-selftest"/geophylo-*/
+          # 解包目录里直接跑门禁套件：conftest 夹具、tests/baseline_images、
+          # tools/（pinned TTL + 构建日志）、docs/、LICENSES/ 必须都在。
+          MPLBACKEND=Agg "$GITHUB_WORKSPACE/sdist-room/bin/python" -m pytest -q \
+            -p no:cacheprovider -m "not performance" \
+            --mpl --mpl-baseline-path=tests/baseline_images
+
+  core-pre:
+    # --pre 前瞻：提前发现上游破坏性变更。**非阻塞**，失败把 job 标为 unstable；
+    # 不用 `|| true`，那会把失败吞成绿。
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Install with pre-releases
+        run: |
+          python -m pip install --upgrade pip
+          pip install --pre -e ".[test]"
+      - name: Test (advisory)
+        env:
+          MPLBACKEND: Agg
+        run: pytest -m "not performance" -v --mpl --mpl-baseline-path=tests/baseline_images

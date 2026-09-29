@@ -1,0 +1,621 @@
+{
+  "generator": {
+    "name": "geophylo-snapshot",
+    "version": "0.1.0"
+  },
+  "command": [
+    "tools/build_snapshot.py",
+    "--ttl",
+    "tools/source/ics-chart-v2026-06.5.ttl",
+    "--chart-version",
+    "2024/12",
+    "--to",
+    "2024/12",
+    "--tag",
+    "v2026-06.5",
+    "--commit",
+    "44d1043ecf295cce1be03b3fc5fa95ca65fe770b",
+    "--source-sha256",
+    "0158959e8fdae2a8bdbb14ca3e424d2370362cd8dfc8af86e7be73c74368b355",
+    "--retrieved-at",
+    "2026-09-11T00:00:00Z",
+    "--out",
+    "geophylo/data/snapshots/ics_chart-2024-12.json"
+  ],
+  "retrieved_at": "2026-09-11T00:00:00Z",
+  "ttl": "tools/source/ics-chart-v2026-06.5.ttl",
+  "out": "geophylo/data/snapshots/ics_chart-2024-12.json",
+  "chart_version": "2024/12",
+  "tag": "v2026-06.5",
+  "commit": "44d1043ecf295cce1be03b3fc5fa95ca65fe770b",
+  "source_sha256": "0158959e8fdae2a8bdbb14ca3e424d2370362cd8dfc8af86e7be73c74368b355",
+  "to_version": "2024/12",
+  "warnings": [],
+  "reverted_boundaries": [
+    {
+      "method": "revert-change-note",
+      "concept": "Anisian",
+      "boundary": "beginning",
+      "from_mya": 247.0,
+      "to_mya": 246.7,
+      "change_note": "2026-06: hasBeginning 246.7 -> 247.0"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Capitanian",
+      "boundary": "end",
+      "from_mya": 259.857,
+      "to_mya": 259.51,
+      "change_note": "2026-06: hasEnd 259.51 -> 259.857",
+      "margin_patch_mya": 0.21,
+      "margin_patch_source": "REVERTED_MARGIN_PATCHES (development document 5.7; not machine-readable upstream, see PROVENANCE.md)"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Induan",
+      "boundary": "end",
+      "from_mya": 250.8,
+      "to_mya": 249.9,
+      "change_note": "2026-06: hasEnd 249.9 -> 250.8"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Olenekian",
+      "boundary": "beginning",
+      "from_mya": 250.8,
+      "to_mya": 249.9,
+      "change_note": "2026-06: hasBeginning 249.9 -> 250.8, hasEnd 246.7 -> 247.0"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Olenekian",
+      "boundary": "end",
+      "from_mya": 247.0,
+      "to_mya": 246.7,
+      "change_note": "2026-06: hasBeginning 249.9 -> 250.8, hasEnd 246.7 -> 247.0"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Wuchiapingian",
+      "boundary": "beginning",
+      "from_mya": 259.857,
+      "to_mya": 259.51,
+      "change_note": "2026-06: hasBeginning 259.51 -> 259.857",
+      "margin_patch_mya": 0.21,
+      "margin_patch_source": "REVERTED_MARGIN_PATCHES (development document 5.7; not machine-readable upstream, see PROVENANCE.md)"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Lopingian",
+      "boundary": "beginning",
+      "from_mya": 259.857,
+      "to_mya": 259.51,
+      "change_note": "2026-06: hasBeginning 259.51 -> 259.857",
+      "margin_patch_mya": 0.21,
+      "margin_patch_source": "REVERTED_MARGIN_PATCHES (development document 5.7; not machine-readable upstream, see PROVENANCE.md)"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "LowerTriassic",
+      "boundary": "end",
+      "from_mya": 247.0,
+      "to_mya": 246.7,
+      "change_note": "2026-06: hasEnd 246.7 -> 247.0"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "MiddleTriassic",
+      "boundary": "beginning",
+      "from_mya": 247.0,
+      "to_mya": 246.7,
+      "change_note": "2026-06: hasBeginning 246.7 -> 247.0"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Guadalupian",
+      "boundary": "end",
+      "from_mya": 259.857,
+      "to_mya": 259.51,
+      "change_note": "2026-06: hasEnd 259.51 -> 259.857",
+      "margin_patch_mya": 0.21,
+      "margin_patch_source": "REVERTED_MARGIN_PATCHES (development document 5.7; not machine-readable upstream, see PROVENANCE.md)"
+    }
+  ],
+  "change_note_stamps_applied": [
+    "2026-06"
+  ],
+  "integrity_repairs": [
+    {
+      "method": "revert-change-note",
+      "concept": "Anisian",
+      "boundary": "beginning",
+      "from_mya": 247.0,
+      "to_mya": 246.7,
+      "change_note": "2026-06: hasBeginning 246.7 -> 247.0"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Capitanian",
+      "boundary": "end",
+      "from_mya": 259.857,
+      "to_mya": 259.51,
+      "change_note": "2026-06: hasEnd 259.51 -> 259.857",
+      "margin_patch_mya": 0.21,
+      "margin_patch_source": "REVERTED_MARGIN_PATCHES (development document 5.7; not machine-readable upstream, see PROVENANCE.md)"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Induan",
+      "boundary": "end",
+      "from_mya": 250.8,
+      "to_mya": 249.9,
+      "change_note": "2026-06: hasEnd 249.9 -> 250.8"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Olenekian",
+      "boundary": "beginning",
+      "from_mya": 250.8,
+      "to_mya": 249.9,
+      "change_note": "2026-06: hasBeginning 249.9 -> 250.8, hasEnd 246.7 -> 247.0"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Olenekian",
+      "boundary": "end",
+      "from_mya": 247.0,
+      "to_mya": 246.7,
+      "change_note": "2026-06: hasBeginning 249.9 -> 250.8, hasEnd 246.7 -> 247.0"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Wuchiapingian",
+      "boundary": "beginning",
+      "from_mya": 259.857,
+      "to_mya": 259.51,
+      "change_note": "2026-06: hasBeginning 259.51 -> 259.857",
+      "margin_patch_mya": 0.21,
+      "margin_patch_source": "REVERTED_MARGIN_PATCHES (development document 5.7; not machine-readable upstream, see PROVENANCE.md)"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Lopingian",
+      "boundary": "beginning",
+      "from_mya": 259.857,
+      "to_mya": 259.51,
+      "change_note": "2026-06: hasBeginning 259.51 -> 259.857",
+      "margin_patch_mya": 0.21,
+      "margin_patch_source": "REVERTED_MARGIN_PATCHES (development document 5.7; not machine-readable upstream, see PROVENANCE.md)"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "LowerTriassic",
+      "boundary": "end",
+      "from_mya": 247.0,
+      "to_mya": 246.7,
+      "change_note": "2026-06: hasEnd 246.7 -> 247.0"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "MiddleTriassic",
+      "boundary": "beginning",
+      "from_mya": 247.0,
+      "to_mya": 246.7,
+      "change_note": "2026-06: hasBeginning 246.7 -> 247.0"
+    },
+    {
+      "method": "revert-change-note",
+      "concept": "Guadalupian",
+      "boundary": "end",
+      "from_mya": 259.857,
+      "to_mya": 259.51,
+      "change_note": "2026-06: hasEnd 259.51 -> 259.857",
+      "margin_patch_mya": 0.21,
+      "margin_patch_source": "REVERTED_MARGIN_PATCHES (development document 5.7; not machine-readable upstream, see PROVENANCE.md)"
+    },
+    {
+      "method": "snap-minority-rounding-variant",
+      "concept": "Aquitanian",
+      "boundary": "beginning",
+      "from_mya": 23.03,
+      "to_mya": 23.04,
+      "class_kind": "parent-base",
+      "parent": "Miocene",
+      "shared_by": "Aquitanian.beginning + Miocene.beginning",
+      "upward_writings": {
+        "23.03": 1,
+        "23.04": 5
+      }
+    },
+    {
+      "method": "same-rank-overlap-children-union",
+      "concept": "Ludlow",
+      "boundary": "end",
+      "from_mya": 419.62,
+      "to_mya": 422.7,
+      "overlapping_with": "Pridoli",
+      "rank": "Epoch",
+      "children_union_members": "Gorstian.end + Ludfordian.end",
+      "cleared_margin_of_stale_age": 1.36
+    }
+  ],
+  "parse_stats": {
+    "concept_subjects": 178,
+    "ranked_concepts": 178,
+    "records": 179,
+    "boundary_values": 356,
+    "margin_values": 206,
+    "uncertain_notes": 36,
+    "change_notes": 9
+  },
+  "interval_count": 179,
+  "derived_labels": [
+    {
+      "concept": "ischart:CambrianStage10",
+      "derived_name": "Cambrian Stage 10"
+    },
+    {
+      "concept": "ischart:CambrianStage2",
+      "derived_name": "Cambrian Stage 2"
+    },
+    {
+      "concept": "ischart:CambrianStage3",
+      "derived_name": "Cambrian Stage 3"
+    },
+    {
+      "concept": "ischart:CambrianStage4",
+      "derived_name": "Cambrian Stage 4"
+    },
+    {
+      "concept": "ischart:UpperPleistocene",
+      "derived_name": "Upper Pleistocene"
+    },
+    {
+      "concept": "ischart:LowerMississippian",
+      "derived_name": "Lower Mississippian"
+    },
+    {
+      "concept": "ischart:LowerPennsylvanian",
+      "derived_name": "Lower Pennsylvanian"
+    },
+    {
+      "concept": "ischart:MiddleMississippian",
+      "derived_name": "Middle Mississippian"
+    },
+    {
+      "concept": "ischart:MiddlePennsylvanian",
+      "derived_name": "Middle Pennsylvanian"
+    },
+    {
+      "concept": "ischart:UpperMississippian",
+      "derived_name": "Upper Mississippian"
+    },
+    {
+      "concept": "ischart:CambrianSeries2",
+      "derived_name": "Cambrian Series 2"
+    },
+    {
+      "concept": "ischart:LowerOrdovician",
+      "derived_name": "Lower Ordovician"
+    },
+    {
+      "concept": "ischart:LowerTriassic",
+      "derived_name": "Lower Triassic"
+    },
+    {
+      "concept": "ischart:MiddleDevonian",
+      "derived_name": "Middle Devonian"
+    },
+    {
+      "concept": "ischart:MiddleOrdovician",
+      "derived_name": "Middle Ordovician"
+    },
+    {
+      "concept": "ischart:MiddleTriassic",
+      "derived_name": "Middle Triassic"
+    },
+    {
+      "concept": "ischart:UpperDevonian",
+      "derived_name": "Upper Devonian"
+    },
+    {
+      "concept": "ischart:UpperPennsylvanian",
+      "derived_name": "Upper Pennsylvanian"
+    },
+    {
+      "concept": "ischart:LowerDevonian",
+      "derived_name": "Lower Devonian"
+    },
+    {
+      "concept": "ischart:UpperJurassic",
+      "derived_name": "Upper Jurassic"
+    },
+    {
+      "concept": "ischart:UpperOrdovician",
+      "derived_name": "Upper Ordovician"
+    },
+    {
+      "concept": "ischart:UpperTriassic",
+      "derived_name": "Upper Triassic"
+    },
+    {
+      "concept": "ischart:LowerJurassic",
+      "derived_name": "Lower Jurassic"
+    },
+    {
+      "concept": "ischart:MiddleJurassic",
+      "derived_name": "Middle Jurassic"
+    },
+    {
+      "concept": "ischart:LowerCretaceous",
+      "derived_name": "Lower Cretaceous"
+    },
+    {
+      "concept": "ischart:UpperCretaceous",
+      "derived_name": "Upper Cretaceous"
+    }
+  ],
+  "dropped_aliases": [
+    {
+      "id": "ics:age:aalenian",
+      "alias": "j1",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:lower-jurassic",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:aeronian",
+      "alias": "s2",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:wenlock",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:anisian",
+      "alias": "t3",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:upper-triassic",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:aquitanian",
+      "alias": "n1",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:miocene",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:artinskian",
+      "alias": "p3",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:lopingian",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:asselian",
+      "alias": "p1",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:cisuralian",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:bajocian",
+      "alias": "j2",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:middle-jurassic",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:bathonian",
+      "alias": "j3",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:upper-jurassic",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:burdigalian",
+      "alias": "n2",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:pliocene",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:calabrian",
+      "alias": "q2",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:holocene",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:cambrian-stage-2",
+      "alias": "ep3",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:miaolingian",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:cambrian-stage-3",
+      "alias": "ep2",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:cambrian-series-2",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:cambrian-stage-4",
+      "alias": "ep4",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:furongian",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:cenomanian",
+      "alias": "k1",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:lower-cretaceous",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:danian",
+      "alias": "e1",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:paleocene",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:dapingian",
+      "alias": "o3",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:upper-ordovician",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:emsian",
+      "alias": "d3",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:upper-devonian",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:floian",
+      "alias": "o2",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:middle-ordovician",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:fortunian",
+      "alias": "ep1",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:terreneuvian",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:gelasian",
+      "alias": "q1",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:pleistocene",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:induan",
+      "alias": "t1",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:lower-triassic",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:lochkovian",
+      "alias": "d1",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:lower-devonian",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:olenekian",
+      "alias": "t2",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:middle-triassic",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:pragian",
+      "alias": "d2",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:middle-devonian",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:pridoli",
+      "alias": "S4",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:pridoli",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:rhuddanian",
+      "alias": "s1",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:llandovery",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:sakmarian",
+      "alias": "p2",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:guadalupian",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:selandian",
+      "alias": "e2",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:eocene",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:sheinwoodian",
+      "alias": "s4",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:pridoli",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:telychian",
+      "alias": "s3",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:ludlow",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:thanetian",
+      "alias": "e3",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:oligocene",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:tournaisian",
+      "alias": "c1",
+      "rank": "Age",
+      "claimed_by": "ics:sub-period:mississippian",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:tremadocian",
+      "alias": "o1",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:lower-ordovician",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:turonian",
+      "alias": "k2",
+      "rank": "Age",
+      "claimed_by": "ics:epoch:upper-cretaceous",
+      "rule": "alias-casefold-precedence"
+    },
+    {
+      "id": "ics:age:visean",
+      "alias": "c2",
+      "rank": "Age",
+      "claimed_by": "ics:sub-period:pennsylvanian",
+      "rule": "alias-casefold-precedence"
+    }
+  ],
+  "qualifier_counts": {
+    "approximate": 36,
+    "constrained": 208,
+    "defined": 97,
+    "present": 5,
+    "unknown": 12
+  },
+  "by_rank": {
+    "Age": 102,
+    "Eon": 4,
+    "Epoch": 38,
+    "Era": 10,
+    "Period": 22,
+    "Sub-Period": 2,
+    "Super-Eon": 1
+  }
+}

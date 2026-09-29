@@ -1,0 +1,5564 @@
+{
+  "schema_version": 1,
+  "chart_version": "2026/06",
+  "snapshot_revision": 1,
+  "generator": {
+    "name": "geophylo-snapshot",
+    "version": "0.1.0"
+  },
+  "source": {
+    "kind": "ics-rdf",
+    "url": "https://github.com/i-c-stratigraphy/chart/blob/44d1043ecf295cce1be03b3fc5fa95ca65fe770b/chart.ttl",
+    "commit": "44d1043ecf295cce1be03b3fc5fa95ca65fe770b",
+    "tag": "v2026-06.5",
+    "source_sha256": "0158959e8fdae2a8bdbb14ca3e424d2370362cd8dfc8af86e7be73c74368b355",
+    "vendored_copy": "tools/source/ics-chart-v2026-06.5.ttl"
+  },
+  "license": {
+    "spdx": "CC-BY-4.0",
+    "file": "LICENSES/CC-BY-4.0.txt",
+    "attribution": "International Commission on Stratigraphy",
+    "citation": "Cohen, K.M., Harper, D.A.T., Gibbard, P.L. & Car, N. (2025, updated). International Chronostratigraphic Chart."
+  },
+  "derivation": {
+    "pinned_input": {
+      "file": "tools/source/ics-chart-v2026-06.5.ttl",
+      "sha256": "0158959e8fdae2a8bdbb14ca3e424d2370362cd8dfc8af86e7be73c74368b355"
+    },
+    "parse_stats": {
+      "concept_subjects": 178,
+      "ranked_concepts": 178,
+      "records": 179,
+      "boundary_values": 356,
+      "margin_values": 206,
+      "uncertain_notes": 36,
+      "change_notes": 9
+    },
+    "qualifier_counts": {
+      "approximate": 36,
+      "constrained": 208,
+      "defined": 97,
+      "present": 5,
+      "unknown": 12
+    },
+    "integrity_repairs": [
+      {
+        "method": "snap-minority-rounding-variant",
+        "concept": "Aquitanian",
+        "boundary": "beginning",
+        "from_mya": 23.03,
+        "to_mya": 23.04,
+        "class_kind": "parent-base",
+        "parent": "Miocene",
+        "shared_by": "Aquitanian.beginning + Miocene.beginning",
+        "upward_writings": {
+          "23.03": 1,
+          "23.04": 5
+        }
+      },
+      {
+        "method": "same-rank-overlap-children-union",
+        "concept": "Ludlow",
+        "boundary": "end",
+        "from_mya": 419.62,
+        "to_mya": 422.7,
+        "overlapping_with": "Pridoli",
+        "rank": "Epoch",
+        "children_union_members": "Gorstian.end + Ludfordian.end",
+        "cleared_margin_of_stale_age": 1.36
+      }
+    ],
+    "derived_labels": [
+      {
+        "concept": "ischart:CambrianStage10",
+        "derived_name": "Cambrian Stage 10"
+      },
+      {
+        "concept": "ischart:CambrianStage2",
+        "derived_name": "Cambrian Stage 2"
+      },
+      {
+        "concept": "ischart:CambrianStage3",
+        "derived_name": "Cambrian Stage 3"
+      },
+      {
+        "concept": "ischart:CambrianStage4",
+        "derived_name": "Cambrian Stage 4"
+      },
+      {
+        "concept": "ischart:UpperPleistocene",
+        "derived_name": "Upper Pleistocene"
+      },
+      {
+        "concept": "ischart:LowerMississippian",
+        "derived_name": "Lower Mississippian"
+      },
+      {
+        "concept": "ischart:LowerPennsylvanian",
+        "derived_name": "Lower Pennsylvanian"
+      },
+      {
+        "concept": "ischart:MiddleMississippian",
+        "derived_name": "Middle Mississippian"
+      },
+      {
+        "concept": "ischart:MiddlePennsylvanian",
+        "derived_name": "Middle Pennsylvanian"
+      },
+      {
+        "concept": "ischart:UpperMississippian",
+        "derived_name": "Upper Mississippian"
+      },
+      {
+        "concept": "ischart:CambrianSeries2",
+        "derived_name": "Cambrian Series 2"
+      },
+      {
+        "concept": "ischart:LowerOrdovician",
+        "derived_name": "Lower Ordovician"
+      },
+      {
+        "concept": "ischart:LowerTriassic",
+        "derived_name": "Lower Triassic"
+      },
+      {
+        "concept": "ischart:MiddleDevonian",
+        "derived_name": "Middle Devonian"
+      },
+      {
+        "concept": "ischart:MiddleOrdovician",
+        "derived_name": "Middle Ordovician"
+      },
+      {
+        "concept": "ischart:MiddleTriassic",
+        "derived_name": "Middle Triassic"
+      },
+      {
+        "concept": "ischart:UpperDevonian",
+        "derived_name": "Upper Devonian"
+      },
+      {
+        "concept": "ischart:UpperPennsylvanian",
+        "derived_name": "Upper Pennsylvanian"
+      },
+      {
+        "concept": "ischart:LowerDevonian",
+        "derived_name": "Lower Devonian"
+      },
+      {
+        "concept": "ischart:UpperJurassic",
+        "derived_name": "Upper Jurassic"
+      },
+      {
+        "concept": "ischart:UpperOrdovician",
+        "derived_name": "Upper Ordovician"
+      },
+      {
+        "concept": "ischart:UpperTriassic",
+        "derived_name": "Upper Triassic"
+      },
+      {
+        "concept": "ischart:LowerJurassic",
+        "derived_name": "Lower Jurassic"
+      },
+      {
+        "concept": "ischart:MiddleJurassic",
+        "derived_name": "Middle Jurassic"
+      },
+      {
+        "concept": "ischart:LowerCretaceous",
+        "derived_name": "Lower Cretaceous"
+      },
+      {
+        "concept": "ischart:UpperCretaceous",
+        "derived_name": "Upper Cretaceous"
+      }
+    ],
+    "dropped_aliases": [
+      {
+        "id": "ics:age:aalenian",
+        "alias": "j1",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:lower-jurassic",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:aeronian",
+        "alias": "s2",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:wenlock",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:anisian",
+        "alias": "t3",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:upper-triassic",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:aquitanian",
+        "alias": "n1",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:miocene",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:artinskian",
+        "alias": "p3",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:lopingian",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:asselian",
+        "alias": "p1",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:cisuralian",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:bajocian",
+        "alias": "j2",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:middle-jurassic",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:bathonian",
+        "alias": "j3",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:upper-jurassic",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:burdigalian",
+        "alias": "n2",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:pliocene",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:calabrian",
+        "alias": "q2",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:holocene",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:cambrian-stage-2",
+        "alias": "ep3",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:miaolingian",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:cambrian-stage-3",
+        "alias": "ep2",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:cambrian-series-2",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:cambrian-stage-4",
+        "alias": "ep4",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:furongian",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:cenomanian",
+        "alias": "k1",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:lower-cretaceous",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:danian",
+        "alias": "e1",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:paleocene",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:dapingian",
+        "alias": "o3",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:upper-ordovician",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:emsian",
+        "alias": "d3",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:upper-devonian",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:floian",
+        "alias": "o2",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:middle-ordovician",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:fortunian",
+        "alias": "ep1",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:terreneuvian",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:gelasian",
+        "alias": "q1",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:pleistocene",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:induan",
+        "alias": "t1",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:lower-triassic",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:lochkovian",
+        "alias": "d1",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:lower-devonian",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:olenekian",
+        "alias": "t2",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:middle-triassic",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:pragian",
+        "alias": "d2",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:middle-devonian",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:pridoli",
+        "alias": "S4",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:pridoli",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:rhuddanian",
+        "alias": "s1",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:llandovery",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:sakmarian",
+        "alias": "p2",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:guadalupian",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:selandian",
+        "alias": "e2",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:eocene",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:sheinwoodian",
+        "alias": "s4",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:pridoli",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:telychian",
+        "alias": "s3",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:ludlow",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:thanetian",
+        "alias": "e3",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:oligocene",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:tournaisian",
+        "alias": "c1",
+        "rank": "Age",
+        "claimed_by": "ics:sub-period:mississippian",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:tremadocian",
+        "alias": "o1",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:lower-ordovician",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:turonian",
+        "alias": "k2",
+        "rank": "Age",
+        "claimed_by": "ics:epoch:upper-cretaceous",
+        "rule": "alias-casefold-precedence"
+      },
+      {
+        "id": "ics:age:visean",
+        "alias": "c2",
+        "rank": "Age",
+        "claimed_by": "ics:sub-period:pennsylvanian",
+        "rule": "alias-casefold-precedence"
+      }
+    ],
+    "alias_precedence": {
+      "Super-Eon": 0,
+      "Eon": 1,
+      "Era": 2,
+      "Period": 3,
+      "Sub-Period": 4,
+      "Epoch": 5,
+      "Age": 6
+    },
+    "qualifier_rule": "present -> present; uncertain (~) -> approximate; gssp/gssa with a published margin -> constrained; gssp/gssa without a margin -> defined; numeric estimate with a margin -> constrained; otherwise unknown"
+  },
+  "intervals": [
+    {
+      "id": "ics:sub-period:mississippian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Mississippian",
+      "name": "Mississippian",
+      "label": "Mississippian",
+      "aliases": [
+        "C1"
+      ],
+      "rank": "Sub-Period",
+      "rank_class": "structural",
+      "parent_id": "ics:period:carboniferous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Carboniferous",
+      "status": "ratified",
+      "color": "#678F66",
+      "older_boundary": {
+        "age_ma": 358.86,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.19,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 323.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:sub-period:pennsylvanian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Pennsylvanian",
+      "name": "Pennsylvanian",
+      "label": "Pennsylvanian",
+      "aliases": [
+        "C2"
+      ],
+      "rank": "Sub-Period",
+      "rank_class": "structural",
+      "parent_id": "ics:period:carboniferous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Carboniferous",
+      "status": "ratified",
+      "color": "#7EBCC6",
+      "older_boundary": {
+        "age_ma": 323.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 298.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.15,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:super-eon:precambrian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Precambrian",
+      "name": "Precambrian",
+      "label": "Precambrian",
+      "aliases": [
+        "PE"
+      ],
+      "rank": "Super-Eon",
+      "rank_class": "structural",
+      "parent_id": null,
+      "source_parent_id": null,
+      "status": "ratified",
+      "color": "#F74370",
+      "older_boundary": {
+        "age_ma": 4567.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 538.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:aalenian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Aalenian",
+      "name": "Aalenian",
+      "label": "Aalenian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:middle-jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/MiddleJurassic",
+      "status": "ratified",
+      "color": "#9AD9DD",
+      "older_boundary": {
+        "age_ma": 174.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.8,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 170.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.8,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:aeronian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Aeronian",
+      "name": "Aeronian",
+      "label": "Aeronian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:llandovery",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Llandovery",
+      "status": "ratified",
+      "color": "#B3E1C2",
+      "older_boundary": {
+        "age_ma": 440.5,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 438.6,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:albian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Albian",
+      "name": "Albian",
+      "label": "Albian",
+      "aliases": [
+        "b6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerCretaceous",
+      "status": "ratified",
+      "color": "#CCEA97",
+      "older_boundary": {
+        "age_ma": 113.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.3,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 100.5,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.1,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:anisian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Anisian",
+      "name": "Anisian",
+      "label": "Anisian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:middle-triassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/MiddleTriassic",
+      "status": "unknown",
+      "color": "#BC75B7",
+      "older_boundary": {
+        "age_ma": 247.0,
+        "qualifier": "unknown",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 241.464,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.28,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:aptian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Aptian",
+      "name": "Aptian",
+      "label": "Aptian",
+      "aliases": [
+        "b5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerCretaceous",
+      "status": "unknown",
+      "color": "#BFE48A",
+      "older_boundary": {
+        "age_ma": 121.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 113.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.3,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:aquitanian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Aquitanian",
+      "name": "Aquitanian",
+      "label": "Aquitanian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:miocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Miocene",
+      "status": "ratified",
+      "color": "#FFFF33",
+      "older_boundary": {
+        "age_ma": 23.04,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 20.45,
+        "qualifier": "unknown",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:artinskian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Artinskian",
+      "name": "Artinskian",
+      "label": "Artinskian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:cisuralian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cisuralian",
+      "status": "ratified",
+      "color": "#E37B68",
+      "older_boundary": {
+        "age_ma": 290.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.26,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 283.3,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:asselian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Asselian",
+      "name": "Asselian",
+      "label": "Asselian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:cisuralian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cisuralian",
+      "status": "ratified",
+      "color": "#E36350",
+      "older_boundary": {
+        "age_ma": 298.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.15,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 293.52,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.17,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:bajocian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Bajocian",
+      "name": "Bajocian",
+      "label": "Bajocian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:middle-jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/MiddleJurassic",
+      "status": "ratified",
+      "color": "#A6DDE0",
+      "older_boundary": {
+        "age_ma": 170.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.8,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 168.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.2,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:barremian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Barremian",
+      "name": "Barremian",
+      "label": "Barremian",
+      "aliases": [
+        "b4"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerCretaceous",
+      "status": "ratified",
+      "color": "#B3DF7F",
+      "older_boundary": {
+        "age_ma": 125.77,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 121.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:bartonian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Bartonian",
+      "name": "Bartonian",
+      "label": "Bartonian",
+      "aliases": [
+        "e6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:eocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Eocene",
+      "status": "unknown",
+      "color": "#FDC091",
+      "older_boundary": {
+        "age_ma": 41.03,
+        "qualifier": "unknown",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 37.71,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:bashkirian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Bashkirian",
+      "name": "Bashkirian",
+      "label": "Bashkirian",
+      "aliases": [
+        "c4"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-pennsylvanian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerPennsylvanian",
+      "status": "ratified",
+      "color": "#99C2B5",
+      "older_boundary": {
+        "age_ma": 323.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 315.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:bathonian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Bathonian",
+      "name": "Bathonian",
+      "label": "Bathonian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:middle-jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/MiddleJurassic",
+      "status": "ratified",
+      "color": "#B3E2E3",
+      "older_boundary": {
+        "age_ma": 168.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.2,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 165.3,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.1,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:berriasian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Berriasian",
+      "name": "Berriasian",
+      "label": "Berriasian",
+      "aliases": [
+        "b1"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerCretaceous",
+      "status": "unknown",
+      "color": "#8CCD60",
+      "older_boundary": {
+        "age_ma": 143.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 137.05,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:burdigalian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Burdigalian",
+      "name": "Burdigalian",
+      "label": "Burdigalian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:miocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Miocene",
+      "status": "unknown",
+      "color": "#FFFF41",
+      "older_boundary": {
+        "age_ma": 20.45,
+        "qualifier": "unknown",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 15.98,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:calabrian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Calabrian",
+      "name": "Calabrian",
+      "label": "Calabrian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:pleistocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Pleistocene",
+      "status": "ratified",
+      "color": "#FFF2BA",
+      "older_boundary": {
+        "age_ma": 1.8,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 0.774,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:callovian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Callovian",
+      "name": "Callovian",
+      "label": "Callovian",
+      "aliases": [
+        "j4"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:middle-jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/MiddleJurassic",
+      "status": "unknown",
+      "color": "#BFE7E5",
+      "older_boundary": {
+        "age_ma": 165.3,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.1,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 161.5,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:cambrian-stage-10",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/CambrianStage10",
+      "name": "Cambrian Stage 10",
+      "label": "Cambrian Stage 10",
+      "aliases": [
+        "ep10"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:furongian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Furongian",
+      "status": "informal",
+      "color": "#E6F5C9",
+      "older_boundary": {
+        "age_ma": 491.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 486.85,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.5,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:cambrian-stage-2",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/CambrianStage2",
+      "name": "Cambrian Stage 2",
+      "label": "Cambrian Stage 2",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:terreneuvian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Terreneuvian",
+      "status": "informal",
+      "color": "#A6BA80",
+      "older_boundary": {
+        "age_ma": 529.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 521.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:cambrian-stage-3",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/CambrianStage3",
+      "name": "Cambrian Stage 3",
+      "label": "Cambrian Stage 3",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:cambrian-series-2",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/CambrianSeries2",
+      "status": "informal",
+      "color": "#A6C583",
+      "older_boundary": {
+        "age_ma": 521.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 514.5,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:cambrian-stage-4",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/CambrianStage4",
+      "name": "Cambrian Stage 4",
+      "label": "Cambrian Stage 4",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:cambrian-series-2",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/CambrianSeries2",
+      "status": "informal",
+      "color": "#B3CA8E",
+      "older_boundary": {
+        "age_ma": 514.5,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 506.5,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:campanian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Campanian",
+      "name": "Campanian",
+      "label": "Campanian",
+      "aliases": [
+        "k5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperCretaceous",
+      "status": "ratified",
+      "color": "#E6F47F",
+      "older_boundary": {
+        "age_ma": 83.6,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 72.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:capitanian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Capitanian",
+      "name": "Capitanian",
+      "label": "Capitanian",
+      "aliases": [
+        "p7"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:guadalupian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Guadalupian",
+      "status": "ratified",
+      "color": "#FB9A85",
+      "older_boundary": {
+        "age_ma": 264.28,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.16,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 259.857,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.084,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:carnian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Carnian",
+      "name": "Carnian",
+      "label": "Carnian",
+      "aliases": [
+        "t5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-triassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperTriassic",
+      "status": "ratified",
+      "color": "#C99BCB",
+      "older_boundary": {
+        "age_ma": 237.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 227.3,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:cenomanian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Cenomanian",
+      "name": "Cenomanian",
+      "label": "Cenomanian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperCretaceous",
+      "status": "ratified",
+      "color": "#B3DE53",
+      "older_boundary": {
+        "age_ma": 100.5,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.1,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 93.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:changhsingian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Changhsingian",
+      "name": "Changhsingian",
+      "label": "Changhsingian",
+      "aliases": [
+        "p9"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lopingian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Lopingian",
+      "status": "ratified",
+      "color": "#FCC0B2",
+      "older_boundary": {
+        "age_ma": 254.14,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.07,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 251.902,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.024,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:chattian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Chattian",
+      "name": "Chattian",
+      "label": "Chattian",
+      "aliases": [
+        "e9"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:oligocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Oligocene",
+      "status": "ratified",
+      "color": "#FEE6AA",
+      "older_boundary": {
+        "age_ma": 27.3,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 23.04,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:chibanian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Chibanian",
+      "name": "Chibanian",
+      "label": "Chibanian",
+      "aliases": [
+        "q3"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:pleistocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Pleistocene",
+      "status": "ratified",
+      "color": "#FFF2C7",
+      "older_boundary": {
+        "age_ma": 0.774,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 0.129,
+        "qualifier": "unknown",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:coniacian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Coniacian",
+      "name": "Coniacian",
+      "label": "Coniacian",
+      "aliases": [
+        "k3"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperCretaceous",
+      "status": "ratified",
+      "color": "#CCE968",
+      "older_boundary": {
+        "age_ma": 89.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.3,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 85.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:danian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Danian",
+      "name": "Danian",
+      "label": "Danian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:paleocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleocene",
+      "status": "ratified",
+      "color": "#FDB462",
+      "older_boundary": {
+        "age_ma": 66.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 61.66,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:dapingian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Dapingian",
+      "name": "Dapingian",
+      "label": "Dapingian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:middle-ordovician",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/MiddleOrdovician",
+      "status": "ratified",
+      "color": "#66C092",
+      "older_boundary": {
+        "age_ma": 471.3,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.4,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 469.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.9,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:darriwilian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Darriwilian",
+      "name": "Darriwilian",
+      "label": "Darriwilian",
+      "aliases": [
+        "o4"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:middle-ordovician",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/MiddleOrdovician",
+      "status": "ratified",
+      "color": "#74C69C",
+      "older_boundary": {
+        "age_ma": 469.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.9,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 458.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.7,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:drumian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Drumian",
+      "name": "Drumian",
+      "label": "Drumian",
+      "aliases": [
+        "ep6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:miaolingian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Miaolingian",
+      "status": "ratified",
+      "color": "#BFD99D",
+      "older_boundary": {
+        "age_ma": 504.5,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 500.5,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:eifelian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Eifelian",
+      "name": "Eifelian",
+      "label": "Eifelian",
+      "aliases": [
+        "d4"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:middle-devonian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/MiddleDevonian",
+      "status": "ratified",
+      "color": "#F1D576",
+      "older_boundary": {
+        "age_ma": 393.47,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.99,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 387.95,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.04,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:emsian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Emsian",
+      "name": "Emsian",
+      "label": "Emsian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-devonian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerDevonian",
+      "status": "ratified",
+      "color": "#E5D075",
+      "older_boundary": {
+        "age_ma": 410.62,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.95,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 393.47,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.99,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:famennian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Famennian",
+      "name": "Famennian",
+      "label": "Famennian",
+      "aliases": [
+        "d7"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-devonian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperDevonian",
+      "status": "ratified",
+      "color": "#F2EDB3",
+      "older_boundary": {
+        "age_ma": 372.15,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.46,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 358.86,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.19,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:floian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Floian",
+      "name": "Floian",
+      "label": "Floian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-ordovician",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerOrdovician",
+      "status": "ratified",
+      "color": "#41B087",
+      "older_boundary": {
+        "age_ma": 477.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.2,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 471.3,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.4,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:fortunian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Fortunian",
+      "name": "Fortunian",
+      "label": "Fortunian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:terreneuvian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Terreneuvian",
+      "status": "ratified",
+      "color": "#99B575",
+      "older_boundary": {
+        "age_ma": 538.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 529.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:frasnian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Frasnian",
+      "name": "Frasnian",
+      "label": "Frasnian",
+      "aliases": [
+        "d6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-devonian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperDevonian",
+      "status": "ratified",
+      "color": "#F2EDAD",
+      "older_boundary": {
+        "age_ma": 382.31,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.36,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 372.15,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.46,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:gelasian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Gelasian",
+      "name": "Gelasian",
+      "label": "Gelasian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:pleistocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Pleistocene",
+      "status": "ratified",
+      "color": "#FFEDB3",
+      "older_boundary": {
+        "age_ma": 2.58,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 1.8,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:givetian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Givetian",
+      "name": "Givetian",
+      "label": "Givetian",
+      "aliases": [
+        "d5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:middle-devonian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/MiddleDevonian",
+      "status": "ratified",
+      "color": "#F1E185",
+      "older_boundary": {
+        "age_ma": 387.95,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.04,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 382.31,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.36,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:gorstian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Gorstian",
+      "name": "Gorstian",
+      "label": "Gorstian",
+      "aliases": [
+        "s6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:ludlow",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Ludlow",
+      "status": "ratified",
+      "color": "#CCECDD",
+      "older_boundary": {
+        "age_ma": 426.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.5,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 425.0,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.5,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:greenlandian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Greenlandian",
+      "name": "Greenlandian",
+      "label": "Greenlandian",
+      "aliases": [
+        "q5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:holocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Holocene",
+      "status": "ratified",
+      "color": "#FEECDB",
+      "older_boundary": {
+        "age_ma": 0.0117,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 0.0082,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:guzhangian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Guzhangian",
+      "name": "Guzhangian",
+      "label": "Guzhangian",
+      "aliases": [
+        "ep7"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:miaolingian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Miaolingian",
+      "status": "ratified",
+      "color": "#CCDFAA",
+      "older_boundary": {
+        "age_ma": 500.5,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 497.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:gzhelian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Gzhelian",
+      "name": "Gzhelian",
+      "label": "Gzhelian",
+      "aliases": [
+        "c7"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-pennsylvanian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperPennsylvanian",
+      "status": "unknown",
+      "color": "#CCD4C7",
+      "older_boundary": {
+        "age_ma": 303.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.1,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 298.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.15,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:hauterivian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Hauterivian",
+      "name": "Hauterivian",
+      "label": "Hauterivian",
+      "aliases": [
+        "b3"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerCretaceous",
+      "status": "ratified",
+      "color": "#A6D975",
+      "older_boundary": {
+        "age_ma": 132.6,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 125.77,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:hettangian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Hettangian",
+      "name": "Hettangian",
+      "label": "Hettangian",
+      "aliases": [
+        "I1"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerJurassic",
+      "status": "ratified",
+      "color": "#4EB3D3",
+      "older_boundary": {
+        "age_ma": 201.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 199.5,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.3,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:hirnantian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Hirnantian",
+      "name": "Hirnantian",
+      "label": "Hirnantian",
+      "aliases": [
+        "o7"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-ordovician",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperOrdovician",
+      "status": "ratified",
+      "color": "#A6DBAB",
+      "older_boundary": {
+        "age_ma": 445.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.9,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 443.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:homerian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Homerian",
+      "name": "Homerian",
+      "label": "Homerian",
+      "aliases": [
+        "s5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:wenlock",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Wenlock",
+      "status": "ratified",
+      "color": "#CCEBD1",
+      "older_boundary": {
+        "age_ma": 430.6,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.3,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 426.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.5,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:induan",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Induan",
+      "name": "Induan",
+      "label": "Induan",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-triassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerTriassic",
+      "status": "ratified",
+      "color": "#A4469F",
+      "older_boundary": {
+        "age_ma": 251.902,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.024,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 250.8,
+        "qualifier": "unknown",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:jiangshanian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Jiangshanian",
+      "name": "Jiangshanian",
+      "label": "Jiangshanian",
+      "aliases": [
+        "ep9"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:furongian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Furongian",
+      "status": "ratified",
+      "color": "#D9F0BB",
+      "older_boundary": {
+        "age_ma": 494.2,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 491.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:kasimovian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Kasimovian",
+      "name": "Kasimovian",
+      "label": "Kasimovian",
+      "aliases": [
+        "c6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-pennsylvanian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperPennsylvanian",
+      "status": "unknown",
+      "color": "#BFD0C5",
+      "older_boundary": {
+        "age_ma": 307.0,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.1,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 303.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.1,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:katian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Katian",
+      "name": "Katian",
+      "label": "Katian",
+      "aliases": [
+        "o6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-ordovician",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperOrdovician",
+      "status": "ratified",
+      "color": "#99D69F",
+      "older_boundary": {
+        "age_ma": 452.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.7,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 445.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.9,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:kimmeridgian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Kimmeridgian",
+      "name": "Kimmeridgian",
+      "label": "Kimmeridgian",
+      "aliases": [
+        "j6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperJurassic",
+      "status": "ratified",
+      "color": "#CCECF4",
+      "older_boundary": {
+        "age_ma": 154.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.8,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 149.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.7,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:kungurian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Kungurian",
+      "name": "Kungurian",
+      "label": "Kungurian",
+      "aliases": [
+        "p4"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:cisuralian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cisuralian",
+      "status": "unknown",
+      "color": "#E38776",
+      "older_boundary": {
+        "age_ma": 283.3,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 274.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:ladinian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Ladinian",
+      "name": "Ladinian",
+      "label": "Ladinian",
+      "aliases": [
+        "t4"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:middle-triassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/MiddleTriassic",
+      "status": "ratified",
+      "color": "#C983BF",
+      "older_boundary": {
+        "age_ma": 241.464,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.28,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 237.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:langhian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Langhian",
+      "name": "Langhian",
+      "label": "Langhian",
+      "aliases": [
+        "n3"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:miocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Miocene",
+      "status": "ratified",
+      "color": "#FFFF4D",
+      "older_boundary": {
+        "age_ma": 15.98,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 13.82,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:lochkovian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Lochkovian",
+      "name": "Lochkovian",
+      "label": "Lochkovian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-devonian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerDevonian",
+      "status": "ratified",
+      "color": "#E5B75A",
+      "older_boundary": {
+        "age_ma": 419.62,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.36,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 413.02,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.91,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:ludfordian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Ludfordian",
+      "name": "Ludfordian",
+      "label": "Ludfordian",
+      "aliases": [
+        "s7"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:ludlow",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Ludlow",
+      "status": "ratified",
+      "color": "#D9F0DF",
+      "older_boundary": {
+        "age_ma": 425.0,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.5,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 422.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.6,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:lutetian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Lutetian",
+      "name": "Lutetian",
+      "label": "Lutetian",
+      "aliases": [
+        "e5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:eocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Eocene",
+      "status": "ratified",
+      "color": "#FDB482",
+      "older_boundary": {
+        "age_ma": 48.07,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 41.03,
+        "qualifier": "unknown",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:maastrichtian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Maastrichtian",
+      "name": "Maastrichtian",
+      "label": "Maastrichtian",
+      "aliases": [
+        "k6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperCretaceous",
+      "status": "ratified",
+      "color": "#F2FA8C",
+      "older_boundary": {
+        "age_ma": 72.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 66.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:meghalayan",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Meghalayan",
+      "name": "Meghalayan",
+      "label": "Meghalayan",
+      "aliases": [
+        "q7"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:holocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Holocene",
+      "status": "ratified",
+      "color": "#FDEDEC",
+      "older_boundary": {
+        "age_ma": 0.0042,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 0.0,
+        "qualifier": "present",
+        "uncertainty_ma": null,
+        "definition": "present",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:messinian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Messinian",
+      "name": "Messinian",
+      "label": "Messinian",
+      "aliases": [
+        "n6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:miocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Miocene",
+      "status": "ratified",
+      "color": "#FFFF73",
+      "older_boundary": {
+        "age_ma": 7.246,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 5.333,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:moscovian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Moscovian",
+      "name": "Moscovian",
+      "label": "Moscovian",
+      "aliases": [
+        "c5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:middle-pennsylvanian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/MiddlePennsylvanian",
+      "status": "unknown",
+      "color": "#B3CBB9",
+      "older_boundary": {
+        "age_ma": 315.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 307.0,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.1,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:norian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Norian",
+      "name": "Norian",
+      "label": "Norian",
+      "aliases": [
+        "t6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-triassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperTriassic",
+      "status": "unknown",
+      "color": "#D6AAD3",
+      "older_boundary": {
+        "age_ma": 227.3,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 205.7,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:northgrippian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Northgrippian",
+      "name": "Northgrippian",
+      "label": "Northgrippian",
+      "aliases": [
+        "q6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:holocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Holocene",
+      "status": "ratified",
+      "color": "#FDECE4",
+      "older_boundary": {
+        "age_ma": 0.0082,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 0.0042,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:olenekian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Olenekian",
+      "name": "Olenekian",
+      "label": "Olenekian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-triassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerTriassic",
+      "status": "unknown",
+      "color": "#B051A5",
+      "older_boundary": {
+        "age_ma": 250.8,
+        "qualifier": "unknown",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 247.0,
+        "qualifier": "unknown",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:oxfordian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Oxfordian",
+      "name": "Oxfordian",
+      "label": "Oxfordian",
+      "aliases": [
+        "j5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperJurassic",
+      "status": "unknown",
+      "color": "#BFE7F1",
+      "older_boundary": {
+        "age_ma": 161.5,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 154.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.8,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:paibian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Paibian",
+      "name": "Paibian",
+      "label": "Paibian",
+      "aliases": [
+        "ep8"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:furongian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Furongian",
+      "status": "ratified",
+      "color": "#CCEBAE",
+      "older_boundary": {
+        "age_ma": 497.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 494.2,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:piacenzian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Piacenzian",
+      "name": "Piacenzian",
+      "label": "Piacenzian",
+      "aliases": [
+        "n8"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:pliocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Pliocene",
+      "status": "ratified",
+      "color": "#FFFFBF",
+      "older_boundary": {
+        "age_ma": 3.6,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 2.58,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:pliensbachian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Pliensbachian",
+      "name": "Pliensbachian",
+      "label": "Pliensbachian",
+      "aliases": [
+        "I3"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerJurassic",
+      "status": "ratified",
+      "color": "#80C5DD",
+      "older_boundary": {
+        "age_ma": 192.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.3,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 184.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.3,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:pragian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Pragian",
+      "name": "Pragian",
+      "label": "Pragian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-devonian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerDevonian",
+      "status": "ratified",
+      "color": "#E5C468",
+      "older_boundary": {
+        "age_ma": 413.02,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.91,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 410.62,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.95,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:priabonian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Priabonian",
+      "name": "Priabonian",
+      "label": "Priabonian",
+      "aliases": [
+        "e7"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:eocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Eocene",
+      "status": "ratified",
+      "color": "#FDCDA1",
+      "older_boundary": {
+        "age_ma": 37.71,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 33.9,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:pridoli",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Pridoli",
+      "name": "Pridoli",
+      "label": "Pridoli",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:silurian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Silurian",
+      "status": "ratified",
+      "color": "#E6F5E1",
+      "older_boundary": {
+        "age_ma": 422.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.6,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 419.62,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.36,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:rhaetian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Rhaetian",
+      "name": "Rhaetian",
+      "label": "Rhaetian",
+      "aliases": [
+        "t7"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-triassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperTriassic",
+      "status": "unknown",
+      "color": "#E3B9DB",
+      "older_boundary": {
+        "age_ma": 205.7,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 201.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:rhuddanian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Rhuddanian",
+      "name": "Rhuddanian",
+      "label": "Rhuddanian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:llandovery",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Llandovery",
+      "status": "ratified",
+      "color": "#A6DCB5",
+      "older_boundary": {
+        "age_ma": 443.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 440.5,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:roadian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Roadian",
+      "name": "Roadian",
+      "label": "Roadian",
+      "aliases": [
+        "p5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:guadalupian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Guadalupian",
+      "status": "ratified",
+      "color": "#FB8069",
+      "older_boundary": {
+        "age_ma": 274.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 266.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:rupelian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Rupelian",
+      "name": "Rupelian",
+      "label": "Rupelian",
+      "aliases": [
+        "e8"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:oligocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Oligocene",
+      "status": "ratified",
+      "color": "#FED99A",
+      "older_boundary": {
+        "age_ma": 33.9,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 27.3,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:sakmarian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Sakmarian",
+      "name": "Sakmarian",
+      "label": "Sakmarian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:cisuralian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cisuralian",
+      "status": "ratified",
+      "color": "#E36F5C",
+      "older_boundary": {
+        "age_ma": 293.52,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.17,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 290.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.26,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:sandbian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Sandbian",
+      "name": "Sandbian",
+      "label": "Sandbian",
+      "aliases": [
+        "o5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-ordovician",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperOrdovician",
+      "status": "ratified",
+      "color": "#8CD094",
+      "older_boundary": {
+        "age_ma": 458.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.7,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 452.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.7,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:santonian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Santonian",
+      "name": "Santonian",
+      "label": "Santonian",
+      "aliases": [
+        "k4"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperCretaceous",
+      "status": "ratified",
+      "color": "#D9EF74",
+      "older_boundary": {
+        "age_ma": 85.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 83.6,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:selandian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Selandian",
+      "name": "Selandian",
+      "label": "Selandian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:paleocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleocene",
+      "status": "ratified",
+      "color": "#FEBF65",
+      "older_boundary": {
+        "age_ma": 61.66,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 59.24,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:serpukhovian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Serpukhovian",
+      "name": "Serpukhovian",
+      "label": "Serpukhovian",
+      "aliases": [
+        "c3"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-mississippian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperMississippian",
+      "status": "unknown",
+      "color": "#BFC26B",
+      "older_boundary": {
+        "age_ma": 330.3,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 323.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:serravallian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Serravallian",
+      "name": "Serravallian",
+      "label": "Serravallian",
+      "aliases": [
+        "n4"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:miocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Miocene",
+      "status": "ratified",
+      "color": "#FFFF59",
+      "older_boundary": {
+        "age_ma": 13.82,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 11.63,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:sheinwoodian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Sheinwoodian",
+      "name": "Sheinwoodian",
+      "label": "Sheinwoodian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:wenlock",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Wenlock",
+      "status": "ratified",
+      "color": "#BFE6C3",
+      "older_boundary": {
+        "age_ma": 432.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.2,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 430.6,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.3,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:sinemurian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Sinemurian",
+      "name": "Sinemurian",
+      "label": "Sinemurian",
+      "aliases": [
+        "I2"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerJurassic",
+      "status": "ratified",
+      "color": "#67BCD8",
+      "older_boundary": {
+        "age_ma": 199.5,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.3,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 192.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.3,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:telychian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Telychian",
+      "name": "Telychian",
+      "label": "Telychian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:llandovery",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Llandovery",
+      "status": "ratified",
+      "color": "#BFE6CF",
+      "older_boundary": {
+        "age_ma": 438.6,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 432.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.2,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:thanetian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Thanetian",
+      "name": "Thanetian",
+      "label": "Thanetian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:paleocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleocene",
+      "status": "ratified",
+      "color": "#FDBF6F",
+      "older_boundary": {
+        "age_ma": 59.24,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 56.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:tithonian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Tithonian",
+      "name": "Tithonian",
+      "label": "Tithonian",
+      "aliases": [
+        "j7"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperJurassic",
+      "status": "unknown",
+      "color": "#D9F1F7",
+      "older_boundary": {
+        "age_ma": 149.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.7,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 143.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:toarcian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Toarcian",
+      "name": "Toarcian",
+      "label": "Toarcian",
+      "aliases": [
+        "I4"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerJurassic",
+      "status": "ratified",
+      "color": "#99CEE3",
+      "older_boundary": {
+        "age_ma": 184.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.3,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 174.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.8,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:tortonian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Tortonian",
+      "name": "Tortonian",
+      "label": "Tortonian",
+      "aliases": [
+        "n5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:miocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Miocene",
+      "status": "ratified",
+      "color": "#FFFF66",
+      "older_boundary": {
+        "age_ma": 11.63,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 7.246,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:tournaisian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Tournaisian",
+      "name": "Tournaisian",
+      "label": "Tournaisian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-mississippian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerMississippian",
+      "status": "ratified",
+      "color": "#8CB06C",
+      "older_boundary": {
+        "age_ma": 358.86,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.19,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 346.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:tremadocian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Tremadocian",
+      "name": "Tremadocian",
+      "label": "Tremadocian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-ordovician",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerOrdovician",
+      "status": "ratified",
+      "color": "#33A97E",
+      "older_boundary": {
+        "age_ma": 486.85,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.5,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 477.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.2,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:turonian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Turonian",
+      "name": "Turonian",
+      "label": "Turonian",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:upper-cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/UpperCretaceous",
+      "status": "ratified",
+      "color": "#BFE35D",
+      "older_boundary": {
+        "age_ma": 93.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 89.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.3,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:upper-pleistocene",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/UpperPleistocene",
+      "name": "Upper Pleistocene",
+      "label": "Upper Pleistocene",
+      "aliases": [
+        "q4"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:pleistocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Pleistocene",
+      "status": "unknown",
+      "color": "#FFF2D3",
+      "older_boundary": {
+        "age_ma": 0.129,
+        "qualifier": "unknown",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 0.0117,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:valanginian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Valanginian",
+      "name": "Valanginian",
+      "label": "Valanginian",
+      "aliases": [
+        "b2"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lower-cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/LowerCretaceous",
+      "status": "ratified",
+      "color": "#99D36A",
+      "older_boundary": {
+        "age_ma": 137.05,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 132.6,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:visean",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Visean",
+      "name": "Visean",
+      "label": "Visean",
+      "aliases": [],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:middle-mississippian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/MiddleMississippian",
+      "status": "ratified",
+      "color": "#A6B96C",
+      "older_boundary": {
+        "age_ma": 346.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 330.3,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:wordian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Wordian",
+      "name": "Wordian",
+      "label": "Wordian",
+      "aliases": [
+        "p6"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:guadalupian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Guadalupian",
+      "status": "ratified",
+      "color": "#FB8D76",
+      "older_boundary": {
+        "age_ma": 266.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 264.28,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.16,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:wuchiapingian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Wuchiapingian",
+      "name": "Wuchiapingian",
+      "label": "Wuchiapingian",
+      "aliases": [
+        "p8"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:lopingian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Lopingian",
+      "status": "ratified",
+      "color": "#FCB4A2",
+      "older_boundary": {
+        "age_ma": 259.857,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.084,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 254.14,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.07,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:wuliuan",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Wuliuan",
+      "name": "Wuliuan",
+      "label": "Wuliuan",
+      "aliases": [
+        "ep5"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:miaolingian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Miaolingian",
+      "status": "ratified",
+      "color": "#B3D492",
+      "older_boundary": {
+        "age_ma": 506.5,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 504.5,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:ypresian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Ypresian",
+      "name": "Ypresian",
+      "label": "Ypresian",
+      "aliases": [
+        "e4"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:eocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Eocene",
+      "status": "ratified",
+      "color": "#FCA773",
+      "older_boundary": {
+        "age_ma": 56.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 48.07,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:age:zanclean",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Zanclean",
+      "name": "Zanclean",
+      "label": "Zanclean",
+      "aliases": [
+        "n7"
+      ],
+      "rank": "Age",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:epoch:pliocene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Pliocene",
+      "status": "ratified",
+      "color": "#FFFFB3",
+      "older_boundary": {
+        "age_ma": 5.333,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 3.6,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:eon:archean",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Archean",
+      "name": "Archean",
+      "label": "Archean",
+      "aliases": [
+        "AR"
+      ],
+      "rank": "Eon",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:super-eon:precambrian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Precambrian",
+      "status": "ratified",
+      "color": "#F0047F",
+      "older_boundary": {
+        "age_ma": 4031.0,
+        "qualifier": "constrained",
+        "uncertainty_ma": 3.0,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 2500.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:eon:hadean",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Hadean",
+      "name": "Hadean",
+      "label": "Hadean",
+      "aliases": [
+        "HA"
+      ],
+      "rank": "Eon",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:super-eon:precambrian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Precambrian",
+      "status": "ratified",
+      "color": "#AE027E",
+      "older_boundary": {
+        "age_ma": 4567.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 4031.0,
+        "qualifier": "constrained",
+        "uncertainty_ma": 3.0,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:eon:phanerozoic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Phanerozoic",
+      "name": "Phanerozoic",
+      "label": "Phanerozoic",
+      "aliases": [
+        "PH"
+      ],
+      "rank": "Eon",
+      "rank_class": "geochronologic",
+      "parent_id": null,
+      "source_parent_id": null,
+      "status": "ratified",
+      "color": "#9AD9DD",
+      "older_boundary": {
+        "age_ma": 538.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 0.0,
+        "qualifier": "present",
+        "uncertainty_ma": null,
+        "definition": "present",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:eon:proterozoic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Proterozoic",
+      "name": "Proterozoic",
+      "label": "Proterozoic",
+      "aliases": [
+        "PR"
+      ],
+      "rank": "Eon",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:super-eon:precambrian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Precambrian",
+      "status": "ratified",
+      "color": "#F73563",
+      "older_boundary": {
+        "age_ma": 2500.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 538.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:cambrian-series-2",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/CambrianSeries2",
+      "name": "Cambrian Series 2",
+      "label": "Cambrian Series 2",
+      "aliases": [
+        "Ep2"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:cambrian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cambrian",
+      "status": "informal",
+      "color": "#99C078",
+      "older_boundary": {
+        "age_ma": 521.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 506.5,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:cisuralian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Cisuralian",
+      "name": "Cisuralian",
+      "label": "Cisuralian",
+      "aliases": [
+        "P1"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:permian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Permian",
+      "status": "ratified",
+      "color": "#EF5845",
+      "older_boundary": {
+        "age_ma": 298.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.15,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 274.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:eocene",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Eocene",
+      "name": "Eocene",
+      "label": "Eocene",
+      "aliases": [
+        "E2"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:paleogene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleogene",
+      "status": "ratified",
+      "color": "#FDB46C",
+      "older_boundary": {
+        "age_ma": 56.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 33.9,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:furongian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Furongian",
+      "name": "Furongian",
+      "label": "Furongian",
+      "aliases": [
+        "Ep4"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:cambrian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cambrian",
+      "status": "ratified",
+      "color": "#B3E095",
+      "older_boundary": {
+        "age_ma": 497.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 486.85,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.5,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:guadalupian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Guadalupian",
+      "name": "Guadalupian",
+      "label": "Guadalupian",
+      "aliases": [
+        "P2"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:permian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Permian",
+      "status": "ratified",
+      "color": "#FB745C",
+      "older_boundary": {
+        "age_ma": 274.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 259.857,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.084,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:holocene",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Holocene",
+      "name": "Holocene",
+      "label": "Holocene",
+      "aliases": [
+        "Q2"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:quaternary",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Quaternary",
+      "status": "ratified",
+      "color": "#FEEBD2",
+      "older_boundary": {
+        "age_ma": 0.0117,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 0.0,
+        "qualifier": "present",
+        "uncertainty_ma": null,
+        "definition": "present",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:llandovery",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Llandovery",
+      "name": "Llandovery",
+      "label": "Llandovery",
+      "aliases": [
+        "S1"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:silurian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Silurian",
+      "status": "ratified",
+      "color": "#99D7B3",
+      "older_boundary": {
+        "age_ma": 443.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 432.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.2,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:lopingian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Lopingian",
+      "name": "Lopingian",
+      "label": "Lopingian",
+      "aliases": [
+        "P3"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:permian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Permian",
+      "status": "ratified",
+      "color": "#FBA794",
+      "older_boundary": {
+        "age_ma": 259.857,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.084,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 251.902,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.024,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:lower-cretaceous",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/LowerCretaceous",
+      "name": "Lower Cretaceous",
+      "label": "Lower Cretaceous",
+      "aliases": [
+        "K1"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cretaceous",
+      "status": "unknown",
+      "color": "#8CCD57",
+      "older_boundary": {
+        "age_ma": 143.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 100.5,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.1,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:lower-devonian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/LowerDevonian",
+      "name": "Lower Devonian",
+      "label": "Lower Devonian",
+      "aliases": [
+        "D1"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:devonian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Devonian",
+      "status": "ratified",
+      "color": "#E5AC4D",
+      "older_boundary": {
+        "age_ma": 419.62,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.36,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 393.47,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.99,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:lower-jurassic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/LowerJurassic",
+      "name": "Lower Jurassic",
+      "label": "Lower Jurassic",
+      "aliases": [
+        "J1"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Jurassic",
+      "status": "ratified",
+      "color": "#42AED0",
+      "older_boundary": {
+        "age_ma": 201.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 174.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.8,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:lower-mississippian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/LowerMississippian",
+      "name": "Lower Mississippian",
+      "label": "Lower Mississippian",
+      "aliases": [
+        "C1c1"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:sub-period:mississippian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Mississippian",
+      "status": "ratified",
+      "color": "#80AB6C",
+      "older_boundary": {
+        "age_ma": 358.86,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.19,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 346.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:lower-ordovician",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/LowerOrdovician",
+      "name": "Lower Ordovician",
+      "label": "Lower Ordovician",
+      "aliases": [
+        "O1"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:ordovician",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Ordovician",
+      "status": "ratified",
+      "color": "#1A9D6F",
+      "older_boundary": {
+        "age_ma": 486.85,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.5,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 471.3,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.4,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:lower-pennsylvanian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/LowerPennsylvanian",
+      "name": "Lower Pennsylvanian",
+      "label": "Lower Pennsylvanian",
+      "aliases": [
+        "C2c4"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:sub-period:pennsylvanian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Pennsylvanian",
+      "status": "ratified",
+      "color": "#8CBEB4",
+      "older_boundary": {
+        "age_ma": 323.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 315.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:lower-triassic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/LowerTriassic",
+      "name": "Lower Triassic",
+      "label": "Lower Triassic",
+      "aliases": [
+        "T1"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:triassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Triassic",
+      "status": "ratified",
+      "color": "#983999",
+      "older_boundary": {
+        "age_ma": 251.902,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.024,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 247.0,
+        "qualifier": "unknown",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:ludlow",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Ludlow",
+      "name": "Ludlow",
+      "label": "Ludlow",
+      "aliases": [
+        "S3"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:silurian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Silurian",
+      "status": "ratified",
+      "color": "#BFE6CF",
+      "older_boundary": {
+        "age_ma": 426.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.5,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 422.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.6,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:miaolingian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Miaolingian",
+      "name": "Miaolingian",
+      "label": "Miaolingian",
+      "aliases": [
+        "Ep3"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:cambrian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cambrian",
+      "status": "ratified",
+      "color": "#A6CF86",
+      "older_boundary": {
+        "age_ma": 506.5,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 497.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:middle-devonian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/MiddleDevonian",
+      "name": "Middle Devonian",
+      "label": "Middle Devonian",
+      "aliases": [
+        "D2"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:devonian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Devonian",
+      "status": "ratified",
+      "color": "#F1C868",
+      "older_boundary": {
+        "age_ma": 393.47,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.99,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 382.31,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.36,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:middle-jurassic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/MiddleJurassic",
+      "name": "Middle Jurassic",
+      "label": "Middle Jurassic",
+      "aliases": [
+        "J2"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Jurassic",
+      "status": "ratified",
+      "color": "#80CFD8",
+      "older_boundary": {
+        "age_ma": 174.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.8,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 161.5,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:middle-mississippian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/MiddleMississippian",
+      "name": "Middle Mississippian",
+      "label": "Middle Mississippian",
+      "aliases": [
+        "C1c2"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:sub-period:mississippian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Mississippian",
+      "status": "ratified",
+      "color": "#99B46C",
+      "older_boundary": {
+        "age_ma": 346.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 330.3,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:middle-ordovician",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/MiddleOrdovician",
+      "name": "Middle Ordovician",
+      "label": "Middle Ordovician",
+      "aliases": [
+        "O2"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:ordovician",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Ordovician",
+      "status": "ratified",
+      "color": "#4DB47E",
+      "older_boundary": {
+        "age_ma": 471.3,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.4,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 458.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.7,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:middle-pennsylvanian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/MiddlePennsylvanian",
+      "name": "Middle Pennsylvanian",
+      "label": "Middle Pennsylvanian",
+      "aliases": [
+        "C2c5"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:sub-period:pennsylvanian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Pennsylvanian",
+      "status": "unknown",
+      "color": "#A6C7B7",
+      "older_boundary": {
+        "age_ma": 315.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 307.0,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.1,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:middle-triassic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/MiddleTriassic",
+      "name": "Middle Triassic",
+      "label": "Middle Triassic",
+      "aliases": [
+        "T2"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:triassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Triassic",
+      "status": "unknown",
+      "color": "#B168B1",
+      "older_boundary": {
+        "age_ma": 247.0,
+        "qualifier": "unknown",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 237.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:miocene",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Miocene",
+      "name": "Miocene",
+      "label": "Miocene",
+      "aliases": [
+        "N1"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:neogene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Neogene",
+      "status": "ratified",
+      "color": "#FFFF00",
+      "older_boundary": {
+        "age_ma": 23.04,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 5.333,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:oligocene",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Oligocene",
+      "name": "Oligocene",
+      "label": "Oligocene",
+      "aliases": [
+        "E3"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:paleogene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleogene",
+      "status": "ratified",
+      "color": "#FEC07A",
+      "older_boundary": {
+        "age_ma": 33.9,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 23.04,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:paleocene",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Paleocene",
+      "name": "Paleocene",
+      "label": "Paleocene",
+      "aliases": [
+        "E1"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:paleogene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleogene",
+      "status": "ratified",
+      "color": "#FDA75F",
+      "older_boundary": {
+        "age_ma": 66.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 56.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:pleistocene",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Pleistocene",
+      "name": "Pleistocene",
+      "label": "Pleistocene",
+      "aliases": [
+        "Q1"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:quaternary",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Quaternary",
+      "status": "ratified",
+      "color": "#FFEFAF",
+      "older_boundary": {
+        "age_ma": 2.58,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 0.0117,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:pliocene",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Pliocene",
+      "name": "Pliocene",
+      "label": "Pliocene",
+      "aliases": [
+        "N2"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:neogene",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Neogene",
+      "status": "ratified",
+      "color": "#FFFF99",
+      "older_boundary": {
+        "age_ma": 5.333,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 2.58,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:pridoli",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Pridoli",
+      "name": "Pridoli",
+      "label": "Pridoli",
+      "aliases": [
+        "S4"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:silurian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Silurian",
+      "status": "ratified",
+      "color": "#E6F5E1",
+      "older_boundary": {
+        "age_ma": 422.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.6,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 419.62,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.36,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:terreneuvian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Terreneuvian",
+      "name": "Terreneuvian",
+      "label": "Terreneuvian",
+      "aliases": [
+        "Ep1"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:cambrian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cambrian",
+      "status": "ratified",
+      "color": "#8CB06C",
+      "older_boundary": {
+        "age_ma": 538.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 521.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:upper-cretaceous",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/UpperCretaceous",
+      "name": "Upper Cretaceous",
+      "label": "Upper Cretaceous",
+      "aliases": [
+        "K2"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:cretaceous",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cretaceous",
+      "status": "ratified",
+      "color": "#A6D84A",
+      "older_boundary": {
+        "age_ma": 100.5,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.1,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 66.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:upper-devonian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/UpperDevonian",
+      "name": "Upper Devonian",
+      "label": "Upper Devonian",
+      "aliases": [
+        "D3"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:devonian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Devonian",
+      "status": "ratified",
+      "color": "#F1E19D",
+      "older_boundary": {
+        "age_ma": 382.31,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.36,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 358.86,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.19,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:upper-jurassic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/UpperJurassic",
+      "name": "Upper Jurassic",
+      "label": "Upper Jurassic",
+      "aliases": [
+        "J3"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:jurassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Jurassic",
+      "status": "unknown",
+      "color": "#B3E3EE",
+      "older_boundary": {
+        "age_ma": 161.5,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 143.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:upper-mississippian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/UpperMississippian",
+      "name": "Upper Mississippian",
+      "label": "Upper Mississippian",
+      "aliases": [
+        "C1c3"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:sub-period:mississippian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Mississippian",
+      "status": "unknown",
+      "color": "#B3BE6C",
+      "older_boundary": {
+        "age_ma": 330.3,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 323.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.4,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:upper-ordovician",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/UpperOrdovician",
+      "name": "Upper Ordovician",
+      "label": "Upper Ordovician",
+      "aliases": [
+        "O3"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:ordovician",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Ordovician",
+      "status": "ratified",
+      "color": "#7FCA93",
+      "older_boundary": {
+        "age_ma": 458.2,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.7,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 443.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:upper-pennsylvanian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/UpperPennsylvanian",
+      "name": "Upper Pennsylvanian",
+      "label": "Upper Pennsylvanian",
+      "aliases": [
+        "C2c6c7"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:sub-period:pennsylvanian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Pennsylvanian",
+      "status": "unknown",
+      "color": "#BFD0BA",
+      "older_boundary": {
+        "age_ma": 307.0,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.1,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 298.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.15,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:upper-triassic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/UpperTriassic",
+      "name": "Upper Triassic",
+      "label": "Upper Triassic",
+      "aliases": [
+        "T3"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:triassic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Triassic",
+      "status": "ratified",
+      "color": "#BD8CC3",
+      "older_boundary": {
+        "age_ma": 237.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 201.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:epoch:wenlock",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Wenlock",
+      "name": "Wenlock",
+      "label": "Wenlock",
+      "aliases": [
+        "S2"
+      ],
+      "rank": "Epoch",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:period:silurian",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Silurian",
+      "status": "ratified",
+      "color": "#B3E1C2",
+      "older_boundary": {
+        "age_ma": 432.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.2,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 426.7,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.5,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:era:cenozoic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Cenozoic",
+      "name": "Cenozoic",
+      "label": "Cenozoic",
+      "aliases": [
+        "CZ"
+      ],
+      "rank": "Era",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:eon:phanerozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Phanerozoic",
+      "status": "ratified",
+      "color": "#F2F91D",
+      "older_boundary": {
+        "age_ma": 66.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 0.0,
+        "qualifier": "present",
+        "uncertainty_ma": null,
+        "definition": "present",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:era:eoarchean",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Eoarchean",
+      "name": "Eoarchean",
+      "label": "Eoarchean",
+      "aliases": [
+        "EA"
+      ],
+      "rank": "Era",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:eon:archean",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Archean",
+      "status": "ratified",
+      "color": "#DA037F",
+      "older_boundary": {
+        "age_ma": 4031.0,
+        "qualifier": "constrained",
+        "uncertainty_ma": 3.0,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 3600.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:era:mesoarchean",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Mesoarchean",
+      "name": "Mesoarchean",
+      "label": "Mesoarchean",
+      "aliases": [
+        "MA"
+      ],
+      "rank": "Era",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:eon:archean",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Archean",
+      "status": "ratified",
+      "color": "#F768A9",
+      "older_boundary": {
+        "age_ma": 3200.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 2800.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:era:mesoproterozoic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Mesoproterozoic",
+      "name": "Mesoproterozoic",
+      "label": "Mesoproterozoic",
+      "aliases": [
+        "MP"
+      ],
+      "rank": "Era",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:eon:proterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Proterozoic",
+      "status": "ratified",
+      "color": "#FDB462",
+      "older_boundary": {
+        "age_ma": 1600.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 1000.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:era:mesozoic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Mesozoic",
+      "name": "Mesozoic",
+      "label": "Mesozoic",
+      "aliases": [
+        "MZ"
+      ],
+      "rank": "Era",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:eon:phanerozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Phanerozoic",
+      "status": "ratified",
+      "color": "#67C5CA",
+      "older_boundary": {
+        "age_ma": 251.902,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.024,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 66.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:era:neoarchean",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Neoarchean",
+      "name": "Neoarchean",
+      "label": "Neoarchean",
+      "aliases": [
+        "NA"
+      ],
+      "rank": "Era",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:eon:archean",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Archean",
+      "status": "ratified",
+      "color": "#F99BC1",
+      "older_boundary": {
+        "age_ma": 2800.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 2500.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:era:neoproterozoic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Neoproterozoic",
+      "name": "Neoproterozoic",
+      "label": "Neoproterozoic",
+      "aliases": [
+        "NP"
+      ],
+      "rank": "Era",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:eon:proterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Proterozoic",
+      "status": "ratified",
+      "color": "#FEB342",
+      "older_boundary": {
+        "age_ma": 1000.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 538.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:era:paleoarchean",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Paleoarchean",
+      "name": "Paleoarchean",
+      "label": "Paleoarchean",
+      "aliases": [
+        "PA"
+      ],
+      "rank": "Era",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:eon:archean",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Archean",
+      "status": "ratified",
+      "color": "#F4449F",
+      "older_boundary": {
+        "age_ma": 3600.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 3200.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:era:paleoproterozoic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Paleoproterozoic",
+      "name": "Paleoproterozoic",
+      "label": "Paleoproterozoic",
+      "aliases": [
+        "PP"
+      ],
+      "rank": "Era",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:eon:proterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Proterozoic",
+      "status": "ratified",
+      "color": "#F74370",
+      "older_boundary": {
+        "age_ma": 2500.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 1600.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:era:paleozoic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Paleozoic",
+      "name": "Paleozoic",
+      "label": "Paleozoic",
+      "aliases": [
+        "PZ"
+      ],
+      "rank": "Era",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:eon:phanerozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Phanerozoic",
+      "status": "ratified",
+      "color": "#99C08D",
+      "older_boundary": {
+        "age_ma": 538.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 251.902,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.024,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:calymmian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Calymmian",
+      "name": "Calymmian",
+      "label": "Calymmian",
+      "aliases": [
+        "MP1"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:mesoproterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Mesoproterozoic",
+      "status": "ratified",
+      "color": "#FDC07A",
+      "older_boundary": {
+        "age_ma": 1600.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 1400.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:cambrian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Cambrian",
+      "name": "Cambrian",
+      "label": "Cambrian",
+      "aliases": [
+        "Ep"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:paleozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleozoic",
+      "status": "ratified",
+      "color": "#7FA056",
+      "older_boundary": {
+        "age_ma": 538.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 486.85,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.5,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:carboniferous",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Carboniferous",
+      "name": "Carboniferous",
+      "label": "Carboniferous",
+      "aliases": [
+        "C"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:paleozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleozoic",
+      "status": "ratified",
+      "color": "#67A599",
+      "older_boundary": {
+        "age_ma": 358.86,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.19,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 298.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.15,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:cretaceous",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Cretaceous",
+      "name": "Cretaceous",
+      "label": "Cretaceous",
+      "aliases": [
+        "K"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:mesozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Mesozoic",
+      "status": "unknown",
+      "color": "#7FC64E",
+      "older_boundary": {
+        "age_ma": 143.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 66.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:cryogenian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Cryogenian",
+      "name": "Cryogenian",
+      "label": "Cryogenian",
+      "aliases": [
+        "NP2"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:neoproterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Neoproterozoic",
+      "status": "unknown",
+      "color": "#FECC5C",
+      "older_boundary": {
+        "age_ma": 720.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 635.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:devonian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Devonian",
+      "name": "Devonian",
+      "label": "Devonian",
+      "aliases": [
+        "D"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:paleozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleozoic",
+      "status": "ratified",
+      "color": "#CB8C37",
+      "older_boundary": {
+        "age_ma": 419.62,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.36,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 358.86,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.19,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:ectasian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Ectasian",
+      "name": "Ectasian",
+      "label": "Ectasian",
+      "aliases": [
+        "MP2"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:mesoproterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Mesoproterozoic",
+      "status": "ratified",
+      "color": "#FDCC8A",
+      "older_boundary": {
+        "age_ma": 1400.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 1200.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:ediacaran",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Ediacaran",
+      "name": "Ediacaran",
+      "label": "Ediacaran",
+      "aliases": [
+        "NP3"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:neoproterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Neoproterozoic",
+      "status": "ratified",
+      "color": "#FED96A",
+      "older_boundary": {
+        "age_ma": 635.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 538.8,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:jurassic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Jurassic",
+      "name": "Jurassic",
+      "label": "Jurassic",
+      "aliases": [
+        "J"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:mesozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Mesozoic",
+      "status": "ratified",
+      "color": "#34B2C9",
+      "older_boundary": {
+        "age_ma": 201.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 143.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.6,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:neogene",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Neogene",
+      "name": "Neogene",
+      "label": "Neogene",
+      "aliases": [
+        "N"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:cenozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cenozoic",
+      "status": "ratified",
+      "color": "#FFE619",
+      "older_boundary": {
+        "age_ma": 23.04,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 2.58,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:ordovician",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Ordovician",
+      "name": "Ordovician",
+      "label": "Ordovician",
+      "aliases": [
+        "O"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:paleozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleozoic",
+      "status": "ratified",
+      "color": "#009270",
+      "older_boundary": {
+        "age_ma": 486.85,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.5,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 443.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:orosirian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Orosirian",
+      "name": "Orosirian",
+      "label": "Orosirian",
+      "aliases": [
+        "PP3"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:paleoproterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleoproterozoic",
+      "status": "ratified",
+      "color": "#F76898",
+      "older_boundary": {
+        "age_ma": 2050.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 1800.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:paleogene",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Paleogene",
+      "name": "Paleogene",
+      "label": "Paleogene",
+      "aliases": [
+        "E"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:cenozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cenozoic",
+      "status": "ratified",
+      "color": "#FD9A52",
+      "older_boundary": {
+        "age_ma": 66.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 23.04,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:permian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Permian",
+      "name": "Permian",
+      "label": "Permian",
+      "aliases": [
+        "P"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:paleozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleozoic",
+      "status": "ratified",
+      "color": "#F04028",
+      "older_boundary": {
+        "age_ma": 298.9,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.15,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 251.902,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.024,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:quaternary",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Quaternary",
+      "name": "Quaternary",
+      "label": "Quaternary",
+      "aliases": [
+        "Q"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:cenozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Cenozoic",
+      "status": "ratified",
+      "color": "#F9F97F",
+      "older_boundary": {
+        "age_ma": 2.58,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 0.0,
+        "qualifier": "present",
+        "uncertainty_ma": null,
+        "definition": "present",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:rhyacian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Rhyacian",
+      "name": "Rhyacian",
+      "label": "Rhyacian",
+      "aliases": [
+        "PP2"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:paleoproterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleoproterozoic",
+      "status": "ratified",
+      "color": "#F75B89",
+      "older_boundary": {
+        "age_ma": 2300.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 2050.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:siderian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Siderian",
+      "name": "Siderian",
+      "label": "Siderian",
+      "aliases": [
+        "PP1"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:paleoproterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleoproterozoic",
+      "status": "ratified",
+      "color": "#F74F7C",
+      "older_boundary": {
+        "age_ma": 2500.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 2300.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:silurian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Silurian",
+      "name": "Silurian",
+      "label": "Silurian",
+      "aliases": [
+        "S"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:paleozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleozoic",
+      "status": "ratified",
+      "color": "#B3E1B6",
+      "older_boundary": {
+        "age_ma": 443.1,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.0,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 419.62,
+        "qualifier": "constrained",
+        "uncertainty_ma": 1.36,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:statherian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Statherian",
+      "name": "Statherian",
+      "label": "Statherian",
+      "aliases": [
+        "PP4"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:paleoproterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Paleoproterozoic",
+      "status": "ratified",
+      "color": "#F875A7",
+      "older_boundary": {
+        "age_ma": 1800.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 1600.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:stenian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Stenian",
+      "name": "Stenian",
+      "label": "Stenian",
+      "aliases": [
+        "MP3"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:mesoproterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Mesoproterozoic",
+      "status": "ratified",
+      "color": "#FED99A",
+      "older_boundary": {
+        "age_ma": 1200.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssa",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 1000.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:tonian",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Tonian",
+      "name": "Tonian",
+      "label": "Tonian",
+      "aliases": [
+        "NP1"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:neoproterozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Neoproterozoic",
+      "status": "ratified",
+      "color": "#FEBF4E",
+      "older_boundary": {
+        "age_ma": 1000.0,
+        "qualifier": "defined",
+        "uncertainty_ma": null,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 720.0,
+        "qualifier": "approximate",
+        "uncertainty_ma": null,
+        "definition": "numeric_estimate",
+        "source_iri": null
+      }
+    },
+    {
+      "id": "ics:period:triassic",
+      "source_iri": "http://resource.geosciml.org/classifier/ics/ischart/Triassic",
+      "name": "Triassic",
+      "label": "Triassic",
+      "aliases": [
+        "T"
+      ],
+      "rank": "Period",
+      "rank_class": "geochronologic",
+      "parent_id": "ics:era:mesozoic",
+      "source_parent_id": "http://resource.geosciml.org/classifier/ics/ischart/Mesozoic",
+      "status": "ratified",
+      "color": "#812B92",
+      "older_boundary": {
+        "age_ma": 251.902,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.024,
+        "definition": "gssp",
+        "source_iri": null
+      },
+      "younger_boundary": {
+        "age_ma": 201.4,
+        "qualifier": "constrained",
+        "uncertainty_ma": 0.2,
+        "definition": "gssp",
+        "source_iri": null
+      }
+    }
+  ],
+  "hash": {
+    "scope": "payload_sha256: sha256 over canonical JSON of the intervals array only; provenance_sha256: sha256 over canonical JSON of every top-level block except intervals and hash",
+    "algorithm": "sha256",
+    "payload_sha256": "4e5603d30aa397c86d469077a8ede7bd454470d3a31d179b2544debb05861fb0",
+    "provenance_sha256": "0eadb237d38a813b36f84ef961c1e39926dcb5483c700d5838ecb11e46f881c9"
+  }
+}

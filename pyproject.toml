@@ -1,0 +1,151 @@
+[build-system]
+# setuptools>=77：PEP 639 的 `license` SPDX 表达式 + `license-files`（可把
+# LICENSES/CC-BY-4.0.txt 与 NOTICE 打进发行物）。
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "geophylo"
+version = "0.1.0"
+description = "Geological timescale axes for Matplotlib: reproducible ICS data, linear geo axes and radial geo rings for timetrees."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+# 许可合规（CC-BY 4.0 第 3(a) 条要求许可文本随附）：LICENSE（代码 MIT）、
+# NOTICE（ICS 数据归属）、LICENSES/CC-BY-4.0.txt（数据许可全文）三者都必须
+# 出现在 wheel 与 sdist 里。
+license-files = ["LICENSE", "NOTICE", "LICENSES/*"]
+authors = [
+    { name = "Zichao Zeng", email = "zengzichao@sjtu.edu.cn" },
+]
+keywords = [
+    "geological-timescale",
+    "geochronology",
+    "phylogeny",
+    "timetree",
+    "matplotlib",
+    "stratigraphy",
+    "ics",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    # PEP 639：`License ::` 分类器与上方的 SPDX `license` 表达式互斥（同时声明
+    # 会让 setuptools 报错）。许可合规性由 license = "MIT"、License-File 元数据
+    # 与 tests/test_packaging.py 的六路交叉断言共同保证。
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Typing :: Typed",
+]
+dependencies = [
+    "matplotlib>=3.10,<4",
+    # 本库不直接 `import numpy`（全树 0 次；`adapter/iplotx.py` 只是鸭子调用
+    # `layout.to_numpy()`）。声明它是有意把传递依赖的下界钉在 Matplotlib 自己的档位上：
+    # matplotlib 元数据同样要求 `numpy>=1.25`，所以这不是隐藏用法，而是一处显式锁定，
+    # 使 min-deps job 解析出的 numpy 版本有确定的可断言下限。
+    # 若将来 Matplotlib 抬高或移除该下界，这里需要随之复核。
+    "numpy>=1.25",
+]
+
+[project.optional-dependencies]
+biopython = ["biopython>=1.88,<2"]
+# ete4 是 iplotx 在运行时真正 import 的树对象库（tests/test_adapter_iplotx.py 也
+# 直接 importorskip 它），但 iplotx 自身的元数据没有声明它：不写在这里，
+# spec_from_iplotx() 的集成面（含唯一的 radial 布局拒绝测试）在任何 CI job 里
+# 都只会 skip。不追加版本上界——上游没有可核验的兼容范围，
+# 任何 pin 都是无凭据的猜测。
+iplotx = ["iplotx>=1.8,<2", "ete4"]
+pyrolite = ["pyrolite>=0.3.7"]
+test = [
+    "pytest>=8",
+    "pytest-mpl>=0.17",
+    "biopython>=1.88,<2",
+    "packaging",
+    # tests/test_packaging.py 会解析 .github/workflows/ci.yml，校验门禁命令本身：
+    # CI 配置是交付物的一部分，不能只靠人眼审。
+    "pyyaml>=6",
+]
+dev = [
+    "geophylo[test]",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "build",
+]
+
+[project.urls]
+Homepage = "https://github.com/ZengZichao/GeoPhylo"
+Documentation = "https://github.com/ZengZichao/GeoPhylo#readme"
+Changelog = "https://github.com/ZengZichao/GeoPhylo/blob/main/CHANGELOG.md"
+Repository = "https://github.com/ZengZichao/GeoPhylo"
+Issues = "https://github.com/ZengZichao/GeoPhylo/issues"
+
+[tool.setuptools.packages.find]
+include = ["geophylo*"]
+
+[tool.setuptools.package-data]
+geophylo = ["py.typed"]
+"geophylo.data" = ["py.typed"]
+"geophylo.data.snapshots" = ["*.json", "*.md"]  # *.md = PROVENANCE.md（M13：随 wheel 发布）
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# --strict-markers：拼错的 marker 会静默不匹配任何测试。
+addopts = "-ra --strict-markers"
+markers = [
+    "experimental: 实验性符号（RadialSpec / add_geo_ring / iplotx）的独立测试标记；默认门禁执行，只在需要按稳定性切片时用 -m 'not experimental' 排除",
+    "visual: 视觉回归测试（matplotlib.testing 图像对比，需 --mpl 才做像素比较）",
+    "performance: 性能测试（本库增量耗时；非阻塞，见 .github/workflows/ci.yml）",
+    "packaging: 打包与文档测试（较慢）",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning:bio",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+[tool.ruff.lint]
+# PLR0124（自身与自身比较）与 PLR0133（两个常量比较）是抓"恒真断言"的最低配置；
+# SIM222（`… or True`）保持启用——短路成恒真的断言必须被它拦下。
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "SIM", "RUF", "PLR0124", "PLR0133"]
+ignore = [
+    "N802", # 公共 API 沿用开发文档命名（add_geo_axis 等）
+    "N803", # 参数名 age_ma / older_ma 等为契约
+    "N806", # 局部变量与契约名对应
+    "C408", # dict(...) 与字面量等价，kwargs 风格与参数表一一对应
+    "SIM105", # try/except/pass 处理第三方 remove() 的兼容性更直观
+    "SIM108", # 三元表达式可读性优先
+    "SIM117",
+    "RUF001", # 中文文档字符串使用全角标点是有意的
+    "RUF002",
+    "RUF003",
+    "RUF007", # zip(seq, seq[1:]) 与文档伪代码一致
+    "RUF012",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["N802", "N803", "N806", "B008", "B017", "E501", "SIM115"]
+"tools/*" = ["SIM115", "N806"]
+"examples/*" = ["E402"]
+
+[tool.mypy]
+python_version = "3.12"
+# 阻塞门禁只覆盖库本身（CI 里裸跑 `mypy` 即读这里）。
+# tests/ 与 tools/ 的类型检查由 ci.yml 的 "Type check tests and tools (advisory)"
+# 步骤以显式路径执行；命令行给路径时
+# mypy 忽略 `packages`，因此无需为它们放宽任何规则。
+packages = ["geophylo"]
+strict = false
+warn_unused_ignores = false
+warn_redundant_casts = true
+no_implicit_optional = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["Bio.*", "iplotx.*", "pyrolite.*", "ete4.*", "matplotlib.*", "numpy.*"]
+ignore_missing_imports = true

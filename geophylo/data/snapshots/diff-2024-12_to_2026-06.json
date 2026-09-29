@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "generator": {
+    "name": "geophylo-snapshot-diff",
+    "version": "0.1.0"
+  },
+  "from": {
+    "chart_version": "2024/12",
+    "file": "ics_chart-2024-12.json",
+    "snapshot_revision": 1,
+    "payload_sha256": "ef099225bc1ef356e45f95cd1c74eb89f8498ea2f3392250a8273c08a7591c14",
+    "source_sha256": "0158959e8fdae2a8bdbb14ca3e424d2370362cd8dfc8af86e7be73c74368b355",
+    "interval_count": 179
+  },
+  "to": {
+    "chart_version": "2026/06",
+    "file": "ics_chart-2026-06.json",
+    "snapshot_revision": 1,
+    "payload_sha256": "4e5603d30aa397c86d469077a8ede7bd454470d3a31d179b2544debb05861fb0",
+    "source_sha256": "0158959e8fdae2a8bdbb14ca3e424d2370362cd8dfc8af86e7be73c74368b355",
+    "interval_count": 179
+  },
+  "summary": {
+    "records_compared": 179,
+    "records_added": 0,
+    "records_removed": 0,
+    "records_changed": 9,
+    "fields_changed": 14,
+    "boundary_age_changes": 3
+  },
+  "boundary_age_changes": [
+    {
+      "from_age_ma": 246.7,
+      "to_age_ma": 247.0,
+      "definition": "numeric_estimate",
+      "qualifier": "unknown",
+      "uncertainty_ma_from": null,
+      "uncertainty_ma_to": null,
+      "affected_record_ids": [
+        "ics:age:anisian",
+        "ics:age:olenekian",
+        "ics:epoch:lower-triassic",
+        "ics:epoch:middle-triassic"
+      ],
+      "affected_record_count": 4,
+      "affected_fields": [
+        "older_boundary.age_ma",
+        "younger_boundary.age_ma"
+      ]
+    },
+    {
+      "from_age_ma": 249.9,
+      "to_age_ma": 250.8,
+      "definition": "numeric_estimate",
+      "qualifier": "unknown",
+      "uncertainty_ma_from": null,
+      "uncertainty_ma_to": null,
+      "affected_record_ids": [
+        "ics:age:induan",
+        "ics:age:olenekian"
+      ],
+      "affected_record_count": 2,
+      "affected_fields": [
+        "older_boundary.age_ma",
+        "younger_boundary.age_ma"
+      ]
+    },
+    {
+      "from_age_ma": 259.51,
+      "to_age_ma": 259.857,
+      "definition": "gssp",
+      "qualifier": "constrained",
+      "uncertainty_ma_from": 0.21,
+      "uncertainty_ma_to": 0.084,
+      "affected_record_ids": [
+        "ics:age:capitanian",
+        "ics:age:wuchiapingian",
+        "ics:epoch:guadalupian",
+        "ics:epoch:lopingian"
+      ],
+      "affected_record_count": 4,
+      "affected_fields": [
+        "older_boundary.age_ma",
+        "younger_boundary.age_ma"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "ics:age:anisian",
+      "name": "Anisian",
+      "rank": "Age",
+      "fields": [
+        {
+          "path": "older_boundary.age_ma",
+          "from": 246.7,
+          "to": 247.0
+        }
+      ]
+    },
+    {
+      "id": "ics:age:capitanian",
+      "name": "Capitanian",
+      "rank": "Age",
+      "fields": [
+        {
+          "path": "younger_boundary.age_ma",
+          "from": 259.51,
+          "to": 259.857
+        },
+        {
+          "path": "younger_boundary.uncertainty_ma",
+          "from": 0.21,
+          "to": 0.084
+        }
+      ]
+    },
+    {
+      "id": "ics:age:induan",
+      "name": "Induan",
+      "rank": "Age",
+      "fields": [
+        {
+          "path": "younger_boundary.age_ma",
+          "from": 249.9,
+          "to": 250.8
+        }
+      ]
+    },
+    {
+      "id": "ics:age:olenekian",
+      "name": "Olenekian",
+      "rank": "Age",
+      "fields": [
+        {
+          "path": "older_boundary.age_ma",
+          "from": 249.9,
+          "to": 250.8
+        },
+        {
+          "path": "younger_boundary.age_ma",
+          "from": 246.7,
+          "to": 247.0
+        }
+      ]
+    },
+    {
+      "id": "ics:age:wuchiapingian",
+      "name": "Wuchiapingian",
+      "rank": "Age",
+      "fields": [
+        {
+          "path": "older_boundary.age_ma",
+          "from": 259.51,
+          "to": 259.857
+        },
+        {
+          "path": "older_boundary.uncertainty_ma",
+          "from": 0.21,
+          "to": 0.084
+        }
+      ]
+    },
+    {
+      "id": "ics:epoch:guadalupian",
+      "name": "Guadalupian",
+      "rank": "Epoch",
+      "fields": [
+        {
+          "path": "younger_boundary.age_ma",
+          "from": 259.51,
+          "to": 259.857
+        },
+        {
+          "path": "younger_boundary.uncertainty_ma",
+          "from": 0.21,
+          "to": 0.084
+        }
+      ]
+    },
+    {
+      "id": "ics:epoch:lopingian",
+      "name": "Lopingian",
+      "rank": "Epoch",
+      "fields": [
+        {
+          "path": "older_boundary.age_ma",
+          "from": 259.51,
+          "to": 259.857
+        },
+        {
+          "path": "older_boundary.uncertainty_ma",
+          "from": 0.21,
+          "to": 0.084
+        }
+      ]
+    },
+    {
+      "id": "ics:epoch:lower-triassic",
+      "name": "Lower Triassic",
+      "rank": "Epoch",
+      "fields": [
+        {
+          "path": "younger_boundary.age_ma",
+          "from": 246.7,
+          "to": 247.0
+        }
+      ]
+    },
+    {
+      "id": "ics:epoch:middle-triassic",
+      "name": "Middle Triassic",
+      "rank": "Epoch",
+      "fields": [
+        {
+          "path": "older_boundary.age_ma",
+          "from": 246.7,
+          "to": 247.0
+        }
+      ]
+    }
+  ],
+  "added": [],
+  "removed": []
+}

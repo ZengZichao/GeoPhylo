@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Testing & linting caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AI assistant state
+.mimosa/
+
+# Example outputs (regenerated on demand)
+examples/_output_*.png
+
+# Snapshot generation logs are provenance artifacts and ARE versioned:
+# tools/build-logs/<snapshot-name>.log.json (see docs/data-policy.md).
+# Never add a pattern that matches tools/build-logs/*.log.json.
+
+# Local environment files
+.env
+.env.*

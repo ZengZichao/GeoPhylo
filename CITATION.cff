@@ -1,0 +1,58 @@
+cff-version: 1.2.0
+message: "If you use geophylo, please cite it as below, and cite the ICS International Chronostratigraphic Chart as required by its CC BY 4.0 license (see the references list and NOTICE)."
+title: "geophylo: reproducible geological timescale axes for Matplotlib, with an explicit coordinate-semantics contract and version-pinned ICS snapshots"
+abstract: >-
+  Geological timescale axes for Matplotlib: reproducible ICS snapshot access,
+  linear geological timescale axes for timetrees and stratigraphic plots, and
+  radial geological time rings, with explicit coordinate-semantics contracts.
+authors:
+  - family-names: Zeng
+    given-names: Zichao
+    email: zengzichao@sjtu.edu.cn
+    orcid: https://orcid.org/0000-0001-6553-970X
+    affiliation:
+      name: School of Life Sciences and Biotechnology, Shanghai Jiao Tong University
+      address: Shanghai
+      country: CN
+version: 0.1.0
+date-released: 2026-09-30
+license: MIT
+type: software
+repository-code: "https://github.com/ZengZichao/GeoPhylo"
+keywords:
+  - geological timescale
+  - phylogenetics
+  - reproducible visualisation
+  - Matplotlib
+  - International Chronostratigraphic Chart
+  - coordinate semantics
+identifiers:
+  # RESERVED — replace the value with the concept DOI that Zenodo mints at the
+  # first GitHub release (it is version-agnostic and cites every later release).
+  # See RELEASE.md, step 2. Do not publish with this placeholder in place.
+  - type: doi
+    value: 10.5281/zenodo.REPLACE_AT_FIRST_RELEASE
+    description: >-
+      Zenodo concept DOI for geophylo; to be minted at the first public release
+      and recorded here. Until then, cite the repository URL and the version.
+references:
+  - type: dataset
+    title: "International Chronostratigraphic Chart"
+    authors:
+      - family-names: Cohen
+        given-names: K. M.
+      - family-names: Harper
+        given-names: D. A. T.
+      - family-names: Gibbard
+        given-names: P. L.
+      - family-names: Car
+        given-names: N.
+    year: 2025
+    edition: "2026/06 (v2026-06.5)"
+    license: CC-BY-4.0
+    url: "https://stratigraphy.org/chart"
+    notes: >-
+      The bundled snapshots are deterministic extracts of this chart; cite it
+      alongside geophylo as required by CC BY 4.0. The reference year is the
+      publication year of the Episodes paper describing the chart (2025); the
+      chart edition the snapshots encode is 2026/06 (see the edition field).

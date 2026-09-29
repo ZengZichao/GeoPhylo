@@ -1,0 +1,37 @@
+geophylo
+Copyright (c) 2026 Zichao Zeng
+
+This project's source code is licensed under the MIT License (see LICENSE).
+
+Bundled ICS data
+----------------
+The files under geophylo/data/snapshots/ (ics_chart-2024-12.json,
+ics_chart-2026-06.json, versions.json) are deterministic snapshots of the
+International Chronostratigraphic Chart, published by the International
+Commission on Stratigraphy (ICS) under CC BY 4.0. The same directory also
+carries diff-2024-12_to_2026-06.json and PROVENANCE.md; both are generated or
+derived from the snapshots and are redistributed under the same terms.
+
+  Source:    https://github.com/i-c-stratigraphy/chart
+             (tag v2026-06.5, commit 44d1043ecf295cce1be03b3fc5fa95ca65fe770b)
+  License:   CC BY 4.0 (see LICENSES/CC-BY-4.0.txt)
+  Copyright: (c) International Commission on Stratigraphy
+
+Required attribution when using geophylo in publications:
+
+  Cohen, K.M., Harper, D.A.T., Gibbard, P.L. & Car, N. (2025, updated).
+  International Chronostratigraphic Chart. https://stratigraphy.org/chart
+
+The reference year is the publication year of the chart paper — Cohen, K.M.,
+Harper, D.A.T., Gibbard, P.L. & Car, N. (2025). The ICS International
+Chronostratigraphic Chart this decade. Episodes 48, 105–115 — and is not the
+chart edition. The edition the bundled snapshots encode is 2026/06 (upstream
+tag v2026-06.5, Source block above); CITATION.cff records it separately in the
+edition field of its dataset reference. Both snapshots' license.citation
+strings carry exactly the 2025 attribution quoted above.
+
+Changes made to the upstream data (normalization into the snapshot schema,
+documented derivation of the 2024/12 snapshot via upstream changeNotes, and
+deterministic reconciliation of upstream inconsistencies) are recorded in
+docs/data-policy.md, geophylo/data/snapshots/PROVENANCE.md and the per-snapshot
+generation logs under tools/build-logs/.
