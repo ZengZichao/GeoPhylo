@@ -181,8 +181,9 @@ The release procedure (public GitHub repository + Zenodo DOI) is described in
   School of Life Sciences and Biotechnology, Shanghai Jiao Tong University.
 
 If you use geophylo in your research, please cite it (see
-[CITATION.cff](CITATION.cff) for the machine-readable citation record; a DOI
-will be minted via Zenodo at the first release) and, as required by the CC BY
+[CITATION.cff](CITATION.cff) for the machine-readable citation record;
+concept DOI `10.5281/zenodo.23060662`, version DOI
+`10.5281/zenodo.23060663` for v0.1.0) and, as required by the CC BY
 4.0 license, cite the International Chronostratigraphic Chart separately (see
 [NOTICE](NOTICE) for the required attribution).
 

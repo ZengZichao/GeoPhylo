@@ -164,7 +164,8 @@ mypy
   上海交通大学生命科学技术学院。
 
 若在研究中使用本库，请引用 geophylo（机器可读引用记录见
-[CITATION.cff](CITATION.cff)；DOI 将在首次发布时由 Zenodo 铸出），
+[CITATION.cff](CITATION.cff)；Concept DOI 为 `10.5281/zenodo.23060662`，
+v0.1.0 的 Version DOI 为 `10.5281/zenodo.23060663`），
 并按 [NOTICE](NOTICE) 的要求同时引用《国际年代地层表》。
 
 ## 许可
