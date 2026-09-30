@@ -1,6 +1,6 @@
-# geophylo User Guide
+# GeoPhylo User Guide
 
-**Version**: corresponds to geophylo 0.1.0 (including the experimental symbols)
+**Version**: corresponds to GeoPhylo 0.1.0 (including the experimental symbols)
 **Requirements**: Python 3.11–3.14 · Matplotlib ≥ 3.10, < 4 · NumPy ≥ 1.25
 **中文版文档**：[user-guide.zh.md](user-guide.zh.md)
 
@@ -52,7 +52,7 @@ first design priority:
   `GeophyloError`; raw third-party `TypeError`/`ValueError` instances never
   escape a public entry point.
 
-**Explicit non-goals**: geophylo does not draw trees (rectangular trees are
+**Explicit non-goals**: GeoPhylo does not draw trees (rectangular trees are
 drawn by Bio.Phylo or iplotx; circular trees follow the recipe in section 9),
 does not infer time calibration, and never updates data over the network.
 
@@ -161,7 +161,7 @@ The time axis of a timetree figure can carry two different meanings:
   factor and a root-age anchor.
 
 Visually the two can look identical; conflating them silently displaces or
-rescales the geological strips — a scientific error. geophylo's answer: the
+rescales the geological strips — a scientific error. GeoPhylo's answer: the
 semantics are declared in a frozen `CoordinateSpec` that is the single source
 of truth; drawing functions consume it and never guess.
 
@@ -872,14 +872,14 @@ carried by the ICS chart version they were built from (`rdfs:isDefinedBy
 ts:gts2020` on the corresponding boundary node in the pinned upstream TTL); they
 are not transcription errors. 145.0 / 139.8 are GTS2012 calibrations and should
 not be mixed with them. When a figure is read against an older table, state the
-source in the caption: every number geophylo draws comes from the bundled
+source in the caption: every number GeoPhylo draws comes from the bundled
 snapshot's `chart_version` (check it with `Timescale().metadata.data_version`).
 
 **Q12: Why does the snapshot stop at 4567 Ma instead of the 4600 that many
 time scales start from?**
 The Hadean / Precambrian older boundary is 4567.0 Ma upstream (the pinned TTL
 describes it as `A time period from 4567 to 4031 million years ago`), and
-geophylo never edits upstream values. If your axis should start at 4600, declare
+GeoPhylo never edits upstream values. If your axis should start at 4600, declare
 it explicitly: `CoordinateSpec.absolute(time_axis="x", age_range=(0.0, 4600.0))`
 with `max_age=4600.0`. The interval between 4567 and 4600 then stays empty — a
 direct consequence of never fabricating a unit the source does not give; say so
@@ -959,7 +959,7 @@ savefig()` order and run headless on Agg (PNG output next to the script).
 - **Design rationale**: the architecture decision records in [`docs/adr/`](adr/README.md)
   (ADR-1 … ADR-5) document the non-obvious choices and their rejected
   alternatives.
-- **Citation**: if you use geophylo in research, cite it (`CITATION.cff`) and
+- **Citation**: if you use GeoPhylo in research, cite it (`CITATION.cff`) and
   cite the ICS International Chronostratigraphic Chart as requested in
   `NOTICE`.
 

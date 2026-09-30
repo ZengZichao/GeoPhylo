@@ -35,4 +35,4 @@
   [`docs/data-policy.zh.md`](../data-policy.zh.md)（英文权威版
   [`docs/data-policy.md`](../data-policy.md)）；
 - 推导快照 `2024/12` 的出处 →
-  [`geophylo/data/snapshots/PROVENANCE.md`](../../geophylo/data/snapshots/PROVENANCE.md)；
+  [`geophylo/data/snapshots/PROVENANCE.md`](../../GeoPhylo/data/snapshots/PROVENANCE.md)；

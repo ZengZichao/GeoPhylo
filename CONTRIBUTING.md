@@ -1,4 +1,4 @@
-# Contributing to geophylo
+# Contributing to GeoPhylo
 
 English | [中文](CONTRIBUTING.zh-CN.md)
 
@@ -57,8 +57,24 @@ in the same change.
   from the snapshots and are verified by the documentation-value tests — never
   transcribed by hand.
 
+## Visual baselines
+
+- `tests/baseline_images/` is generated with the current dependency stack
+  (`python3 tests/update_baselines.py`) and is what every blocking gate compares
+  against.
+- `tests/baseline_images_min/` holds the same two figures rendered under the
+  **minimum** dependency stack (oldest Python, `matplotlib==3.10.*`,
+  `numpy==1.25.*`); the core-min CI job copies them over `tests/baseline_images/`
+  before running the gate, because the 3.10 Agg output differs from the current
+  one at the antialiasing level and the tolerance is zero. Regenerate them in a
+  minimum-deps environment the same way:
+  `MPLBACKEND=Agg pytest tests/test_visual.py --mpl --mpl-baseline-path=tests/baseline_images --mpl-results-path=<dir>`,
+  then copy `<dir>/*/result.png` into `tests/baseline_images_min/` (pytest-mpl's
+  `--mpl-generate-path` output does not match its compare pipeline under
+  matplotlib 3.10).
+- Visual baseline images must pass code review before they are overwritten by
+  hand.
+
 ## Commits
 
 - Use conventional commits: `feat:`, `fix:`, `data:`, `docs:` and `test:`.
-- Visual baseline images must pass code review before they are overwritten by
-  hand.

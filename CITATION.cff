@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-message: "If you use geophylo, please cite it as below, and cite the ICS International Chronostratigraphic Chart as required by its CC BY 4.0 license (see the references list and NOTICE)."
-title: "geophylo: reproducible geological timescale axes for Matplotlib, with an explicit coordinate-semantics contract and version-pinned ICS snapshots"
+message: "If you use GeoPhylo, please cite it as below, and cite the ICS International Chronostratigraphic Chart as required by its CC BY 4.0 license (see the references list and NOTICE)."
+title: "GeoPhylo: reproducible geological timescale axes for Matplotlib, with an explicit coordinate-semantics contract and version-pinned ICS snapshots"
 abstract: >-
   Geological timescale axes for Matplotlib: reproducible ICS snapshot access,
   linear geological timescale axes for timetrees and stratigraphic plots, and
@@ -30,7 +30,7 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.23060662
     description: >-
-      Zenodo concept DOI for geophylo; it is version-agnostic and cites every
+      Zenodo concept DOI for GeoPhylo; it is version-agnostic and cites every
       later release. The version DOI for 0.1.0 is 10.5281/zenodo.23060663.
 references:
   - type: dataset
@@ -50,6 +50,6 @@ references:
     url: "https://stratigraphy.org/chart"
     notes: >-
       The bundled snapshots are deterministic extracts of this chart; cite it
-      alongside geophylo as required by CC BY 4.0. The reference year is the
+      alongside GeoPhylo as required by CC BY 4.0. The reference year is the
       publication year of the Episodes paper describing the chart (2025); the
       chart edition the snapshots encode is 2026/06 (see the edition field).

@@ -38,5 +38,5 @@ choices that are *not* recorded here, and are documented elsewhere instead:
 - append-only snapshots and the sentinel-assertion release ritual →
   [`docs/data-policy.md`](../data-policy.md);
 - provenance of the derived `2024/12` snapshot →
-  [`geophylo/data/snapshots/PROVENANCE.md`](../../geophylo/data/snapshots/PROVENANCE.md);
+  [`geophylo/data/snapshots/PROVENANCE.md`](../../GeoPhylo/data/snapshots/PROVENANCE.md);
 

@@ -43,8 +43,19 @@ pip install -e ".[dev]"
 - 面向用户的文档（README、docs/、examples/）里的边界数值必须来自快照，并由文档
   数值测试校验，不得手写。
 
+## 视觉基准图
+
+- `tests/baseline_images/` 由当前依赖栈生成（`python3 tests/update_baselines.py`），
+  是所有阻塞门禁比较的基准。
+- `tests/baseline_images_min/` 存放**最低依赖组合**（最老 Python、
+  `matplotlib==3.10.*`、`numpy==1.25.*`）渲染的同两张图；core-min 任务跑门禁前
+  会把它们拷贝到 `tests/baseline_images/`——3.10 的 Agg 输出与当前版本在抗锯齿
+  层面有差异，而容差为零。再生成方法相同，在最低依赖环境里执行：
+  `MPLBACKEND=Agg pytest tests/test_visual.py --mpl --mpl-baseline-path=tests/baseline_images --mpl-results-path=<目录>`，
+  然后把 `<目录>/*/result.png` 拷入 `tests/baseline_images_min/`
+  （matplotlib 3.10 下 pytest-mpl 的 `--mpl-generate-path` 产物与其比较管线不一致）。
+
 ## 提交
 
 - 使用约定式提交（conventional commits）：`feat:`、`fix:`、`data:`、`docs:` 和
   `test:`。
-- 视觉基准图的更新必须先通过代码审查，随后才能手工覆盖。

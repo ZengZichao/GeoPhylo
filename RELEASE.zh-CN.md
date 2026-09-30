@@ -22,9 +22,9 @@
 
    ```bash
    VERSION=0.1.0
-   git tag -a "v${VERSION}" -m "geophylo ${VERSION}"
+   git tag -a "v${VERSION}" -m "GeoPhylo ${VERSION}"
    git push origin main "v${VERSION}"
-   gh release create "v${VERSION}" --latest --title "geophylo ${VERSION}" --generate-notes
+   gh release create "v${VERSION}" --latest --title "GeoPhylo ${VERSION}" --generate-notes
    ```
 
    或在网页 **Releases → Draft a new release**：Tag 填 `v${VERSION}`（即 `v` + 版本

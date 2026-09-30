@@ -1,4 +1,4 @@
-# geophylo
+# GeoPhylo
 
 [English](README.md) | 中文
 
@@ -130,7 +130,7 @@ list(ts.iter_intervals(ranks=["Epoch"], min_age=0, max_age=66))
 生成，随包分发，只增不改。版本间的逐字段机器可读 diff 见
 `geophylo/data/snapshots/diff-2024-12_to_2026-06.json`（由 `tools/make_diff.py`
 生成），逐快照生成日志见 `tools/build-logs/`，推导快照 `2024/12` 的出处见
-[`geophylo/data/snapshots/PROVENANCE.md`](geophylo/data/snapshots/PROVENANCE.md)。
+[`geophylo/data/snapshots/PROVENANCE.md`](GeoPhylo/data/snapshots/PROVENANCE.md)。
 
 ICS 数据的引用与归因见 [NOTICE](NOTICE) 与
 [数据政策（中文版）](docs/data-policy.zh.md)。本库代码以 MIT 许可发布
@@ -163,7 +163,7 @@ mypy
   ORCID：[0000-0001-6553-970X](https://orcid.org/0000-0001-6553-970X) —
   上海交通大学生命科学技术学院。
 
-若在研究中使用本库，请引用 geophylo（机器可读引用记录见
+若在研究中使用本库，请引用 GeoPhylo（机器可读引用记录见
 [CITATION.cff](CITATION.cff)；Concept DOI 为 `10.5281/zenodo.23060662`，
 v0.1.0 的 Version DOI 为 `10.5281/zenodo.23060663`），
 并按 [NOTICE](NOTICE) 的要求同时引用《国际年代地层表》。

@@ -37,6 +37,7 @@ include tests/conftest.py
 include tests/update_baselines.py
 recursive-include tests *.py
 recursive-include tests/baseline_images *.png
+recursive-include tests/baseline_images_min *.png
 
 # --- 生成链：pinned TTL + 构建器 + 构建日志 + diff 生成器 ------------------
 include tools/build_snapshot.py

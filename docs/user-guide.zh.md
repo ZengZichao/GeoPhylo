@@ -1,6 +1,6 @@
-# geophylo 中文使用文档
+# GeoPhylo 中文使用文档
 
-**版本**：对应 geophylo 0.1.0（含实验性符号）
+**版本**：对应 GeoPhylo 0.1.0（含实验性符号）
 **适用环境**：Python 3.11～3.14 · Matplotlib ≥ 3.10 且 < 4 · NumPy ≥ 1.25
 **配套英文文档**：[user-guide.en.md](user-guide.en.md)
 
@@ -876,7 +876,7 @@ python examples/bio_phylo_timetree.py
   `geophylo/data/snapshots/PROVENANCE.md`。
 - **设计决策**：[`docs/adr/`](adr/README.md) 下的架构决策记录（ADR-1～ADR-5）
   写明各处的非显然选择和已否决的替代方案。
-- **引用**：使用本库请引用 geophylo（`CITATION.cff`），并按 `NOTICE` 要求
+- **引用**：使用本库请引用 GeoPhylo（`CITATION.cff`），并按 `NOTICE` 要求
   同时引用《国际年代地层表》。
 
 术语约定（全文一致）：`older_ma` 和 `younger_ma` 分别是区间较老边界、较年轻

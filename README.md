@@ -1,4 +1,4 @@
-# geophylo
+# GeoPhylo
 
 English | [中文](README.zh-CN.md)
 
@@ -147,7 +147,7 @@ versions is `geophylo/data/snapshots/diff-2024-12_to_2026-06.json` (generated
 by `tools/make_diff.py`); per-snapshot generation logs live in
 `tools/build-logs/`; the provenance of the derived `2024/12` snapshot is
 documented in
-[`geophylo/data/snapshots/PROVENANCE.md`](geophylo/data/snapshots/PROVENANCE.md).
+[`geophylo/data/snapshots/PROVENANCE.md`](GeoPhylo/data/snapshots/PROVENANCE.md).
 
 For citation and attribution of the ICS data, see [NOTICE](NOTICE) and
 [docs/data-policy.md](docs/data-policy.md). The library's source code is
@@ -180,7 +180,7 @@ The release procedure (public GitHub repository + Zenodo DOI) is described in
   ORCID: [0000-0001-6553-970X](https://orcid.org/0000-0001-6553-970X) —
   School of Life Sciences and Biotechnology, Shanghai Jiao Tong University.
 
-If you use geophylo in your research, please cite it (see
+If you use GeoPhylo in your research, please cite it (see
 [CITATION.cff](CITATION.cff) for the machine-readable citation record;
 concept DOI `10.5281/zenodo.23060662`, version DOI
 `10.5281/zenodo.23060663` for v0.1.0) and, as required by the CC BY

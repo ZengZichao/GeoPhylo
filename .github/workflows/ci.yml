@@ -98,6 +98,11 @@ jobs:
             "biopython==1.88.*"
       - name: Show resolved minimum versions
         run: python -m pip list
+      - name: Swap in the min-deps visual baselines
+        # matplotlib 3.10 与当前版本的 Agg 输出存在亚像素级抗锯齿差异（整图 RMS≈7），
+        # tolerance=0 下基准图必须由同一依赖组合渲染：先换入 tests/baseline_images_min/
+        # （由 matplotlib 3.10 渲染的基线），门禁命令保持逐字不变。
+        run: cp tests/baseline_images_min/*.png tests/baseline_images/
       - name: Test (blocking gate, minimum deps)
         env:
           MPLBACKEND: Agg
@@ -207,9 +212,11 @@ jobs:
           set -euo pipefail
           python -m venv sdist-room
           # 只装 sdist 本身 + 它声明的 test extra：装不上即元数据不完整。
-          # 注意 glob 不加引号，让 shell 展开成 path[extras] 形式。
+          # `[test]` 的方括号会被 shell 当成通配符字符类，`dist/*.tar.gz[test]`
+          # 展开不到任何文件；因此先取真实文件名，再把 extras 后缀拼在引号里。
           sdist-room/bin/pip install --upgrade pip
-          sdist-room/bin/pip install dist/*.tar.gz[test]
+          SDIST=$(ls dist/*.tar.gz)
+          sdist-room/bin/pip install "${SDIST}[test]"
           rm -rf "$RUNNER_TEMP/sdist-selftest"
           mkdir -p "$RUNNER_TEMP/sdist-selftest"
           tar -xzf dist/*.tar.gz -C "$RUNNER_TEMP/sdist-selftest"

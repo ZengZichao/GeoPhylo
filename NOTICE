@@ -1,11 +1,11 @@
-geophylo
+GeoPhylo
 Copyright (c) 2026 Zichao Zeng
 
 This project's source code is licensed under the MIT License (see LICENSE).
 
 Bundled ICS data
 ----------------
-The files under geophylo/data/snapshots/ (ics_chart-2024-12.json,
+The files under GeoPhylo/data/snapshots/ (ics_chart-2024-12.json,
 ics_chart-2026-06.json, versions.json) are deterministic snapshots of the
 International Chronostratigraphic Chart, published by the International
 Commission on Stratigraphy (ICS) under CC BY 4.0. The same directory also
@@ -17,7 +17,7 @@ derived from the snapshots and are redistributed under the same terms.
   License:   CC BY 4.0 (see LICENSES/CC-BY-4.0.txt)
   Copyright: (c) International Commission on Stratigraphy
 
-Required attribution when using geophylo in publications:
+Required attribution when using GeoPhylo in publications:
 
   Cohen, K.M., Harper, D.A.T., Gibbard, P.L. & Car, N. (2025, updated).
   International Chronostratigraphic Chart. https://stratigraphy.org/chart
@@ -33,5 +33,5 @@ strings carry exactly the 2025 attribution quoted above.
 Changes made to the upstream data (normalization into the snapshot schema,
 documented derivation of the 2024/12 snapshot via upstream changeNotes, and
 deterministic reconciliation of upstream inconsistencies) are recorded in
-docs/data-policy.md, geophylo/data/snapshots/PROVENANCE.md and the per-snapshot
+docs/data-policy.md, GeoPhylo/data/snapshots/PROVENANCE.md and the per-snapshot
 generation logs under tools/build-logs/.

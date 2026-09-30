@@ -77,6 +77,8 @@ SDIST_REQUIRED = (
     "tests/update_baselines.py",
     "tests/baseline_images/timetree_geo_axis.png",
     "tests/baseline_images/stratigraphic_geo_axis.png",
+    "tests/baseline_images_min/timetree_geo_axis.png",
+    "tests/baseline_images_min/stratigraphic_geo_axis.png",
     "tools/build_snapshot.py",
     "tools/make_diff.py",
     "tools/source/ics-chart-v2026-06.5.ttl",
@@ -351,7 +353,7 @@ class TestReleaseMetadata:
         面板渲染成空姓名。题名在此钉死，改名必须是有意的。
         """
         expected = (
-            "geophylo: reproducible geological timescale axes for Matplotlib, with an "
+            "GeoPhylo: reproducible geological timescale axes for Matplotlib, with an "
             "explicit coordinate-semantics contract and version-pinned ICS snapshots"
         )
         cff_text = (PROJECT_ROOT / "CITATION.cff").read_text(encoding="utf-8")

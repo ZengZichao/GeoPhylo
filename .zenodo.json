@@ -1,5 +1,5 @@
 {
-  "title": "geophylo: reproducible geological timescale axes for Matplotlib, with an explicit coordinate-semantics contract and version-pinned ICS snapshots",
+  "title": "GeoPhylo: reproducible geological timescale axes for Matplotlib, with an explicit coordinate-semantics contract and version-pinned ICS snapshots",
   "upload_type": "software",
   "publication_date": "2026-09-30",
   "version": "0.1.0",
