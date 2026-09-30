@@ -27,14 +27,11 @@ keywords:
   - International Chronostratigraphic Chart
   - coordinate semantics
 identifiers:
-  # RESERVED — replace the value with the concept DOI that Zenodo mints at the
-  # first GitHub release (it is version-agnostic and cites every later release).
-  # See RELEASE.md, step 2. Do not publish with this placeholder in place.
   - type: doi
-    value: 10.5281/zenodo.REPLACE_AT_FIRST_RELEASE
+    value: 10.5281/zenodo.23060662
     description: >-
-      Zenodo concept DOI for geophylo; to be minted at the first public release
-      and recorded here. Until then, cite the repository URL and the version.
+      Zenodo concept DOI for geophylo; it is version-agnostic and cites every
+      later release. The version DOI for 0.1.0 is 10.5281/zenodo.23060663.
 references:
   - type: dataset
     title: "International Chronostratigraphic Chart"

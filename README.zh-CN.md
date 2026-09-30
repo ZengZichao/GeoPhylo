@@ -2,6 +2,8 @@
 
 [English](README.md) | 中文
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23060662.svg)](https://doi.org/10.5281/zenodo.23060662)
+
 面向 Matplotlib Axes 的地质时间轴可视化库。它把 ICS（International Commission on
 Stratigraphy，国际地层委员会）发布的《国际年代地层表》（International
 Chronostratigraphic Chart）作为可复现的内置快照，叠加到时间校准树上，也叠加到

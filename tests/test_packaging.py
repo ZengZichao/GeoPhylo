@@ -412,7 +412,9 @@ class TestReleaseMetadata:
             if path.is_file()
             and path.resolve() != here
             and ".git" not in path.parts
-            and path.name not in {"RELEASE.md", "CHANGELOG.md"}
+            and ".mimosa" not in path.parts  # 本地 AI 工具状态，.gitignore 内，不入库
+            and path.name
+            not in {"RELEASE.md", "RELEASE.zh-CN.md", "CHANGELOG.md", "CHANGELOG.zh-CN.md"}
             and PLACEHOLDER_MARKER in _safe_read(path)
         )
         assert not offenders, "真实 DOI 已填入，但占位串仍残留：" + ", ".join(offenders)

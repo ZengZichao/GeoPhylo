@@ -2,6 +2,8 @@
 
 English | [中文](README.zh-CN.md)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23060662.svg)](https://doi.org/10.5281/zenodo.23060662)
+
 A geological timescale visualisation library for Matplotlib Axes. It ships the
 ICS (International Commission on Stratigraphy) International Chronostratigraphic
 Chart as reproducible, version-pinned built-in snapshots and overlays them onto
