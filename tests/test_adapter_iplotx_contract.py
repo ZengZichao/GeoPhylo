@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from geophylo import CoordinateError
+import geophylo
 from geophylo.adapter import spec_from_iplotx
 
 pytestmark = [pytest.mark.experimental]
@@ -61,7 +61,7 @@ class TestAgeConversionApplied:
 
     def test_illegal_conversion_result_rejected(self):
         artist = _FakeTreeArtist({"n1": (0.0, 0.0), "n2": (5.0, 1.0)})
-        with pytest.raises(CoordinateError, match="age_conversion"):
+        with pytest.raises(geophylo.CoordinateError, match="age_conversion"):
             spec_from_iplotx(artist, time_axis="x", age_conversion=lambda bl: -bl, root_age=100.0)
 
 
@@ -76,8 +76,6 @@ class TestSkipPolicyForOptionalDependencies:
         import inspect
 
         from conftest import LAYOUT_CONSTRUCTION_ERRORS
-
-        import geophylo
 
         assert LAYOUT_CONSTRUCTION_ERRORS, "跳过口子不能是空元组"
         assert Exception not in LAYOUT_CONSTRUCTION_ERRORS, (
