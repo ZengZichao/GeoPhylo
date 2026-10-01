@@ -32,6 +32,11 @@
 
 3. **`.zenodo.json` 必须位于该 tag 指向的提交里**（Zenodo 读的是 release 的
    快照，不是分支 HEAD）。上一步先提交、后打标签即可满足。
+4. **构建产物的挂载是自动的**：tag 推送会触发 `.github/workflows/release.yml`
+   —— 它构建 sdist + wheel，跑一遍与 ci.yml packaging job 相同的 clean-room
+   校验，然后把两个产物挂到该 tag 对应的 GitHub Release（Release 已存在则
+   追加，不存在则以 `--generate-notes` 创建）。因此上面第 2 步的
+   `gh release create` 不带构建产物也没关系。
 
 ## 步骤 2 — 铸造 Zenodo DOI
 
