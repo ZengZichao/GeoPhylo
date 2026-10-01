@@ -8,13 +8,6 @@
 from __future__ import annotations
 
 from .biopython import radial_spec_from_biophylo, spec_from_biophylo
+from .iplotx import spec_from_iplotx
 
-__all__ = ["radial_spec_from_biophylo", "spec_from_biophylo"]
-
-
-def __getattr__(name: str):  # pragma: no cover - 可选依赖按需导入
-    if name == "spec_from_iplotx":
-        from .iplotx import spec_from_iplotx
-
-        return spec_from_iplotx
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+__all__ = ["radial_spec_from_biophylo", "spec_from_biophylo", "spec_from_iplotx"]
