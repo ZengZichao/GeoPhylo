@@ -1,0 +1,73 @@
+name: Bug report
+description: Something in GeoPhylo behaves differently from the documentation
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. Please read the user guide first - a large
+        share of reports are coordinate-semantics questions that the guide and
+        its FAQ already answer.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you observe, and what did you expect instead?
+      placeholder: |
+        Timescale(version="2024/12").find_by_age(...) returned None, but the
+        user guide says the interval should be resolved.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproducer
+    attributes:
+      label: Minimal reproducer
+      description: A short self-contained snippet that shows the problem.
+      render: python
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Output of the following, plus your OS.
+      render: shell
+      placeholder: |
+        python -c "import sys, matplotlib, numpy, geophylo; print(sys.version); print('geophylo', geophylo.__version__); print('matplotlib', matplotlib.__version__); print('numpy', numpy.__version__)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: extras
+    attributes:
+      label: Optional integrations installed
+      multiple: true
+      options:
+        - none
+        - biopython
+        - pyrolite
+        - iplotx (+ ete4)
+    validations:
+      required: false
+
+  - type: textarea
+    id: snapshot
+    attributes:
+      label: Snapshot version
+      description: Which bundled ICS snapshot were you using? Leave blank if you did not specify one.
+      placeholder: '2026/06 (default), or 2024/12'
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: This is not a security problem. (Security issues go through SECURITY.md, not the issue tracker.)
+          required: true
+        - label: I searched the existing issues and the user guide FAQ.
+          required: true

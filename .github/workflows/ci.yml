@@ -15,6 +15,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# 显式收窄 GITHUB_TOKEN 权限。本 workflow 只做 checkout / 装依赖 / 跑测试，
+# 不写回仓库、不发布，因此 contents: read 就是全部所需——不给任何写权限，
+# 即使将来有人误加了一个会写 secrets 的 step 也无法得逞。
+permissions:
+  contents: read
+
 # 阻塞门禁命令（唯一权威定义；RELEASE.md 与 tests/update_baselines.py 都指向它）：
 #
 #   pytest -m "not performance" -v --mpl --mpl-baseline-path=tests/baseline_images
@@ -30,9 +36,10 @@ jobs:
     # 单一 lint/类型检查 job：核心矩阵的 4 个 Python 版本共用一次检查。
     # 工具版本只由 pyproject 的 dev extra 声明，不在 ci.yml 里手工重复。
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
       - name: Install (dev extra)
@@ -58,13 +65,14 @@ jobs:
     # 当前依赖 × 全部受支持 Python（3.11–3.14）。阻塞门禁。
     needs: lint
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.11", "3.12", "3.13", "3.14"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install
@@ -81,9 +89,10 @@ jobs:
     # 也必须钉住，否则它们解析到最新版，"最低支持组合"名不副实。
     needs: lint
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install with minimum dependencies
@@ -114,6 +123,7 @@ jobs:
     name: ${{ matrix.name }}
     needs: lint
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
@@ -131,8 +141,8 @@ jobs:
             extras: "test,biopython,pyrolite,iplotx"
             pins: ""
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install
@@ -169,8 +179,8 @@ jobs:
     continue-on-error: true
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
       - run: |
@@ -184,9 +194,10 @@ jobs:
   packaging:
     # wheel/sdist 构建 + 清洁安装 + package-data 与许可证检查 + sdist 自测。
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
       - run: |
@@ -231,10 +242,11 @@ jobs:
     # --pre 前瞻：提前发现上游破坏性变更。**非阻塞**，失败把 job 标为 unstable；
     # 不用 `|| true`，那会把失败吞成绿。
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.14"
       - name: Install with pre-releases
@@ -245,3 +257,43 @@ jobs:
         env:
           MPLBACKEND: Agg
         run: pytest -m "not performance" -v --mpl --mpl-baseline-path=tests/baseline_images
+
+  coverage:
+    # 覆盖率**非阻塞**。这里刻意不设阈值门禁：把一个和正确性无关的指标
+    # 接到发布路径上，只会让"测试全绿但覆盖率掉了"变成一次无谓的发布阻塞。
+    # 数字进 job summary，人来判读趋势。
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Install (dev extra)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Coverage report
+        env:
+          MPLBACKEND: Agg
+        run: >-
+          pytest -m "not performance" -q
+          --mpl --mpl-baseline-path=tests/baseline_images
+          --cov=geophylo --cov-report=term-missing --cov-report=xml
+      - name: Publish coverage to the job summary
+        if: always()
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          report = Path("coverage.xml")
+          if not report.is_file():
+              print("no coverage.xml produced; skipping summary")
+              raise SystemExit(0)
+          root = ET.parse(report).getroot()
+          rate = float(root.get("line-rate", 0)) * 100
+          with open("$GITHUB_STEP_SUMMARY", "a", encoding="utf-8") as handle:
+              handle.write(f"### Line coverage: {rate:.2f}%\n\n")
+          print(f"line coverage {rate:.2f}%")
+          PY

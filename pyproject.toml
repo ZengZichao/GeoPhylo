@@ -72,9 +72,17 @@ test = [
 ]
 dev = [
     "geophylo[test]",
-    "ruff>=0.6",
-    "mypy>=1.11",
+    # 上界是刻意加的。ruff 的 formatter 与 mypy 的诊断都会随小版本变化，
+    # 而 CI 门禁是 `ruff format --check` + `mypy` 零告警：工具漂移会让门禁
+    # 因「上游改行为」而不是「代码有问题」变红。无上界时，本地与 CI 还可能
+    # 解析到不同版本，排查成本极高（参见 lint job 的单一来源约定）。
+    # 升级工具时先在本地跑一遍门禁，再抬上界。
+    "ruff>=0.6,<1",
+    "mypy>=1.11,<2",
     "build",
+    # 仅 coverage job 使用（该 job 非阻塞），不进 test extra，避免拖慢
+    # 消费者的测试安装。
+    "pytest-cov>=5",
 ]
 
 [project.urls]

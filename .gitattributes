@@ -1,0 +1,31 @@
+# Normalise line endings on checkin so that a contributor on Windows does not
+# produce a diff that is entirely line endings. The library is pure Python with
+# LF-native text assets (snapshot JSON, the vendored ICS TTL, baselines).
+* text=auto eol=lf
+
+*.py    text diff=python
+*.md    text
+*.toml  text
+*.yml   text
+*.yaml  text
+*.json  text
+*.txt   text
+*.ttl   text
+*.cff   text
+*.in    text
+
+# Snapshots, provenance records, and the vendored ICS TTL are reproduced
+# byte-for-byte from upstream tools. Marking them binary keeps git from
+# normalising line endings inside values that are hashed or compared.
+geophylo/data/snapshots/*.json  -text
+tools/source/*.ttl               -text
+tools/build-logs/*.json         -text
+
+# Pixel baselines: never text-diffed, and line-ending normalisation would
+# corrupt them anyway.
+tests/baseline_images/*.png     binary
+tests/baseline_images_min/*.png binary
+
+*.png  binary
+*.jpg  binary
+*.whl  binary

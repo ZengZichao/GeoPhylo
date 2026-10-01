@@ -1,0 +1,57 @@
+name: Feature request
+description: Propose a new capability or a change to an existing one
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        GeoPhylo deliberately raises an explicit error instead of guessing when
+        coordinate semantics cannot be determined. A proposal is much more
+        likely to be accepted if it keeps that property.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: Describe the task, not the API you imagine. What makes the current library unable to do it?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: What should the library do instead? A sketch of the intended behaviour is enough.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: stability
+    attributes:
+      label: Which surface would this touch?
+      options:
+        - stable public API (Timescale, Interval, Boundary)
+        - coordinate contract (CoordinateSpec and modes)
+        - rendering (add_geo_axis, GeoAxisResult)
+        - radial layout (experimental)
+        - adapters (biopython / pyrolite / iplotx)
+        - bundled ICS snapshots
+        - tooling, docs, or packaging
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      description: Including a workaround you already use.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I checked that this does not already exist in the user guide or the ADRs.
+          required: true

@@ -16,15 +16,34 @@ updates:
       all-pip-bumps:
         patterns:
           - "*"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 5
     commit-message:
       prefix: "chore(ci)"
-    # 屏蔽 major 升级：action 跨大版本会更换 Node 运行时
-    # （如 actions/checkout 4→7 从 Node 20 跳到 Node 24），
-    # 未经人工验证直接合并会破坏 CI 流水线。
+    # 屏蔽 major 升级：action 跨大版本会更换 Node 运行时，合并前必须人工验证。
+    #
+    # ⚠️ 这条规则是「延后」而不是「否决」。被屏蔽的 major 版本必须由人定期手工
+    # 升级，否则仓库会静默停在已停止支持的 action 上（Node 20 运行时退役就会
+    # 这样发生），而且 Dependabot 永远不会提醒你。
+    #
+    # 当前手工锁定（最近核对：2026-10-01）：
+    #
+    #   actions/checkout      v7   （2026-07-20 发布）
+    #   actions/setup-python  v7   （2026-07-20 发布）
+    #   github/codeql-action  v4
+    #
+    # 升级清单见 CONTRIBUTING.md「升级 GitHub Actions 的大版本」：
+    #   1. gh api repos/OWNER/ACTION/releases/latest 确认新 tag 与 runtime 要求
+    #   2. 提 PR 改 .github/workflows/*.yml 里所有 uses:
+    #   3. 等 CI 全绿再合并；不要顺手放宽这条 ignore
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+    groups:
+      all-actions-bumps:
+        patterns:
+          - "*"

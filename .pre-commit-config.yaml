@@ -1,0 +1,40 @@
+# Local mirror of the CI lint gate. Not required to contribute - CI is
+# authoritative - but it is the same checks, so a hook failure here is a real
+# failure rather than a local-environment artefact.
+#
+# The hook repositories are pinned to a tag for reproducibility, matching the
+# "unpinned tooling drifts" failure mode documented in CONTRIBUTING.md.
+#
+#   pre-commit install          # once, then it runs on every commit
+#   pre-commit run --all-files  # run over the whole tree
+minimum_pre_commit_version: "3.0.0"
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: end-of-file-fixer
+        exclude: ^tests/baseline_images(_min)?/
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: trailing-whitespace
+        exclude: ^tests/baseline_images(_min)?/
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # 与 pyproject 的 ruff>=0.6,<1 保持同一档：CI 装到的是该区间内最新的 ruff，
+    # 钩子若钉在旧档，本地就会跑出一个 CI 永远不会复现的结果——这正是
+    # CONTRIBUTING.md 里「工具漂移让门禁失去意义」那条警告的同一种故障。
+    # 升 ruff 时同步抬这里。
+    rev: v0.16.9
+    hooks:
+      # types_or 是必需的，不是洁癖：ruff 0.16 起会格式化 Markdown 里的
+      # Python 代码块。CI 的门禁范围是四棵显式子树，不含 docs/ 与 README，
+      # 所以钩子若放行 *.md 就会报出一批 CI 永远不会复现的差异——钩子与门禁
+      # 口径必须锁死。args 里的四棵子树与 ci.yml 的 Lint/Type check 逐字一致。
+      - id: ruff-check
+        types_or: [python, pyi]
+        args: [--exit-non-zero-on-fix, geophylo, tests, tools, examples]
+      - id: ruff-format
+        types_or: [python, pyi]
+        args: [--check, geophylo, tests, tools, examples]

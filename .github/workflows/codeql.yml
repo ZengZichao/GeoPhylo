@@ -1,0 +1,50 @@
+name: CodeQL
+
+# Static analysis for the library. Separate from ci.yml on purpose: code
+# scanning is a security signal with a different lifecycle, and it must keep
+# running on the weekly schedule even when the test gate is red.
+#
+# Public repositories get CodeQL at no charge.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Monday 04:20 UTC. Off the :00 mark on purpose - the top of the hour is
+    # the most contended slot on GitHub's scheduler and a delayed run is
+    # indistinguishable from a broken one.
+    - cron: "20 4 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    name: Analyze ${{ matrix.language }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["python"]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          language: ${{ matrix.language }}
+          queries: security-and-quality
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v4
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"
