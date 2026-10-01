@@ -50,7 +50,16 @@ include geophylo/data/snapshots/*.json
 include geophylo/data/snapshots/PROVENANCE.md
 
 # --- CI 配置（test_packaging.py 断言其存在）------------------------------
+# 全部 workflow 都要进：sdist 是"从发行包复核"的载体，只带 ci.yml 而漏掉
+# codeql.yml，会让下游拿到一份不完整的仓库。
 include .github/workflows/ci.yml
+include .github/workflows/codeql.yml
+include .pre-commit-config.yaml
+include .gitattributes
+
+# --- 治理文件（随包分发，PyPI 页与 sdist 都应可见）------------------------
+include .github/SECURITY.md
+include .github/CODE_OF_CONDUCT.md
 
 # --- 明确排除：缓存、本地产物 -------------------------------------------
 global-exclude __pycache__

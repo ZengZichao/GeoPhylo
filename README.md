@@ -3,6 +3,9 @@
 English | [中文](README.zh-CN.md)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23060662.svg)](https://doi.org/10.5281/zenodo.23060662)
+[![CI](https://github.com/ZengZichao/GeoPhylo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ZengZichao/GeoPhylo/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/ZengZichao/GeoPhylo/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/ZengZichao/GeoPhylo/actions/workflows/codeql.yml)
+[![PyPI](https://img.shields.io/pypi/v/geophylo.svg)](https://pypi.org/project/geophylo/)
 
 A geological timescale visualisation library for Matplotlib Axes. It ships the
 ICS (International Commission on Stratigraphy) International Chronostratigraphic
