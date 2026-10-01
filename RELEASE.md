@@ -36,6 +36,12 @@ exactly these five).
 3. **`.zenodo.json` must be present in the commit the tag points to** (Zenodo
    reads the release snapshot, not the branch HEAD). Committing first and then
    tagging, as above, satisfies this.
+4. **Attaching the build artifacts is automated**: pushing the tag triggers
+   `.github/workflows/release.yml`, which builds the sdist + wheel, runs the
+   same clean-room check as the ci.yml packaging job, and attaches both files
+   to the GitHub Release for that tag (appending if the release already
+   exists, otherwise creating it with `--generate-notes`). It is therefore
+   fine to run `gh release create` without artifacts, as in the command above.
 
 ## Step 2 — Mint the Zenodo DOI
 

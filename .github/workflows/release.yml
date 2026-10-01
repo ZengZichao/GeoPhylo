@@ -1,0 +1,69 @@
+name: Release
+
+# tag 推送（v*）→ 构建 sdist + wheel → clean-room 校验 → 把构建产物挂到
+# 对应的 GitHub Release。对应 RELEASE.md「Step 1」的手工步骤：维护者只需
+# 打 tag 并（可选地）先建好 Release；Release 已存在则追加资产，不存在则
+# 连同构建产物一起创建。
+#
+# PyPI 发布刻意未接入：Trusted Publishing（OIDC）需要先在 pypi.org 上
+# 为本仓库登记 publisher（owner/repository/workflow name），这一步只能由
+# 维护者在 PyPI 侧完成。接入方法：
+#   1. pypi.org → 账号 → Publishing → Add a new pending publisher，
+#      填 owner=ZengZichao、repository=GeoPhylo、workflow=release.yml；
+#   2. 在本文件追加一个 job，用 pypa/gh-action-pypi-publish@release/v1
+#      （environment: pypi），不需要任何 API token；
+#   3. 首次发布后确认包名 geophylo 归属正确。
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write # 把构建产物挂到 Release 需要 Release 写权限；仅 tag 触发。
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false # 同一 tag 的发布不允许被取消。
+
+jobs:
+  build-and-attach:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Build distributions
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build
+      - name: Clean-room install (wheel) and verify artifacts
+        # 与 ci.yml packaging job、RELEASE.md「Post-release verification」
+        # 同一套校验：装不进干净环境或清单缺文件即失败，不产出坏资产。
+        run: |
+          python -m venv clean-room
+          clean-room/bin/pip install --upgrade pip
+          clean-room/bin/pip install dist/*.whl
+          clean-room/bin/python tests/packaging/check_wheel.py dist
+      - name: Attach artifacts to the GitHub Release
+        # Release 已存在（维护者按 RELEASE.md 手工创建）→ 追加；
+        # 不存在 → 以 --generate-notes 创建并直接带上构建产物。
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dist/*.whl dist/*.tar.gz --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" \
+              --latest \
+              --title "GeoPhylo ${GITHUB_REF_NAME#v}" \
+              --generate-notes \
+              dist/*.whl dist/*.tar.gz
+          fi
+      - name: Upload artifacts to the workflow run
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/*
+          if-no-files-found: error
