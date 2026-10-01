@@ -176,9 +176,9 @@ class TestPackageData:
             assert (files / name).is_file(), f"缺少 package-data: {name}"
 
     def test_timescale_loads_from_installed_layout(self):
-        from geophylo import Timescale
+        import geophylo
 
-        assert Timescale().find_by_age(66.0, rank="Period").name == "Paleogene"
+        assert geophylo.Timescale().find_by_age(66.0, rank="Period").name == "Paleogene"
 
 
 class TestLicenseFiles:
@@ -318,7 +318,7 @@ class TestReleaseMetadata:
             assert "https://github.com/ZengZichao/GeoPhylo" in text, name
 
     def test_version_agrees_across_release_files(self):
-        from geophylo import __version__
+        import geophylo
 
         pyproject = _pyproject()
         cff = re.search(
@@ -337,7 +337,7 @@ class TestReleaseMetadata:
             "CHANGELOG.md 的版本标题格式变了，守卫需同步更新（发布前写 unreleased，发布后写日期）"
         )
         assert (
-            __version__
+            geophylo.__version__
             == pyproject["project"]["version"]
             == cff.group(1)
             == zenodo["version"]

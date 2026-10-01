@@ -69,11 +69,11 @@ def _is_blank(value) -> bool:
     if value is None:
         return True
     try:
-        if math.isnan(value):
-            return True
+        isnan = math.isnan(value)
     except TypeError:
-        pass
-    return str(value).strip() == ""
+        # math.isnan 只接受实数；其余类型不存在 NaN 形态，继续按空白串判断。
+        isnan = False
+    return isnan or str(value).strip() == ""
 
 
 def _colour_to_hex(value: object) -> str | None:

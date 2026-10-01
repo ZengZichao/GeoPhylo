@@ -26,7 +26,7 @@
 from __future__ import annotations
 
 from ._version import __version__
-from .adapter import radial_spec_from_biophylo, spec_from_biophylo
+from .adapter import radial_spec_from_biophylo, spec_from_biophylo, spec_from_iplotx
 from .coordinate.radial import RadialSpec
 from .coordinate.spec import CoordinateSpec
 from .data.backend import TimescaleBackend
@@ -73,11 +73,3 @@ __all__ = [
     "spec_from_biophylo",
     "spec_from_iplotx",
 ]
-
-
-def __getattr__(name: str):  # pragma: no cover - 可选依赖按需导入
-    if name == "spec_from_iplotx":
-        from .adapter.iplotx import spec_from_iplotx
-
-        return spec_from_iplotx
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
