@@ -71,7 +71,8 @@ __all__ = [
     "radial_spec_from_biophylo",
     "remove_all",
     "spec_from_biophylo",
-    "spec_from_iplotx",
+    # 由模块级 __getattr__ 惰性解析（iplotx 为可选依赖），静态导出检查对此误报。
+    "spec_from_iplotx",  # codeql[py/undefined-export]
 ]
 
 

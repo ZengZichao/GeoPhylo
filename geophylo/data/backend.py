@@ -23,7 +23,6 @@ class TimescaleBackend(Protocol):
 
     def get_interval(self, interval_id: str) -> Interval:
         """按稳定 ID 或 ``source_iri`` 查询；未知抛 ``IntervalNotFoundError``。"""
-        ...
 
     def find_by_name(
         self,
@@ -34,11 +33,9 @@ class TimescaleBackend(Protocol):
         case_sensitive: bool = False,
     ) -> Interval:
         """按名称/别名查询；0 命中或 ≥2 命中时抛对应异常。"""
-        ...
 
     def find_by_age(self, age_ma: float, *, rank: str | None = None) -> Interval:
         """按年龄查询；边界归属与吸附容差语义见规范 4.2。"""
-        ...
 
     def iter_intervals(
         self,
@@ -48,4 +45,3 @@ class TimescaleBackend(Protocol):
         max_age: float | None = None,
     ) -> Iterator[Interval]:
         """返回与 ``[min_age, max_age]`` 窗口**相交**的全部区间，确定性排序。"""
-        ...

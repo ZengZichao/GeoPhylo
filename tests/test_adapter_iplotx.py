@@ -35,6 +35,7 @@ def _make_artist(layout):
         pytest.skip(
             f"iplotx {getattr(iplotx, '__version__', '?')} 无法构造 layout={layout!r}: {exc!r}"
         )
+        raise  # 不可达：pytest.skip() 必然抛出；显式再抛保证 artist 在 return 前必然已绑定
     return fig, ax, artist
 
 

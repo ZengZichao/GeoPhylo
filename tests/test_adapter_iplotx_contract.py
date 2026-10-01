@@ -78,7 +78,6 @@ class TestSkipPolicyForOptionalDependencies:
         from conftest import LAYOUT_CONSTRUCTION_ERRORS
 
         import geophylo
-        from geophylo.exceptions import GeophyloError
 
         assert LAYOUT_CONSTRUCTION_ERRORS, "跳过口子不能是空元组"
         assert Exception not in LAYOUT_CONSTRUCTION_ERRORS, (
@@ -87,7 +86,9 @@ class TestSkipPolicyForOptionalDependencies:
         exported = {
             obj
             for obj in vars(geophylo).values()
-            if inspect.isclass(obj) and issubclass(obj, GeophyloError) and obj is not GeophyloError
+            if inspect.isclass(obj)
+            and issubclass(obj, geophylo.GeophyloError)
+            and obj is not geophylo.GeophyloError
         }
         assert exported, "geophylo 未导出任何异常类，本守卫的前提已变化"
         swallowed = sorted(

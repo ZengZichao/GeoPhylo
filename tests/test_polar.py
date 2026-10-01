@@ -117,7 +117,7 @@ class TestRingGeometry:
             r_outer=1.0,
             theta_range=(0.0, math.pi / 2),  # 四分之一圆
         )
-        _result = add_geo_ring(ax, spec=spec, rank="Period")
+        add_geo_ring(ax, spec=spec, rank="Period")
         widths = [p.get_width() for p in ax.patches]
         assert widths  # 零 patch 的退化渲染不得静默通过
         assert all(math.isclose(w, math.pi / 2, abs_tol=1e-9) for w in widths)
@@ -157,7 +157,7 @@ class TestBandGeometryDrivesRingRadii:
 
     def test_different_bands_give_different_geometry(self, polar_ax):
         # 最小复现：band 若只参与校验而不参与几何，两组 band 会产出逐字节相同的矩形。
-        _fig, _ax = polar_ax
+        # 本测试自建 figure/axes，fixture 提供的 (fig, ax) 不在此使用。
         spec = self._spec()
         collected = {}
         for band in ((0.92, 1.0), (0.05, 0.15)):
