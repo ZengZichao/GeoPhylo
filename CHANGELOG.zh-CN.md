@@ -5,6 +5,19 @@
 本文件记录本项目的全部重要变更。数据变更与代码变更分开列出（科学数据变更至少
 触发一次次版本号发布；即使只是订正级补丁，转录修正也会列出）。
 
+## [0.1.1] - 2026-10-02
+
+维护性发布；公共 API 与随包数据无变化。
+
+### 变更
+- 维护自动化：Dependabot（屏蔽 GitHub Actions 的 major 升级）、pre-commit
+  钩子，以及社区健康文件（SECURITY、行为准则、issue/PR 模板、FUNDING）。
+
+### 修复
+- CI：min-deps 可视化门槛、sdist 安装检查与 CodeQL 质量告警；iplotx 契约
+  测试统一为单一 `geophylo` 导入形式。
+- 发布工作流现在在 tag 推送时构建 sdist + wheel 并挂到 GitHub Release。
+
 ## [0.1.0] - 2026-09-30
 
 首次发布。

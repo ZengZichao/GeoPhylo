@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "geophylo"
-version = "0.1.0"
+version = "0.1.1"
 description = "GeoPhylo: geological timescale axes for Matplotlib, with reproducible ICS data, linear geo axes and radial geo rings for timetrees."
 readme = "README.md"
 requires-python = ">=3.11"

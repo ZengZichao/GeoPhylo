@@ -6,6 +6,21 @@ least a minor release; transcription fixes are listed even when patch-level).
 
 中文版：[CHANGELOG.zh-CN.md](CHANGELOG.zh-CN.md)
 
+## [0.1.1] - 2026-10-02
+
+Maintenance release; no changes to the public API or bundled data.
+
+### Changed
+- Maintenance automation: Dependabot (with a hold on major GitHub Actions
+  bumps), pre-commit hooks, and community health files (SECURITY, Code of
+  Conduct, issue/PR templates, FUNDING).
+
+### Fixed
+- CI: min-deps visual gate, sdist install check, and CodeQL quality alerts;
+  the iplotx contract tests use a single `geophylo` import form.
+- Release workflow now builds sdist + wheel on tag push and attaches them to
+  the GitHub Release.
+
 ## [0.1.0] - 2026-09-30
 
 Initial release.
