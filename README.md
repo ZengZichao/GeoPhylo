@@ -2,7 +2,7 @@
 
 English | [中文](README.zh-CN.md)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23060662.svg)](https://doi.org/10.5281/zenodo.23060662)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23093968.svg)](https://doi.org/10.5281/zenodo.23093968)
 [![CI](https://github.com/ZengZichao/GeoPhylo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ZengZichao/GeoPhylo/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/ZengZichao/GeoPhylo/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/ZengZichao/GeoPhylo/actions/workflows/codeql.yml)
 [![PyPI](https://img.shields.io/pypi/v/geophylo.svg)](https://pypi.org/project/geophylo/)
@@ -186,7 +186,10 @@ The release procedure (public GitHub repository + Zenodo DOI) is described in
 If you use GeoPhylo in your research, please cite it (see
 [CITATION.cff](CITATION.cff) for the machine-readable citation record;
 concept DOI `10.5281/zenodo.23060662`, version DOI
-`10.5281/zenodo.23060663` for v0.1.0) and, as required by the CC BY
+`10.5281/zenodo.23060663` for v0.1.0; releases from v0.1.1 onward are
+archived by the Zenodo GitHub integration under concept DOI
+`10.5281/zenodo.23093968`, version DOI `10.5281/zenodo.23093969` for
+v0.1.1) and, as required by the CC BY
 4.0 license, cite the International Chronostratigraphic Chart separately (see
 [NOTICE](NOTICE) for the required attribution).
 

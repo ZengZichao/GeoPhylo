@@ -2,7 +2,7 @@
 
 [English](README.md) | 中文
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23060662.svg)](https://doi.org/10.5281/zenodo.23060662)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23093968.svg)](https://doi.org/10.5281/zenodo.23093968)
 [![CI](https://github.com/ZengZichao/GeoPhylo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ZengZichao/GeoPhylo/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/ZengZichao/GeoPhylo/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/ZengZichao/GeoPhylo/actions/workflows/codeql.yml)
 [![PyPI](https://img.shields.io/pypi/v/geophylo.svg)](https://pypi.org/project/geophylo/)
@@ -167,8 +167,11 @@ mypy
   上海交通大学生命科学技术学院。
 
 若在研究中使用本库，请引用 GeoPhylo（机器可读引用记录见
-[CITATION.cff](CITATION.cff)；Concept DOI 为 `10.5281/zenodo.23060662`，
-v0.1.0 的 Version DOI 为 `10.5281/zenodo.23060663`），
+[CITATION.cff](CITATION.cff)；v0.1.0 的 Concept DOI 为
+`10.5281/zenodo.23060662`、Version DOI 为 `10.5281/zenodo.23060663`；
+自 v0.1.1 起由 Zenodo GitHub 集成归档在新的 Concept 谱系下——Concept DOI
+为 `10.5281/zenodo.23093968`，v0.1.1 的 Version DOI 为
+`10.5281/zenodo.23093969`），
 并按 [NOTICE](NOTICE) 的要求同时引用《国际年代地层表》。
 
 ## 许可
