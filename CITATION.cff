@@ -30,8 +30,11 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.23060662
     description: >-
-      Zenodo concept DOI for GeoPhylo; it is version-agnostic and cites every
-      later release. The version DOI for 0.1.0 is 10.5281/zenodo.23060663.
+      Zenodo concept DOI for GeoPhylo; the version DOI for 0.1.0 is
+      10.5281/zenodo.23060663. Releases from 0.1.1 onward are archived by the
+      Zenodo GitHub integration under a separate concept lineage (concept DOI
+      10.5281/zenodo.23093968); the version DOI for 0.1.1 is
+      10.5281/zenodo.23093969.
 references:
   - type: dataset
     title: "International Chronostratigraphic Chart"
