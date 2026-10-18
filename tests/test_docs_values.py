@@ -339,7 +339,9 @@ def test_documented_repository_structure_guard_fires_on_a_planted_mismatch():
     steps = re.findall(r"^## Step (\d+)", release, re.M)
     assert steps == ["1", "2", "3"], f"未篡改时 RELEASE 步骤标题就不是三步：{steps}"
     gutted_release = release.replace("## Step 2", "## Appendix B", 1)
-    assert re.findall(r"^## Step (\d+)", gutted_release, re.M) != ["1", "2", "3"], "RELEASE 反例是空转"
+    assert re.findall(r"^## Step (\d+)", gutted_release, re.M) != ["1", "2", "3"], (
+        "RELEASE 反例是空转"
+    )
 
     from typing import get_args
 
