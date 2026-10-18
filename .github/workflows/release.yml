@@ -1,25 +1,28 @@
 name: Release
 
 # tag 推送（v*）→ 构建 sdist + wheel → clean-room 校验 → 把构建产物挂到
-# 对应的 GitHub Release。对应 RELEASE.md「Step 1」的手工步骤：维护者只需
-# 打 tag 并（可选地）先建好 Release；Release 已存在则追加资产，不存在则
-# 连同构建产物一起创建。
+# 对应的 GitHub Release → 以 Trusted Publishing（OIDC）发布到 PyPI。
+# 对应 RELEASE.md「Step 1」的手工步骤：维护者只需打 tag 并（可选地）先建好
+# Release；Release 已存在则追加资产，不存在则连同构建产物一起创建。
 #
-# PyPI 发布刻意未接入：Trusted Publishing（OIDC）需要先在 pypi.org 上
-# 为本仓库登记 publisher（owner/repository/workflow name），这一步只能由
-# 维护者在 PyPI 侧完成。接入方法：
-#   1. pypi.org → 账号 → Publishing → Add a new pending publisher，
-#      填 owner=ZengZichao、repository=GeoPhylo、workflow=release.yml；
-#   2. 在本文件追加一个 job，用 pypa/gh-action-pypi-publish@release/v1
-#      （environment: pypi），不需要任何 API token；
-#   3. 首次发布后确认包名 geophylo 归属正确。
+# PyPI 发布走 Trusted Publishing（OIDC），仓库里不存任何 API token。前提是
+# 维护者已在 pypi.org 完成一次性登记（owner=ZengZichao、repository=GeoPhylo、
+# workflow=release.yml、environment=pypi），见 RELEASE.md「Step 3」。登记的
+# 是 pending publisher：首次发布由本 workflow 创建 geophylo 项目并归到该账号
+# 名下，此后每个 tag 自动发布；对同一版本重复发布会被 PyPI 拒绝
+# （file-exists error），不存在覆盖风险。
+#
+# workflow_dispatch 保留为人工通道：main 与最新 tag 指向的版本一致（五处
+# 版本一致由 tests/test_packaging.py 钉死），维护者可用它补发/重发当前版本。
+# 该模式下没有对应的 Release 可挂，下方 attach 步骤按 ref 是否为 tag 分流。
 
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 permissions:
-  contents: write # 把构建产物挂到 Release 需要 Release 写权限；仅 tag 触发。
+  contents: write # 把构建产物挂到 Release 需要 Release 写权限。
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -47,8 +50,11 @@ jobs:
           clean-room/bin/pip install dist/*.whl
           clean-room/bin/python tests/packaging/check_wheel.py dist
       - name: Attach artifacts to the GitHub Release
+        # 仅 tag 触发才写 Release：workflow_dispatch 从分支触发，没有对应的
+        # Release，也不能为分支名凭空创建一个。
         # Release 已存在（维护者按 RELEASE.md 手工创建）→ 追加；
         # 不存在 → 以 --generate-notes 创建并直接带上构建产物。
+        if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -67,3 +73,26 @@ jobs:
           name: dist
           path: dist/*
           if-no-files-found: error
+
+  publish-pypi:
+    # 只发布 build-and-attach 通过 clean-room 校验的同一批构建产物：构建一次、
+    # 发布一次，PyPI 收到的 wheel/sdist 与 GitHub Release 资产逐字节相同。
+    # PyPI 侧核验 OIDC 声明（owner/repository/workflow/environment）后放行，
+    # 见文件头注释与 RELEASE.md「Step 3」的一次性登记。
+    needs: build-and-attach
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: pypi
+    permissions:
+      # Trusted Publishing 要求能换 OIDC token；attestations 供生成 PEP 740
+      # 发布证明（gh-action-pypi-publish 默认开启，PyPI 会展示并可供验证）。
+      id-token: write
+      attestations: write
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

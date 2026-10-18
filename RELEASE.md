@@ -1,13 +1,16 @@
-# Release procedure (public GitHub repository + Zenodo DOI)
+# Release procedure (public GitHub repository + Zenodo DOI + PyPI)
 
 English | [中文](RELEASE.zh-CN.md)
 
-This document describes only the two release steps that are **executed
-manually by the maintainer**. All repository metadata is already prepared; the
-only value left to fill in is the `CITATION.cff` placeholder once Zenodo has
-minted the concept DOI (see "Paste-in locations" below).
+This document describes the release steps that are **executed manually by the
+maintainer**: publishing the repository (Step 1), minting the Zenodo DOI
+(Step 2), and the **one-time** PyPI Trusted-Publishing registration (Step 3;
+every later release publishes automatically). All repository metadata is
+already prepared; the only value left to fill in is the `CITATION.cff`
+placeholder once Zenodo has minted the concept DOI (see "Paste-in locations"
+below).
 
-The version is currently `0.1.0` and must agree in the following five places
+The version is currently `0.1.1` and must agree in the following five places
 (re-check before releasing): `geophylo/_version.py`, `pyproject.toml`,
 `CITATION.cff`, `.zenodo.json`, and the version heading of `CHANGELOG.md`
 (`test_version_agrees_across_release_files` in `tests/test_packaging.py` pins
@@ -64,6 +67,37 @@ exactly these five).
    record is filed as `MIT`. Attribution on the data side is carried jointly by
    three places: the `notes` field of `.zenodo.json`, the in-repo `NOTICE`, and
    `LICENSES/CC-BY-4.0.txt`. Keep `notes` when publishing.
+
+## Step 3 — Publish to PyPI (one-time registration, then automatic)
+
+PyPI publishing is wired into `.github/workflows/release.yml` through
+**Trusted Publishing (OIDC)**: no API token is stored in the repository or in
+GitHub Secrets. The only manual part is a one-time registration on the PyPI
+side, which cannot be automated because it requires signing in to pypi.org:
+
+1. Sign in at <https://pypi.org> → account → **Publishing** → *Add a new
+   pending publisher*, and fill in exactly:
+   - **PyPI project name**: `geophylo`
+   - **Owner**: `ZengZichao`
+   - **Repository**: `GeoPhylo`
+   - **Workflow name**: `release.yml`
+   - **Environment name**: `pypi` (the environment already exists in the
+     repository)
+2. Trigger the workflow once — either way, PyPI verifies the OIDC claims
+   against the registration above before accepting the upload:
+   - to publish the version that is already tagged, run
+     `gh workflow run release.yml` (dispatch runs on `main`, whose version
+     agrees with the latest tag);
+   - or tag the next release as in Step 1 (`git push origin "v${VERSION}"`),
+     which builds, attaches to the GitHub Release and publishes to PyPI in
+     one run.
+3. Verify that <https://pypi.org/project/geophylo/> shows the release and is
+   owned by your account. Every later tag publishes automatically. Re-running
+   for a version that already exists on PyPI is rejected with a file-exists
+   error, so an accidental re-dispatch cannot overwrite anything.
+
+Note: `workflow_dispatch` runs publish to PyPI but never touch GitHub Releases
+— the artifact-attachment step only fires on tag refs.
 
 ## Paste-in locations
 

@@ -1,12 +1,13 @@
-# 发布流程（GitHub 公开 + Zenodo DOI）
+# 发布流程（GitHub 公开 + Zenodo DOI + PyPI）
 
 [English](RELEASE.md) | 中文
 
-本文件只描述**由维护者手动执行**的两步发布。仓库内已把所有元数据准备好，
-唯一待填的是 Zenodo 铸出 Concept DOI 后的 `CITATION.cff` 占位符
-（见下方"粘贴位置"）。
+本文件描述**由维护者手动执行**的发布步骤：公开仓库（步骤 1）、铸造 Zenodo
+DOI（步骤 2），以及**只需一次**的 PyPI Trusted Publishing 登记（步骤 3；此后
+每次发布自动同步）。仓库内已把所有元数据准备好，唯一待填的是 Zenodo 铸出
+Concept DOI 后的 `CITATION.cff` 占位符（见下方"粘贴位置"）。
 
-版本号当前为 `0.1.0`，以下五处保持一致（发布前请再次核对）：
+版本号当前为 `0.1.1`，以下五处保持一致（发布前请再次核对）：
 `geophylo/_version.py`、`pyproject.toml`、`CITATION.cff`、`.zenodo.json`
 和 `CHANGELOG.md` 的版本标题（`tests/test_packaging.py` 的
 `test_version_agrees_across_release_files` 正是钉这五处）。
@@ -55,6 +56,32 @@
    单条记录只能填一个 `license`，因此记录里填 `MIT`。数据侧的归属说明由三处
    共同承担：`.zenodo.json` 的 `notes` 字段、仓库内的 `NOTICE` 和
    `LICENSES/CC-BY-4.0.txt`。发布时请保留 `notes`。
+
+## 步骤 3 — 发布到 PyPI（登记一次，此后自动）
+
+PyPI 发布已通过 **Trusted Publishing（OIDC）** 接入
+`.github/workflows/release.yml`：仓库和 GitHub Secrets 里不存任何 API token。
+唯一的人工环节是 PyPI 侧的一次性登记——它需要登录 pypi.org，无法代劳：
+
+1. 登录 <https://pypi.org> → 账号 → **Publishing** → *Add a new pending
+   publisher*，逐字填入：
+   - **PyPI project name**：`geophylo`
+   - **Owner**：`ZengZichao`
+   - **Repository**：`GeoPhylo`
+   - **Workflow name**：`release.yml`
+   - **Environment name**：`pypi`（该 environment 已在仓库中创建）
+2. 触发一次 workflow——两种方式任选，PyPI 都会先核验 OIDC 声明与上面的登记
+   一致，再接受上传：
+   - 发布已经打好 tag 的版本：`gh workflow run release.yml`
+     （dispatch 跑在 `main` 上，其版本号与最新 tag 一致）；
+   - 或按步骤 1 打下一个版本的 tag（`git push origin "v${VERSION}"`），一次
+     运行同时完成构建、挂载 GitHub Release 与发布 PyPI。
+3. 确认 <https://pypi.org/project/geophylo/> 已显示该 release 且归属你的
+   账号。此后每个 tag 自动发布；对 PyPI 上已存在的版本重复发布会收到
+   file-exists 错误，误触发也不会覆盖任何内容。
+
+注意：`workflow_dispatch` 运行会发布 PyPI，但不会触碰 GitHub Release——
+挂载构建产物的步骤只在 tag ref 上生效。
 
 ## 粘贴位置
 
