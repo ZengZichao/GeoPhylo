@@ -300,16 +300,20 @@ def test_every_adr_documents_its_rejected_alternatives():
         assert body.strip().startswith("-"), f"{name} 的被否方案一节没有列出任何条目"
 
 
-def test_release_notes_describe_a_two_step_procedure():
-    """发布流程是"记录在 RELEASE.md 里的两步"；两步都得在文里。
+def test_release_notes_describe_a_three_step_procedure():
+    """发布流程是"记录在 RELEASE.md 里的三步"；三步都得在文里。
 
+    Step 1（公开仓库并打 tag）、Step 2（Zenodo DOI）、Step 3（PyPI）。
+    其中只有 Step 3 的 Trusted Publishing 登记是一次性的，之后随 tag 自动发布，
+    因此除步骤编号外还要钉住 "pending publisher" 这个登记入口词。
     RELEASE.md 以英文为权威版本，因此锚定英文标题；中文镜像 RELEASE.zh-CN.md
     不参与本断言。
     """
     text = (PROJECT_ROOT / "RELEASE.md").read_text(encoding="utf-8")
     steps = re.findall(r"^## Step (\d+)", text, re.M)
-    assert steps == ["1", "2"], f"RELEASE.md 的步骤标题应为 Step 1/Step 2，实得 {steps}"
+    assert steps == ["1", "2", "3"], f"RELEASE.md 的步骤标题应为 Step 1/Step 2/Step 3，实得 {steps}"
     assert "manually" in text, "RELEASE.md 未说明这是维护者手动流程"
+    assert "pending publisher" in text, "RELEASE.md 未说明 PyPI 侧的一次性登记入口"
 
 
 def test_boundary_value_domains_match_between_models_and_loader():
@@ -333,9 +337,9 @@ def test_documented_repository_structure_guard_fires_on_a_planted_mismatch():
 
     release = (PROJECT_ROOT / "RELEASE.md").read_text(encoding="utf-8")
     steps = re.findall(r"^## Step (\d+)", release, re.M)
-    assert steps == ["1", "2"], f"未篡改时 RELEASE 步骤标题就不是两步：{steps}"
+    assert steps == ["1", "2", "3"], f"未篡改时 RELEASE 步骤标题就不是三步：{steps}"
     gutted_release = release.replace("## Step 2", "## Appendix B", 1)
-    assert re.findall(r"^## Step (\d+)", gutted_release, re.M) != ["1", "2"], "RELEASE 反例是空转"
+    assert re.findall(r"^## Step (\d+)", gutted_release, re.M) != ["1", "2", "3"], "RELEASE 反例是空转"
 
     from typing import get_args
 
