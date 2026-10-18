@@ -49,8 +49,8 @@ R 语言生态中的 `deeptime` 为 ggplot2、ggtree 提供了 `coord_geo()`；`
 
 ## 安装
 
-> PyPI 发布尚未完成：下面带包名的 `pip install` 命令在发布前会解析失败。
-> 发布前请从源码树安装：`pip install .`；完整测试环境用 `pip install -e ".[test]"`。
+> GeoPhylo 已发布到 PyPI：下面的 `pip install geophylo` 可直接解析。
+> 如需基于源码树开发，用 `pip install .`；完整测试环境用 `pip install -e ".[test]"`。
 
 ```bash
 pip install geophylo            # 核心（仅需 matplotlib + numpy）

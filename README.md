@@ -59,10 +59,9 @@ error instead of guessing silently.
 
 ## Installation
 
-> The PyPI release is not published yet: the `pip install` commands below that
-> name the package will fail to resolve until then. Install from the source
-> tree with `pip install .`; for a full test environment use
-> `pip install -e ".[test]"`.
+> GeoPhylo is published on PyPI: the `pip install geophylo` commands below
+> resolve directly. To work from the source tree instead, install with
+> `pip install .`; for a full test environment use `pip install -e ".[test]"`.
 
 ```bash
 pip install geophylo            # core (matplotlib + numpy only)

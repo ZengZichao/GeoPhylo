@@ -35,6 +35,9 @@ identifiers:
       Zenodo GitHub integration under a separate concept lineage (concept DOI
       10.5281/zenodo.23093968); the version DOI for 0.1.1 is
       10.5281/zenodo.23093969.
+  - type: url
+    value: "https://pypi.org/project/geophylo/"
+    description: PyPI distribution; every tag of this repository is published there automatically (pip install geophylo).
 references:
   - type: dataset
     title: "International Chronostratigraphic Chart"
