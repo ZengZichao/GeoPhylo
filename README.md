@@ -6,6 +6,9 @@ English | [中文](README.zh-CN.md)
 [![CI](https://github.com/ZengZichao/GeoPhylo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ZengZichao/GeoPhylo/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/ZengZichao/GeoPhylo/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/ZengZichao/GeoPhylo/actions/workflows/codeql.yml)
 [![PyPI](https://img.shields.io/pypi/v/geophylo.svg?label=PyPI)](https://pypi.org/project/geophylo/)
+[![Python](https://img.shields.io/pypi/pyversions/geophylo)](https://pypi.org/project/geophylo/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![ORCID](https://img.shields.io/badge/ORCID-0000--0001--6553--970X-a6ce39?logo=orcid&logoColor=white)](https://orcid.org/0000-0001-6553-970X)
 
 A geological timescale visualisation library for Matplotlib Axes. It ships the
 ICS (International Commission on Stratigraphy) International Chronostratigraphic
