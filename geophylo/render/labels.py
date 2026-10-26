@@ -247,7 +247,7 @@ def _candidate_sequence(
     abbreviated: str,
     base_rot: float,
     fallback_truncation: int | None = None,
-) -> tuple[list[tuple[str, float]], int]:
+) -> tuple[list[tuple[str, float]], frozenset[int]]:
     """按规范 5.2 的降级顺序生成候选：全名 → 缩写 → 缩写旋转 → 全名旋转 →（前缀）→ 隐藏。
 
     缩写与全名同名时省略第二个候选，避免无意义的重复测量。
