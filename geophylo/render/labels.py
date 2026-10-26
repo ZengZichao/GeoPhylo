@@ -200,9 +200,10 @@ def _collides(
     gx = gap_px if time_index == 0 else 0.0
     gy = gap_px if time_index == 1 else 0.0
     for ox, oy, ow, oh in placed:
-        if abs(cx - ox) < (screen[0] + ow) / 2.0 + gx and abs(cy - oy) < (
-            screen[1] + oh
-        ) / 2.0 + gy:
+        if (
+            abs(cx - ox) < (screen[0] + ow) / 2.0 + gx
+            and abs(cy - oy) < (screen[1] + oh) / 2.0 + gy
+        ):
             return True
     return False
 

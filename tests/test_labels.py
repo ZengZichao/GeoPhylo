@@ -471,12 +471,15 @@ class TestTrackRegisterAndTruncation:
         assert min(len(text) for text in prefixes) == 2, "递减到 2 个字符为止"
         assert 0 in strict and len(strict) == len(prefixes) + 1
 
-
     def test_uniform_register_is_per_track_not_per_call(self):
         # 一次 add_geo_axis() 里多条 rank 各占一条轨道；"同轨统一"说的是**一条
         # 条带**，不是这一次调用的全部标签。否则 Period 轨会被 Epoch 轨拖下水，
         # 整张图一起降级成代号。
-        items = self._items([300.0, 300.0, 22.0, 300.0], names=["Triassic", "Jurassic", "AlphaLongName", "Beta"], aliases=[("T",), ("J",), ("Al",), ("Be",)])
+        items = self._items(
+            [300.0, 300.0, 22.0, 300.0],
+            names=["Triassic", "Jurassic", "AlphaLongName", "Beta"],
+            aliases=[("T",), ("J",), ("Al",), ("Be",)],
+        )
         # 前两条放在上轨道（across=0.0），后两条放在下轨道（across=1.0）
         for k, item in enumerate(items):
             item.px_center = (float(k) * 500.0, 0.0)
@@ -497,14 +500,16 @@ class TestTrackRegisterAndTruncation:
         assert hidden == 0 and items[0].text == "Aalenian"
         assert rotated is True and shortened is False
 
-
     def test_min_label_gap_keeps_neighbours_apart(self):
         # 默认只判"不相交"：两枚 100 px 宽的标签中心相距 105 px，恰好不重叠即可放置。
         # 给出净距后必须留出 min_label_gap_px，后者沿降级阶梯退让，无处可去即隐藏
         # （旋转候选因厚度维超限被拒，故不会用旋转绕开净距）。
         def build():
             items = self._items(
-                [300.0, 300.0], thickness_px=20.0, names=["Alpha", "Beta"], aliases=[("Al",), ("Be",)]
+                [300.0, 300.0],
+                thickness_px=20.0,
+                names=["Alpha", "Beta"],
+                aliases=[("Al",), ("Be",)],
             )
             for k, item in enumerate(items):
                 item.px_center = (float(k) * 105.0, 0.0)

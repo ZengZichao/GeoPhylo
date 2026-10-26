@@ -1034,8 +1034,7 @@ class TestProvenanceDocumented:
 
         def verified_with(*tokens: str) -> bool:
             return any(
-                all(tok.lower() in block.lower() for tok in tokens)
-                for block in verified_blocks
+                all(tok.lower() in block.lower() for tok in tokens) for block in verified_blocks
             )
 
         # 主张一：±0.21 Ma 误差补丁的出处
