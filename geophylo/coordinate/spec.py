@@ -10,6 +10,7 @@ import math
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
+from .._i18n import msg
 from ..exceptions import CoordinateError, InvalidRangeError
 from ..validation import (
     MODES,
@@ -37,35 +38,78 @@ class CoordinateSpec:
         require_time_axis(self.time_axis)
         if self.mode not in MODES:
             raise CoordinateError(
-                f'mode={self.mode!r} 非法；合法取值为 ["absolute_age", "root_distance"]'
+                msg(
+                    f'mode={self.mode!r} is not allowed; valid values are ["absolute_age", '
+                    f'"root_distance"]',
+                    f'mode={self.mode!r} 非法；合法取值为 ["absolute_age", "root_distance"]',
+                )
             )
         lo, hi = self.age_range
         for name, value in (("age_range[0]", lo), ("age_range[1]", hi)):
             if isinstance(value, bool) or not isinstance(value, (int, float)):
-                raise InvalidRangeError(f"{name} 必须是数值，得到 {value!r}")
+                raise InvalidRangeError(
+                    msg(
+                        f"{name} must be a number, got {value!r}",
+                        f"{name} 必须是数值，得到 {value!r}",
+                    )
+                )
             if not math.isfinite(float(value)):
-                raise InvalidRangeError(f"{name} 必须是有限值，得到 {value!r}")
+                raise InvalidRangeError(
+                    msg(
+                        f"{name} must be finite, got {value!r}",
+                        f"{name} 必须是有限值，得到 {value!r}",
+                    )
+                )
         lo, hi = float(lo), float(hi)
         if lo < 0:
-            raise InvalidRangeError(f"age_range[0]={lo} 不能为负（年龄以 Ma 为单位）")
+            raise InvalidRangeError(
+                msg(
+                    f"age_range[0]={lo} must not be negative (ages are in Ma)",
+                    f"age_range[0]={lo} 不能为负（年龄以 Ma 为单位）",
+                )
+            )
         if lo >= hi:
-            raise InvalidRangeError(f"要求 age_range 满足 min < max，得到 ({lo}, {hi})")
+            raise InvalidRangeError(
+                msg(
+                    f"expected age_range to satisfy min < max, got ({lo}, {hi})",
+                    f"要求 age_range 满足 min < max，得到 ({lo}, {hi})",
+                )
+            )
         object.__setattr__(self, "age_range", (lo, hi))
         if self.root_age is not None:
             if isinstance(self.root_age, bool) or not isinstance(self.root_age, (int, float)):
-                raise CoordinateError(f"root_age 必须是数值或 None，得到 {self.root_age!r}")
+                raise CoordinateError(
+                    msg(
+                        f"root_age must be a number or None, got {self.root_age!r}",
+                        f"root_age 必须是数值或 None，得到 {self.root_age!r}",
+                    )
+                )
             root = float(self.root_age)
             if not math.isfinite(root) or root < 0:
-                raise CoordinateError(f"root_age 必须是非负有限值，得到 {self.root_age!r}")
+                raise CoordinateError(
+                    msg(
+                        f"root_age must be a non-negative finite value, got {self.root_age!r}",
+                        f"root_age 必须是非负有限值，得到 {self.root_age!r}",
+                    )
+                )
             object.__setattr__(self, "root_age", root)
         if self.mode == "root_distance" and self.root_age is None:
             raise CoordinateError(
-                'mode="root_distance" 时 root_age 必填（根年龄来自外部时间校准结果，'
-                "本库不接受 branch length 大概率是 Ma 这类假设）"
+                msg(
+                    'mode="root_distance" requires root_age (the root age comes from an external '
+                    'time calibration; this library does not accept assumptions such as "branch '
+                    'lengths are probably Ma")',
+                    'mode="root_distance" 时 root_age 必填（根年龄来自外部时间校准结果，'
+                    "本库不接受 branch length 大概率是 Ma 这类假设）",
+                )
             )
         if self.mode == "absolute_age" and self.root_age is not None:
             raise CoordinateError(
-                'mode="absolute_age" 时 root_age 必须为 None；根年龄只属于 root_distance 模式'
+                msg(
+                    'mode="absolute_age" requires root_age to be None; the root age belongs '
+                    "only to the root_distance mode",
+                    'mode="absolute_age" 时 root_age 必须为 None；根年龄只属于 root_distance 模式',
+                )
             )
 
     # -- 纯函数 -----------------------------------------------------------
@@ -117,28 +161,47 @@ class CoordinateSpec:
         """
         if not acknowledge_inference:
             raise CoordinateError(
-                "范围推断被拒绝：从 Axes 数据范围推断 age_range 属于隐式假设。"
-                "请显式给出 age_range，或在确认数据范围可信时传 "
-                "acknowledge_inference=True 显式确认"
+                msg(
+                    "range inference is refused: inferring age_range from the Axes data limits "
+                    "is an implicit assumption. Give age_range explicitly, or pass "
+                    "acknowledge_inference=True "
+                    "to confirm that the data range is trusted",
+                    "范围推断被拒绝：从 Axes 数据范围推断 age_range 属于隐式假设。"
+                    "请显式给出 age_range，或在确认数据范围可信时传 "
+                    "acknowledge_inference=True 显式确认",
+                )
             )
         if mode not in MODES:
-            raise CoordinateError(f"mode={mode!r} 非法")
+            raise CoordinateError(msg(f"mode={mode!r} is not allowed", f"mode={mode!r} 非法"))
         require_time_axis(time_axis)
         if mode == "root_distance" and root_age is None:
             raise CoordinateError(
-                'mode="root_distance" 的范围推断同样必须提供 root_age；'
-                "Axes 数值范围本身不携带根年龄信息"
+                msg(
+                    'mode="root_distance" range inference also requires root_age; the Axes numeric '
+                    "range carries no root-age information",
+                    'mode="root_distance" 的范围推断同样必须提供 root_age；'
+                    "Axes 数值范围本身不携带根年龄信息",
+                )
             )
         if mode == "absolute_age" and root_age is not None:
-            raise CoordinateError('mode="absolute_age" 时 root_age 必须为 None')
+            raise CoordinateError(
+                msg(
+                    'mode="absolute_age" requires root_age to be None',
+                    'mode="absolute_age" 时 root_age 必须为 None',
+                )
+            )
         require_linear_numeric_axes(ax)
         limits = ax.get_xlim() if time_axis == "x" else ax.get_ylim()
         lo, hi = sorted(float(v) for v in limits)
         if mode == "absolute_age":
             if lo < 0:
                 raise InvalidRangeError(
-                    f"宿主 Axes 数据范围 [{lo}, {hi}] 含负值，无法作为 age_range"
-                    "（年龄以 Ma 为单位且非负）"
+                    msg(
+                        f"the host Axes data range [{lo}, {hi}] contains negative values and "
+                        f"cannot serve as age_range (ages are in Ma and non-negative)",
+                        f"宿主 Axes 数据范围 [{lo}, {hi}] 含负值，无法作为 age_range"
+                        "（年龄以 Ma 为单位且非负）",
+                    )
                 )
             return cls.absolute(time_axis=time_axis, age_range=(lo, hi))
         assert root_age is not None  # absolute_age 分支已在上方拒绝 None
@@ -146,7 +209,12 @@ class CoordinateSpec:
         age_lo, age_hi = root - hi, root - lo
         if age_lo < 0 or age_hi <= 0:
             raise InvalidRangeError(
-                f"宿主 Axes 数据范围 [{lo}, {hi}] 在 root_age={root} 下推出非法 age_range "
-                f"[{age_lo}, {age_hi}]；root_age 应不小于数据范围上界"
+                msg(
+                    f"the host Axes data range [{lo}, {hi}] yields an illegal age_range [{age_lo}, "
+                    f"{age_hi}] under root_age={root}; root_age must not be smaller than the "
+                    f"upper end of the data range",
+                    f"宿主 Axes 数据范围 [{lo}, {hi}] 在 root_age={root} 下推出非法 age_range "
+                    f"[{age_lo}, {age_hi}]；root_age 应不小于数据范围上界",
+                )
             )
         return cls.root_distance(time_axis=time_axis, age_range=(age_lo, age_hi), root_age=root)

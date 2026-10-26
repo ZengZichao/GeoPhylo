@@ -1,6 +1,6 @@
 # GeoPhylo User Guide
 
-**Version**: corresponds to GeoPhylo 0.1.0 (including the experimental symbols)
+**Version**: corresponds to GeoPhylo 0.1.1 (including the experimental symbols)
 **Requirements**: Python 3.11–3.14 · Matplotlib ≥ 3.10, < 4 · NumPy ≥ 1.25
 **中文版文档**：[user-guide.zh.md](user-guide.zh.md)
 
@@ -364,6 +364,7 @@ result = add_geo_axis(
     label=True,                  # draw interval name labels
     label_size=6.0,              # label font size (pt)
     label_color="auto",          # "auto" picks black/white from the composited background
+    min_label_gap=0.0,           # minimum clearance (pt) along the time dimension
     skip=None,                   # interval names to skip
     abbreviate=True,             # allow official short codes when space is tight
     border="both",               # "none" | "near" | "far" | "both"
@@ -372,6 +373,9 @@ result = add_geo_axis(
     rotation=0.0,                # fixed label rotation (degrees)
     tick_style="none",           # "none" | "boundaries" | "ages"
     tick_max_count=10,           # tick-count cap (tick_style="ages" only)
+    tick_format="default",       # "default" | "exact" | callable(age) -> str
+    track_register="interval",   # "interval" | "uniform"
+    fallback_truncation=None,    # None (off) or a shortest-prefix length >= 2
     key=None,                    # track identity for idempotent updates (7.2)
     preserve_axes_state=True,    # promise not to mutate the host view state
 )
@@ -459,6 +463,42 @@ labels_hidden`. Two rules bound what abbreviation may do:
 background, then applies the WCAG relative-luminance contrast rule to choose
 black or white — labels stay readable on translucent fills.
 
+**`min_label_gap` (neighbour clearance)**: the minimum gap, in points, that two labels in the same band must leave along the time dimension. The default `0.0` means "no overlap" only, so two labels can touch and read as one invented word; set it (e.g. `4.0`, half a line height) to keep them apart. It is applied during placement, so a label that cannot keep the gap falls back down the ladder instead of being drawn and dropped later.
+
+**`tick_format` (tick number precision)**:
+
+- `"default"` (default): the deterministic rule above — `age ≥ 100` is rounded to
+  whole Ma, so a stored boundary of `251.902 Ma` is printed as `252`;
+- `"exact"`: prints each value at the precision the snapshot stores it. Integers
+  drop the decimal point (`66 → "66"`), everything else keeps up to six decimals
+  with trailing zeros removed (`251.902 → "251.902"`, `0.0117 → "0.0117"`). Use
+  this when the figure is meant to exhibit the snapshot's boundary precision
+  rather than a rounded reading; note that longer numerals are wider, so the
+  spacing filter may drop more tick numbers (`result.ticks_dropped` reports it);
+- a callable `age -> str` replaces the rule entirely.
+
+**`track_register` (abbreviation consistency across a track)**:
+
+- `"interval"` (default): each interval independently decides whether to
+  abbreviate, which can leave a track mixing codes and full names
+  (`T3 · J1 · Lower Cretaceous · K2`);
+- `"uniform"`: if *any* interval in the track has to be abbreviated, the whole
+  track switches to the official short codes, so the track reads in one register.
+  A track whose full names all fit is left untouched, and `abbreviate=False`
+  always wins over this setting.
+
+**`fallback_truncation` (name-prefix fallback)**:
+
+- `None` (default): the ladder ends at *rotate → hide*. The library never
+  invents a token: an interval with no official short code is drawn with its full
+  name or not at all;
+- an integer `n ≥ 2`: **after** the rotated full name has been tried and rejected,
+  the label falls back to a name prefix of `n` characters (shortened further to 2
+  characters only if even that does not fit its own interval). The order matters:
+  rotation is the rung that keeps the name readable as written, prefix truncation
+  is the rung that invents a token, so truncation never pre-empts rotation. Use
+  this when the figure must show a label in every band; `Aalenian → Aal`.
+
 ### 6.3 The side-effect contract
 
 With `preserve_axes_state=True` (the default), `add_geo_axis()` does **not
@@ -495,7 +535,9 @@ result.restore()     # restore the host Axes state snapshot taken at creation
 - **`update()`** accepts rendering parameters only (`ranks`, `thickness_ratio`,
   `min_age/max_age`, `fill`, `alpha`, `label`, `label_size`, `label_color`,
   `skip`, `abbreviate`, `border*`, `rotation`, `tick_style`,
-  `tick_max_count`). `spec`, `position` and `timescale` are **not** updatable —
+  `tick_max_count`, `tick_format`, `track_register`,
+  `fallback_truncation`). `spec`, `position` and `timescale` are **not**
+  updatable —
   they change the coordinate semantics or the carrying Axes, so passing them
   raises `CoordinateError`. All value-domain checks and a geometry pre-check
   run before anything is committed: a rejected `update()` leaves the previous
@@ -775,6 +817,12 @@ ts.find_by_name("Ectasian")
 All public exceptions inherit from `geophylo.GeophyloError`. Messages contain
 the failing parameter, its actual value, and a fix suggestion.
 
+**Messages and localisation.** Exception and warning messages are English by
+default. Setting `GEOPHYLO_LANG=zh` (any value starting with `zh`) switches them
+to Chinese. The two texts are written side by side at each call site
+(`geophylo._i18n.msg`), so nothing is machine-translated and no message is lost;
+docstrings stay bilingual and do not affect runtime output.
+
 | Exception | Typical trigger | What to do |
 | --- | --- | --- |
 | `DataValidationError` | snapshot schema/hash/shared-boundary failure; unpublished version requested | check `available_versions()`; validate custom JSON against the bundled schema; never hand-edit snapshots |
@@ -864,6 +912,35 @@ API-frozen. `spec_from_biophylo()` + `add_geo_axis()` belongs to the stable API.
 See `examples/` in the repository: every boundary value and colour is read from
 the bundled snapshot — nothing is hand-written — so re-running a script with its
 own output path and `dpi` reproduces the same figure.
+
+**Q11: Why is there no multi-rank radial ring?**
+`add_geo_ring()` accepts exactly one `rank` and raises `InvalidRankError` for a
+sequence. Stacking several geochronologic ranks radially needs a layout model
+that decides how inner and outer rings share the same radius-to-age mapping;
+that model does not exist yet, so the API refuses rather than guessing. Until it
+does, use the linear multi-rank track (`ranks=["Period", "Epoch"]`) for stacked
+bands and draw the circular tree yourself with a single ring around it (9.3).
+
+**Q12: I use ETE4 or toytree — can I still use geophylo?**
+Yes, indirectly. The shipped adapters are `spec_from_biophylo()` (stable) and
+`spec_from_iplotx()` (experimental); ETE4 and toytree do not hand their tree
+geometry back as a Matplotlib Axes, so no adapter is planned for them. Draw the
+tree yourself, declare the semantics once and add the strip:
+
+```python
+spec = CoordinateSpec.absolute(time_axis="x", age_range=(0.0, my_max_age))
+result = add_geo_axis(ax, spec=spec, position="bottom", ranks=["Period", "Epoch"])
+```
+
+Any Axes whose x (or y) axis carries Ma works — the tree library is irrelevant
+as long as you own the drawing call.
+
+**Q13: Why does `spec_from_iplotx()` reject a radial tree?**
+Because iplotx's radial layout is polar, while the linear strip contract needs a
+Cartesian time axis; silently converting would change the coordinate semantics
+that this library exists to protect. Draw the circular layout yourself and use
+`RadialSpec` + `add_geo_ring()` (Section 9); the radial adapter is tracked for
+v0.2.
 
 **Q11: Why is the base of the Cretaceous 143.1 Ma (and the top of the Berriasian
 137.05 Ma) rather than the widely quoted GTS2012 values 145.0 and 139.8?**
@@ -957,7 +1034,7 @@ savefig()` order and run headless on Agg (PNG output next to the script).
   `derived_from` entry of the 2024/12 record in `versions.json`, explained in
   `geophylo/data/snapshots/PROVENANCE.md`.
 - **Design rationale**: the architecture decision records in [`docs/adr/`](adr/README.md)
-  (ADR-1 … ADR-5) document the non-obvious choices and their rejected
+  (ADR-1 … ADR-6) document the non-obvious choices and their rejected
   alternatives.
 - **Citation**: if you use GeoPhylo in research, cite it (`CITATION.cff`) and
   cite the ICS International Chronostratigraphic Chart as requested in

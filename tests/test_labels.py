@@ -369,3 +369,176 @@ class TestDegradation:
                 abbreviate=True,
                 time_bounds_px=(500.0, 0.0),
             )
+
+
+class TestTrackRegisterAndTruncation:
+    """``track_register`` 与 ``fallback_truncation`` 的契约（图 3/图 4 的脚本补丁下沉）。
+
+    两个参数默认关闭，因此上面全部既有用例的行为不变；这里只为显式开启时
+    钉住语义：整轨统一语域不改变"能放下就用全名"的判定，前缀截断只在
+    降级阶梯末端补位。
+    """
+
+    def _items(self, lengths, thickness_px=20.0, names=None, aliases=None):
+        items = []
+        count = len(lengths)
+        for k, length in enumerate(lengths):
+            name = (names or [f"Iten{k}" for k in range(count)])[k]
+            item_aliases = aliases[k] if aliases is not None else (name[:2],)
+            interval = make_interval(name, item_aliases, 500.0 - k)
+            items.append(
+                LabelItem(
+                    interval=interval,
+                    artist=None,
+                    center=(0.0, 0.0),
+                    px_center=(float(k) * 500.0, 0.0),
+                    length_px=length,
+                    thickness_px=thickness_px,
+                    base_rotation=0.0,
+                    time_axis_index=time_axis_index_for("x"),
+                    rank_priority=2,
+                    sort_key=(2, -interval.older_ma, interval.id),
+                )
+            )
+        return items
+
+    @staticmethod
+    def _measure(item, text):
+        return estimate_text_size(text, 6.0, 100.0)
+
+    def test_interval_register_keeps_the_per_interval_mix(self):
+        # 默认：窄区间缩写、宽区间全名——这正是图 3 Epoch 轨出现混排的原因。
+        items = self._items(
+            [22.0, 300.0], names=["AlphaLongName", "Beta"], aliases=[("Al",), ("Be",)]
+        )
+        apply_label_degradation(items, measure=self._measure, abbreviate=True)
+        assert [item.text for item in items] == ["Al", "Beta"]
+
+    def test_uniform_register_switches_the_whole_track(self):
+        # 开启后：同轨只要有一处被迫缩写，全轨统一用代号，不留混排。
+        items = self._items(
+            [22.0, 300.0], names=["AlphaLongName", "Beta"], aliases=[("Al",), ("Be",)]
+        )
+        shortened, _rotated, hidden = apply_label_degradation(
+            items, measure=self._measure, abbreviate=True, track_register="uniform"
+        )
+        assert [item.text for item in items] == ["Al", "Be"]
+        assert shortened and hidden == 0
+
+    def test_uniform_register_is_inert_when_everything_fits(self):
+        # 全名都放得下时不得无故改用代号。
+        items = self._items([300.0, 300.0], names=["Alpha", "Beta"], aliases=[("Al",), ("Be",)])
+        apply_label_degradation(
+            items, measure=self._measure, abbreviate=True, track_register="uniform"
+        )
+        assert [item.text for item in items] == ["Alpha", "Beta"]
+
+    def test_uniform_register_respects_explicit_abbreviate_false(self):
+        # 用户显式关掉缩写时，整轨统一不得越过这一显式选择。
+        items = self._items(
+            [10.0, 300.0], names=["AlphaLongName", "Beta"], aliases=[("Al",), ("Be",)]
+        )
+        apply_label_degradation(
+            items, measure=self._measure, abbreviate=False, track_register="uniform"
+        )
+        assert items[0].text == "AlphaLongName"
+
+    def test_truncation_off_by_default(self):
+        # 无别名且放不下 → 隐藏（库的默认立场：不凭空造记号）。
+        items = self._items([20.0], names=["Aalenian"], aliases=[()])
+        _s, _r, hidden = apply_label_degradation(items, measure=self._measure, abbreviate=True)
+        assert hidden == 1 and items[0].visible is False
+
+    def test_truncation_recovers_a_label_without_an_alias(self):
+        # 开启后："Aalenian" 逐级缩短，最短保留 3 个字符 → "Aal" 放得下。
+        items = self._items([20.0], names=["Aalenian"], aliases=[()])
+        shortened, _rotated, hidden = apply_label_degradation(
+            items, measure=self._measure, abbreviate=True, fallback_truncation=3
+        )
+        assert hidden == 0 and items[0].visible is True
+        assert items[0].text == items[0].interval.name[:3]
+        assert shortened is True
+
+    def test_truncation_never_goes_below_the_floor(self):
+        # 前缀从 fallback_truncation 个字符起步，放不下才递减，且不短于 2 个字符；
+        # 直接对候选生成器求值——阶梯本身是生成器契约，与后续碰撞/旋转无关。
+        from geophylo.render.labels import _candidate_sequence
+
+        sequence, strict = _candidate_sequence("Aalenian", "Aalenian", 0.0, 4)
+        prefixes = [text for text, _rot in sequence if text != "Aalenian"]
+        assert prefixes, "开启 fallback_truncation 后必须生成前缀候选"
+        assert prefixes[0] == "Aale", "从 4 个字符起步"
+        assert min(len(text) for text in prefixes) == 2, "递减到 2 个字符为止"
+        assert 0 in strict and len(strict) == len(prefixes) + 1
+
+
+    def test_uniform_register_is_per_track_not_per_call(self):
+        # 一次 add_geo_axis() 里多条 rank 各占一条轨道；"同轨统一"说的是**一条
+        # 条带**，不是这一次调用的全部标签。否则 Period 轨会被 Epoch 轨拖下水，
+        # 整张图一起降级成代号。
+        items = self._items([300.0, 300.0, 22.0, 300.0], names=["Triassic", "Jurassic", "AlphaLongName", "Beta"], aliases=[("T",), ("J",), ("Al",), ("Be",)])
+        # 前两条放在上轨道（across=0.0），后两条放在下轨道（across=1.0）
+        for k, item in enumerate(items):
+            item.px_center = (float(k) * 500.0, 0.0)
+            item.center = (0.0, 0.0 if k < 2 else 1.0)
+        apply_label_degradation(
+            items, measure=self._measure, abbreviate=True, track_register="uniform"
+        )
+        assert [item.text for item in items] == ["Triassic", "Jurassic", "Al", "Be"]
+
+    def test_truncation_runs_after_the_rotate_rung(self):
+        # 前缀截断是"造记号"的兜底档，必须排在"读全名"的旋转之后：本可用旋转
+        # 读出全名的区间不得被无谓截短。轨道厚度要放得下旋转后的行高（约 41 px），
+        # 否则旋转档本身就通不过，谈不上先后。
+        items = self._items([12.0], thickness_px=50.0, names=["Aalenian"], aliases=[()])
+        shortened, rotated, hidden = apply_label_degradation(
+            items, measure=self._measure, abbreviate=True, fallback_truncation=3
+        )
+        assert hidden == 0 and items[0].text == "Aalenian"
+        assert rotated is True and shortened is False
+
+
+    def test_min_label_gap_keeps_neighbours_apart(self):
+        # 默认只判"不相交"：两枚 100 px 宽的标签中心相距 105 px，恰好不重叠即可放置。
+        # 给出净距后必须留出 min_label_gap_px，后者沿降级阶梯退让，无处可去即隐藏
+        # （旋转候选因厚度维超限被拒，故不会用旋转绕开净距）。
+        def build():
+            items = self._items(
+                [300.0, 300.0], thickness_px=20.0, names=["Alpha", "Beta"], aliases=[("Al",), ("Be",)]
+            )
+            for k, item in enumerate(items):
+                item.px_center = (float(k) * 105.0, 0.0)
+            return items
+
+        def measure(item, text):
+            return (100.0, 8.0)
+
+        touching = build()
+        _s, _r, hidden = apply_label_degradation(touching, measure=measure, abbreviate=True)
+        assert hidden == 0, "零净距时相切即可放置"
+        assert [item.text for item in touching] == ["Alpha", "Beta"]
+
+        gapped = build()
+        _s, _r, hidden = apply_label_degradation(
+            gapped, measure=measure, abbreviate=True, min_label_gap_px=10.0
+        )
+        assert hidden == 1, "净距 10 px 时后者无处可放，应隐藏"
+
+    @pytest.mark.parametrize("bad", [1, 0, -2, True, 3.0])
+    def test_truncation_rejects_invalid_floor(self, bad):
+        from geophylo.exceptions import InvalidRangeError
+
+        items = self._items([20.0], names=["Aalenian"], aliases=[()])
+        with pytest.raises(InvalidRangeError):
+            apply_label_degradation(
+                items, measure=self._measure, abbreviate=True, fallback_truncation=bad
+            )
+
+    def test_unknown_track_register_rejected(self):
+        from geophylo.exceptions import InvalidRangeError
+
+        items = self._items([20.0], names=["Aalenian"], aliases=[()])
+        with pytest.raises(InvalidRangeError):
+            apply_label_degradation(
+                items, measure=self._measure, abbreviate=True, track_register="per_track"
+            )

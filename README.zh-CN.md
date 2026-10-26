@@ -44,7 +44,7 @@ R 语言生态中的 `deeptime` 为 ggplot2、ggtree 提供了 `coord_geo()`；`
   reference, FAQ and troubleshooting）
 - [数据政策](docs/data-policy.zh.md)（ICS 快照的来源、许可、更新和回退；
   英文权威版见 [data-policy.md](docs/data-policy.md)）
-- [架构决策记录](docs/adr/README.zh.md)（ADR-1～ADR-5：非显然的选择和已否决的
+- [架构决策记录](docs/adr/README.zh.md)（ADR-1～ADR-6：非显然的选择和已否决的
   替代方案；英文权威版见 [adr/README.md](docs/adr/README.md)）
 
 ## 安装

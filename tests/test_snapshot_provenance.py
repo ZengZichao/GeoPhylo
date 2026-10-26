@@ -1012,37 +1012,51 @@ class TestProvenanceDocumented:
         assert probe.returncode != 0, "按规范新增的生成日志会被 .gitignore 静默忽略"
 
     def test_provenance_discloses_the_project_authored_margin(self):
-        """0.21 Ma 的出处必须在包内被明确标为项目自定值，而不是伪装成上游。"""
+        """0.21 Ma 的出处必须在包内被明确标为项目自定值，并给出可复核凭据或显式占位。"""
         text = self.TEXT
         assert "0.21" in text
         assert re.search(
             r"(?i)(development document 5\.7|project-authored|not traceable to a machine-readable upstream statement)",
             text,
         )
-        # 占位必须**挂在它所要澄清的那条披露上**，不能是文档里随便某处有个 TODO：
-        # 0.21 Ma 的项目自定值、以及"无独立 2024/12 归档版可核验"各需一条。
+        # 待核验的外部主张各自有两种合法状态：仍未核验（留 TODO 占位），或已核验并
+        # 点名可复核凭据（核验日期 + 具体证据）。只写"我们采用 0.21"不算数。
         blocks = re.findall(
             r"(?i)TODO\(author\)(.*?)(?=\n-\s`{0,1}TODO\(author\)`|\n#{2,}\s|\Z)",
             text,
             re.DOTALL,
         )
-        assert blocks, "外部出处仍缺凭据：PROVENANCE.md 必须留下待作者补全的显式占位"
-        joined = [block.lower() for block in blocks]
-        assert any("0.21" in block for block in joined), (
-            "缺一条挂在 ±0.21 Ma 误差补丁上的 TODO(author) 占位"
+        verified_blocks = re.findall(
+            r"(?i)\*\*Verified 2026-\d{2}-\d{2}\*\*(.*?)(?=\n-\s|\n#{2,}\s|\Z)",
+            text,
+            re.DOTALL,
         )
-        # 「上游不发布 2024/12 机器可读快照」有两种合法状态：仍未核验（留 TODO 占位），
-        # 或已核验并给出可复核凭据。
+
+        def verified_with(*tokens: str) -> bool:
+            return any(
+                all(tok.lower() in block.lower() for tok in tokens)
+                for block in verified_blocks
+            )
+
+        # 主张一：±0.21 Ma 误差补丁的出处
+        open_margin = any("0.21" in block.lower() for block in blocks)
+        verified_margin = verified_with("Episodes", "259.51", "0.21")
+        assert open_margin or verified_margin, (
+            "±0.21 Ma 误差补丁这条外部主张既无 TODO(author) 占位，也未点名可复核出处"
+        )
+
+        # 主张二：「上游不发布 2024/12 机器可读快照」
         # 只写"我们相信上游没有 2024/12"不算数：必须点名核验日期与具体证据，
         # 否则这条断言本身就是一句无出处的外部主张。
+        open_chart = any("2024/12" in block.lower() for block in blocks)
         verified_record = re.search(
             r"(?i)verified[\s*]{0,4}2026-\d{2}-\d{2}[\s\S]{0,900}?(v0\.0\.15|2025-03-12)"
             r"[\s\S]{0,400}?2024/12",
             text,
         )
-        assert any("2024/12" in block for block in joined) or verified_record, (
+        assert open_chart or verified_record, (
             "「上游不发布 2024/12 机器可读快照」这条外部主张既无 TODO(author) 占位，"
-            "也无带日期与具体证据的核验记录"
+            "也未点名可复核凭据"
         )
 
     def test_loader_ignores_diff_and_provenance_files(self):

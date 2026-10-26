@@ -25,6 +25,7 @@ import math
 import warnings
 from collections.abc import Iterator, Sequence
 
+from .._i18n import msg
 from ..exceptions import (
     AmbiguousIntervalError,
     DataValidationError,
@@ -140,7 +141,13 @@ def _require_pyrolite():
     try:
         import pyrolite
     except ImportError as exc:  # pragma: no cover - 可选依赖缺失
-        raise ImportError("pyrolite 后端需要可选依赖 pyrolite；请安装 geophylo[pyrolite]") from exc
+        raise ImportError(
+            msg(
+                "the pyrolite backend needs the optional dependency pyrolite; install "
+                "geophylo[pyrolite]",
+                "pyrolite 后端需要可选依赖 pyrolite；请安装 geophylo[pyrolite]",
+            )
+        ) from exc
     version = getattr(pyrolite, "__version__", "0")
     parts = []
     for chunk in version.split(".")[:3]:
@@ -150,8 +157,12 @@ def _require_pyrolite():
         parts.append(0)
     if tuple(parts) < MIN_PYROLITE_VERSION:
         raise ImportError(
-            f"pyrolite>={MIN_PYROLITE_VERSION_STR} 是本后端的版本下界"
-            f"（锚定 2024/12 数据与 Supereon 层级），当前为 {version!r}"
+            msg(
+                f"pyrolite>={MIN_PYROLITE_VERSION_STR} is the version floor for this backend (it "
+                f"anchors the 2024/12 data and the Supereon rank), current version {version!r}",
+                f"pyrolite>={MIN_PYROLITE_VERSION_STR} 是本后端的版本下界"
+                f"（锚定 2024/12 数据与 Supereon 层级），当前为 {version!r}",
+            )
         )
     return pyrolite
 
@@ -166,11 +177,20 @@ def _row_age(where: str, column: str, value) -> float:
         number = float(value)
     except (TypeError, ValueError) as exc:
         raise DataValidationError(
-            f"pyrolite 表 {where} 的 {column} 不是数值（{value!r}）；本后端不做外推，也不猜测单位"
+            msg(
+                f"column {column} of the pyrolite table {where} is not a number ({value!r}); this "
+                f"backend neither extrapolates nor guesses units",
+                f"pyrolite 表 {where} 的 {column} 不是数值（{value!r}）；"
+                f"本后端不做外推，也不猜测单位",
+            )
         ) from exc
     if not math.isfinite(number):
         raise DataValidationError(
-            f"pyrolite 表 {where} 的 {column} 非有限值（{value!r}）；无法建立时间语义"
+            msg(
+                f"column {column} of the pyrolite table {where} is not finite ({value!r}); no time "
+                f"semantics can be established",
+                f"pyrolite 表 {where} 的 {column} 非有限值（{value!r}）；无法建立时间语义",
+            )
         )
     return number
 
@@ -238,17 +258,30 @@ class PyroliteBackend:
             )
         if missing_color:
             warnings.warn(
-                f"pyrolite 表中 {missing_color} 行缺少颜色：这些区间的条带使用中性占位色 "
-                f"{UNKNOWN_COLOR_PLACEHOLDER}，它不代表任何年代地层含义（缺失元数据不"
-                "被伪造成可信颜色）；需要配色请使用内置快照后端",
+                msg(
+                    f"{missing_color} rows in the pyrolite table carry no colour: their bands "
+                    f"use the neutral placeholder {UNKNOWN_COLOR_PLACEHOLDER}, which has no "
+                    f"chronostratigraphic meaning (missing metadata is never fabricated into "
+                    f"a trusted colour); use the bundled snapshot backend for real colours",
+                    f"pyrolite 表中 {missing_color} 行缺少颜色：这些区间的条带使用中性占位色 "
+                    f"{UNKNOWN_COLOR_PLACEHOLDER}，它不代表任何年代地层含义（缺失元数据不"
+                    "被伪造成可信颜色）；需要配色请使用内置快照后端",
+                ),
                 UserWarning,
                 stacklevel=3,
             )
         if rank_corrected:
             warnings.warn(
-                f"pyrolite 表中 {rank_corrected} 行按「Level=Epoch 且 Period 父列为空且 "
-                "Era 父列非空」的确定性特征被纠正为 Period（该后端没有前寒武纪 Period "
-                "槽位）；纠正范围仅限该判据，见 _true_rank 的 docstring",
+                msg(
+                    f"{rank_corrected} rows in the pyrolite table were re-ranked from Epoch "
+                    f"to Period by the deterministic rule 'Level=Epoch with an empty Period "
+                    f"parent and a non-empty Era parent' (that backend has no Precambrian Period "
+                    f"slot); the correction is limited to that criterion, see the _true_rank "
+                    f"docstring",
+                    f"pyrolite 表中 {rank_corrected} 行按「Level=Epoch 且 Period 父列为空且 "
+                    "Era 父列非空」的确定性特征被纠正为 Period（该后端没有前寒武纪 Period "
+                    "槽位）；纠正范围仅限该判据，见 _true_rank 的 docstring",
+                ),
                 UserWarning,
                 stacklevel=3,
             )
@@ -265,7 +298,11 @@ class PyroliteBackend:
 
     def get_interval(self, interval_id: str) -> Interval:
         raise IntervalNotFoundError(
-            "pyrolite 公开表契约没有稳定 ID，本后端不支持 ID 查询；请改用 find_by_name()"
+            msg(
+                "the published pyrolite table contract has no stable ids, so this backend does not "
+                "support id lookup; use find_by_name()",
+                "pyrolite 公开表契约没有稳定 ID，本后端不支持 ID 查询；请改用 find_by_name()",
+            )
         )
 
     def find_by_name(
@@ -277,14 +314,30 @@ class PyroliteBackend:
         case_sensitive: bool = False,
     ) -> Interval:
         if parent is not None:
-            raise IntervalNotFoundError("pyrolite 公开表契约没有父子关系，本后端不支持 parent 过滤")
+            raise IntervalNotFoundError(
+                msg(
+                    "the published pyrolite table contract has no parent/child relations, so this "
+                    "backend does not support a parent filter",
+                    "pyrolite 公开表契约没有父子关系，本后端不支持 parent 过滤",
+                )
+            )
         if not isinstance(name, str) or not name:
-            raise IntervalNotFoundError(f"name 必须是非空字符串，得到 {name!r}")
+            raise IntervalNotFoundError(
+                msg(
+                    f"name must be a non-empty string, got {name!r}",
+                    f"name 必须是非空字符串，得到 {name!r}",
+                )
+            )
 
         pool: list[Interval] = self._intervals
         if rank is not None:
             if rank not in CORE_RANKS:
-                raise InvalidRankError(f"非法 rank {rank!r}；核心 rank 为 {list(CORE_RANKS)!r}")
+                raise InvalidRankError(
+                    msg(
+                        f"illegal rank {rank!r}; the core ranks are {list(CORE_RANKS)!r}",
+                        f"非法 rank {rank!r}；核心 rank 为 {list(CORE_RANKS)!r}",
+                    )
+                )
             pool = [i for i in pool if i.rank == rank]
         # 通道优先级（name → aliases → label）与精确匹配优先由 ``_query`` 统一
         # 实现，与内置快照后端同语义。
@@ -293,7 +346,10 @@ class PyroliteBackend:
             return hits[0]
         if verdict == "ambiguous":
             raise AmbiguousIntervalError(
-                f"名称查询 {name!r} 在 pyrolite 表中命中 {len(hits)} 个候选",
+                msg(
+                    f"the name query {name!r} matched {len(hits)} candidates in the pyrolite table",
+                    f"名称查询 {name!r} 在 pyrolite 表中命中 {len(hits)} 个候选",
+                ),
                 candidates=[i.id for i in hits],
             )
         if rank is not None:
@@ -303,28 +359,58 @@ class PyroliteBackend:
             if matching:
                 true_ranks = sorted({i.rank for i in matching})
                 raise InvalidRankError(
-                    f"名称 {name!r} 存在于 pyrolite 表，但真实层级为 {true_ranks!r}，"
-                    f"与请求的 rank={rank!r} 不符；严格 rank 过滤不做层级回退，"
-                    "请改用正确的 rank 或省略 rank 过滤"
+                    msg(
+                        f"the name {name!r} exists in the pyrolite table but its real hierarchy is "
+                        f"{true_ranks!r}, which does not match the requested rank={rank!r}; strict "
+                        f"rank filtering never falls back through the hierarchy, so pass the "
+                        f"correct rank or omit the rank filter",
+                        f"名称 {name!r} 存在于 pyrolite 表，但真实层级为 {true_ranks!r}，"
+                        f"与请求的 rank={rank!r} 不符；严格 rank 过滤不做层级回退，"
+                        "请改用正确的 rank 或省略 rank 过滤",
+                    )
                 )
-        raise IntervalNotFoundError(f"名称 {name!r} 未命中 pyrolite 表中的任何区间")
+        raise IntervalNotFoundError(
+            msg(
+                f"the name {name!r} matches no interval in the pyrolite table",
+                f"名称 {name!r} 未命中 pyrolite 表中的任何区间",
+            )
+        )
 
     def find_by_age(self, age_ma: float, *, rank: str | None = None) -> Interval:
         if isinstance(age_ma, bool) or not isinstance(age_ma, (int, float)):
-            raise InvalidRangeError(f"age_ma 必须是数值，得到 {age_ma!r}")
+            raise InvalidRangeError(
+                msg(
+                    f"age_ma must be a number, got {age_ma!r}",
+                    f"age_ma 必须是数值，得到 {age_ma!r}",
+                )
+            )
         age = float(age_ma)
         if not math.isfinite(age) or age < 0:
-            raise InvalidRangeError(f"age_ma={age_ma!r} 必须是非负有限值")
+            raise InvalidRangeError(
+                msg(
+                    f"age_ma={age_ma!r} must be a non-negative finite value",
+                    f"age_ma={age_ma!r} 必须是非负有限值",
+                )
+            )
         if rank is not None and rank not in CORE_RANKS:
-            raise InvalidRankError(f"非法 rank {rank!r}；核心 rank 为 {list(CORE_RANKS)!r}")
+            raise InvalidRankError(
+                msg(
+                    f"illegal rank {rank!r}; the core ranks are {list(CORE_RANKS)!r}",
+                    f"非法 rank {rank!r}；核心 rank 为 {list(CORE_RANKS)!r}",
+                )
+            )
         # 结构行（Supereon/Superepoch/Subepoch 等）不参与命中判定，且按 rank
         # 具体度而非「最老优先」挑选多 rank 同时命中的区间——与内置后端一致
         # （规范 4.2 第 1、4 条）。
         pool = core_rank_pool(self._intervals, rank)
         if not pool:
             raise IntervalNotFoundError(
-                f"age_ma={age_ma!r} 在 rank={rank!r} 下无区间可用；"
-                f"可用的 rank 为 {list(CORE_RANKS)!r}"
+                msg(
+                    f"age_ma={age_ma!r} has no interval at rank={rank!r}; available ranks are "
+                    f"{list(CORE_RANKS)!r}",
+                    f"age_ma={age_ma!r} 在 rank={rank!r} 下无区间可用；"
+                    f"可用的 rank 为 {list(CORE_RANKS)!r}",
+                )
             )
         # 与内置快照后端一致的 0.0 语义：显式归入最年轻区间（规范 4.2 第 3 条）。
         hit, snapped = resolve_age(pool, age, tol=_TOL)
@@ -334,7 +420,12 @@ class PyroliteBackend:
                 return min(present, key=lambda i: i.older_ma)
         if hit is not None:
             return hit
-        raise IntervalNotFoundError(f"age_ma={age_ma!r} 在 pyrolite 表（rank={rank!r}）中无区间")
+        raise IntervalNotFoundError(
+            msg(
+                f"age_ma={age_ma!r} has no interval in the pyrolite table (rank={rank!r})",
+                f"age_ma={age_ma!r} 在 pyrolite 表（rank={rank!r}）中无区间",
+            )
+        )
 
     def iter_intervals(
         self,
@@ -350,7 +441,12 @@ class PyroliteBackend:
         lo = float(min_age) if min_age is not None else 0.0
         hi = float(max_age) if max_age is not None else math.inf
         if lo >= hi:
-            raise InvalidRangeError(f"要求 min_age < max_age，得到 {lo}, {hi}")
+            raise InvalidRangeError(
+                msg(
+                    f"expected min_age < max_age, got {lo}, {hi}",
+                    f"要求 min_age < max_age，得到 {lo}, {hi}",
+                )
+            )
         # ``ranks=None`` 表示五个核心 rank（不是「全部行含结构行」），窗口带
         # 1e-9 容差，排序键与内置后端一致。
         return iter(select_window(self._intervals, selected, lo, hi, tol=_TOL))

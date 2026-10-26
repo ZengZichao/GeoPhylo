@@ -9,7 +9,7 @@ ADR-2 记录见 ``docs/adr/ADR-2-inset-axes-for-tracks.md``。
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import TYPE_CHECKING, Literal, cast
 
 import matplotlib.colors
@@ -17,13 +17,16 @@ import matplotlib.text as mtext
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 
+from .._i18n import msg
 from ..coordinate.spec import CoordinateSpec
 from ..exceptions import CoordinateError, InvalidRangeError
 from ..timescale import Timescale
 from ..validation import (
     BORDERS,
     POSITIONS,
+    TICK_FORMATS,
     TICK_STYLES,
+    TRACK_REGISTERS,
     check_position_time_axis,
     normalize_ranks,
     require_age_window,
@@ -47,6 +50,7 @@ from .ticks import (
     fill_ages_style,
     filter_by_pixel_distance,
     format_age,
+    format_age_exact,
 )
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -98,9 +102,14 @@ def compute_track_layout(
     min_frac = (min_px / dpi) / host_span_in
     if min_frac * len(ranks) > total_thickness + 1e-12:
         raise InvalidRangeError(
-            f"thickness_ratio={total_thickness} 不足以容纳 {len(ranks)} 条轨道"
-            f"（每条至少 {min_frac:.4f}，共 {min_frac * len(ranks):.4f}）；"
-            "请增大 thickness_ratio 或减少 rank 数量"
+            msg(
+                f"thickness_ratio={total_thickness} is too small for {len(ranks)} tracks (each "
+                f"needs at least {min_frac:.4f}, {min_frac * len(ranks):.4f} in total); raise "
+                f"thickness_ratio or use fewer ranks",
+                f"thickness_ratio={total_thickness} 不足以容纳 {len(ranks)} 条轨道"
+                f"（每条至少 {min_frac:.4f}，共 {min_frac * len(ranks):.4f}）；"
+                "请增大 thickness_ratio 或减少 rank 数量",
+            )
         )
     raw = [total_thickness * w / total for w in weights]
     deficit = sum(max(0.0, min_frac - t) for t in raw)
@@ -130,6 +139,7 @@ def add_geo_axis(
     label: bool = True,
     label_size: float = 6.0,
     label_color: str = "auto",
+    min_label_gap: float = 0.0,
     skip: Sequence[str] | None = None,
     abbreviate: bool = True,
     border: Literal["none", "near", "far", "both"] = "both",
@@ -138,6 +148,9 @@ def add_geo_axis(
     rotation: float = 0.0,
     tick_style: Literal["none", "boundaries", "ages"] = "none",
     tick_max_count: int = 10,
+    tick_format: Literal["default", "exact"] | Callable[[float], str] = "default",
+    track_register: Literal["interval", "uniform"] = "interval",
+    fallback_truncation: int | None = None,
     key: str | None = None,
     preserve_axes_state: bool = True,
 ) -> GeoAxisResult:
@@ -153,8 +166,12 @@ def add_geo_axis(
     require_linear_numeric_axes(ax)
     if not isinstance(spec, CoordinateSpec):
         raise CoordinateError(
-            f"spec 必须是 CoordinateSpec，得到 {type(spec).__name__}；"
-            "坐标语义的唯一真值来源不能省略"
+            msg(
+                f"spec must be a CoordinateSpec, got {type(spec).__name__}; the single source of "
+                f"truth for coordinate semantics cannot be omitted",
+                f"spec 必须是 CoordinateSpec，得到 {type(spec).__name__}；"
+                "坐标语义的唯一真值来源不能省略",
+            )
         )
     position = cast(
         Literal["bottom", "top", "left", "right"],
@@ -172,6 +189,7 @@ def add_geo_axis(
     require_bool("preserve_axes_state", preserve_axes_state)
     require_number("alpha", alpha, minimum=0.0, maximum=1.0)
     require_number("label_size", label_size, minimum=0.0, exclude_minimum=True)
+    require_number("min_label_gap", min_label_gap, minimum=0.0)
     require_number("border_width", border_width, minimum=0.0)
     require_number("rotation", rotation)
     if (
@@ -179,21 +197,58 @@ def add_geo_axis(
         or not isinstance(tick_max_count, int)
         or tick_max_count < 1
     ):
-        raise InvalidRangeError(f"tick_max_count 必须是正整数，得到 {tick_max_count!r}")
+        raise InvalidRangeError(
+            msg(
+                f"tick_max_count must be a positive integer, got {tick_max_count!r}",
+                f"tick_max_count 必须是正整数，得到 {tick_max_count!r}",
+            )
+        )
     require_choice("border", border, BORDERS)
     require_choice("tick_style", tick_style, TICK_STYLES)
+    if not callable(tick_format):
+        require_choice("tick_format", tick_format, TICK_FORMATS)
+    require_choice("track_register", track_register, TRACK_REGISTERS)
+    if fallback_truncation is not None and (
+        isinstance(fallback_truncation, bool)
+        or not isinstance(fallback_truncation, int)
+        or fallback_truncation < 2
+    ):
+        raise InvalidRangeError(
+            msg(
+                f"fallback_truncation must be an integer >= 2 or None, got {fallback_truncation!r}",
+                f"fallback_truncation 必须是 >= 2 的整数或 None，得到 {fallback_truncation!r}",
+            )
+        )
     if not isinstance(label_color, str):
-        raise CoordinateError(f'label_color 必须是字符串或 "auto"，得到 {label_color!r}')
+        raise CoordinateError(
+            msg(
+                f'label_color must be a string or "auto", got {label_color!r}',
+                f'label_color 必须是字符串或 "auto"，得到 {label_color!r}',
+            )
+        )
     if not isinstance(border_color, str):
-        raise CoordinateError(f"border_color 必须是字符串，得到 {border_color!r}")
+        raise CoordinateError(
+            msg(
+                f"border_color must be a string, got {border_color!r}",
+                f"border_color 必须是字符串，得到 {border_color!r}",
+            )
+        )
     if key is not None and not isinstance(key, str):
-        raise CoordinateError(f"key 必须是字符串或 None，得到 {key!r}")
+        raise CoordinateError(
+            msg(
+                f"key must be a string or None, got {key!r}",
+                f"key 必须是字符串或 None，得到 {key!r}",
+            )
+        )
     window = require_age_window(
         min_age, max_age, spec_min=spec.age_range[0], spec_max=spec.age_range[1]
     )
     if timescale is not None and not isinstance(timescale, Timescale):
         raise CoordinateError(
-            f"timescale 必须是 Timescale 或 None，得到 {type(timescale).__name__}"
+            msg(
+                f"timescale must be a Timescale or None, got {type(timescale).__name__}",
+                f"timescale 必须是 Timescale 或 None，得到 {type(timescale).__name__}",
+            )
         )
     skip_names = _require_skip_names("skip", skip) if skip is not None else ()
 
@@ -208,6 +263,7 @@ def add_geo_axis(
         label=label,
         label_size=float(label_size),
         label_color=label_color,
+        min_label_gap=float(min_label_gap),
         skip=skip_names,
         abbreviate=abbreviate,
         border=border,
@@ -216,19 +272,32 @@ def add_geo_axis(
         rotation=float(rotation),
         tick_style=tick_style,
         tick_max_count=int(tick_max_count),
+        tick_format=tick_format,
+        track_register=track_register,
+        fallback_truncation=fallback_truncation,
     )
     if key is not None:
         existing = lookup_track(ax, key)
         if existing is not None:
             if existing.spec != spec:
                 raise CoordinateError(
-                    f"key={key!r} 已存在于该宿主 Axes 上且绑定了不同的 spec；"
-                    "坐标语义不可原地更新，请 remove() 后重新 add_geo_axis()"
+                    msg(
+                        f"key={key!r} already exists on this host Axes with a different spec; "
+                        f"coordinate semantics cannot be updated in place, remove() and "
+                        f"add_geo_axis() again",
+                        f"key={key!r} 已存在于该宿主 Axes 上且绑定了不同的 spec；"
+                        "坐标语义不可原地更新，请 remove() 后重新 add_geo_axis()",
+                    )
                 )
             if existing.position != position:
                 raise CoordinateError(
-                    f"key={key!r} 已存在于该宿主 Axes 上且 position={existing.position!r}；"
-                    "position 不可原地更新，请 remove() 后重新 add_geo_axis()"
+                    msg(
+                        f"key={key!r} already exists on this host Axes with "
+                        f"position={existing.position!r}; position cannot be updated in place, "
+                        f"remove() and add_geo_axis() again",
+                        f"key={key!r} 已存在于该宿主 Axes 上且 position={existing.position!r}；"
+                        "position 不可原地更新，请 remove() 后重新 add_geo_axis()",
+                    )
                 )
             return existing.update(**params)
 
@@ -626,10 +695,18 @@ class _LinearResult(GeoAxisResult):
         # （``filter_by_pixel_distance``）不足以保证数字互不粘连：这里按对齐后的
         # **包围盒**再做一次同优先级（从老到新、保留较老者）的过滤，被这一层丢掉
         # 的候选同样计入 ``ticks_dropped``。
+        # 数字格式化规则：default（>= 100 Ma 取整）/ exact（按快照存储精度）
+        # / 调用方传入的 age -> str。规则只影响文本，不影响刻度位置。
+        tick_format = p["tick_format"]
+        formatter = (
+            tick_format
+            if callable(tick_format)
+            else (format_age_exact if tick_format == "exact" else format_age)
+        )
         placed: list[tuple[float, str, str]] = []
         boxes: list[tuple[float, float]] = []
         for age in ages:
-            text = format_age(age)
+            text = formatter(age)
             width_px = estimate_text_size(text, fontsize, dpi)[0 if horizontal else 1]
             align, box_lo, box_hi = _tick_placement(
                 float(to_display(age)), width_px, edge_lo, edge_hi, horizontal
@@ -759,6 +836,7 @@ class _LinearResult(GeoAxisResult):
         if not items:
             self.labels_shortened = self.labels_rotated = False
             self.labels_hidden = 0
+            self.labels_shortened_n = self.labels_rotated_n = 0
             return
         dpi = self.host_ax.figure.dpi
         if precise and renderer is None:
@@ -798,8 +876,15 @@ class _LinearResult(GeoAxisResult):
             measure=measure,
             abbreviate=bool(p["abbreviate"]),
             time_bounds_px=time_bounds_px,
+            track_register=str(p["track_register"]),
+            fallback_truncation=p["fallback_truncation"],
+            min_label_gap_px=float(p["min_label_gap"]) * dpi / 72.0,
         )
         self.labels_shortened, self.labels_rotated, self.labels_hidden = shortened, rotated, hidden
+        # 计数只覆盖**可见**标签：图注报的 "N in full / M abbreviated" 正是对可见
+        # 标签的划分，隐藏的标签不参与计数。
+        self.labels_shortened_n = sum(1 for item in items if item.visible and item.shortened)
+        self.labels_rotated_n = sum(1 for item in items if item.visible and item.rotated)
         inverse = self.geo_ax.transData.inverted()
         for item in items:
             item.final_center = item.center

@@ -9,9 +9,17 @@ from __future__ import annotations
 
 import math
 
+from .._i18n import msg
 from ..exceptions import InvalidRangeError
 
-__all__ = ["cap_ticks", "dedupe_ages", "fill_ages_style", "filter_by_pixel_distance", "format_age"]
+__all__ = [
+    "cap_ticks",
+    "dedupe_ages",
+    "fill_ages_style",
+    "filter_by_pixel_distance",
+    "format_age",
+    "format_age_exact",
+]
 
 
 def format_age(age: float) -> str:
@@ -24,7 +32,7 @@ def format_age(age: float) -> str:
     格式化器直接得到；需要按存储精度输出的调用方应在调用侧覆写格式化规则。
     """
     if age < 0:
-        raise InvalidRangeError(f"age 不能为负：{age!r}")
+        raise InvalidRangeError(msg(f"age must not be negative: {age!r}", f"age 不能为负：{age!r}"))
     if age < 1:
         return f"{age:.2f}"
     if age < 100:
@@ -33,6 +41,26 @@ def format_age(age: float) -> str:
             text = text[:-2]
         return text
     return str(math.floor(age + 0.5))
+
+
+def format_age_exact(age: float) -> str:
+    """按快照的存储精度格式化年龄：不做任何取整（``tick_format="exact"``）。
+
+    ``format_age`` 对 ``age >= 100`` 一律取整（251.902 → 252），这会让快照里
+    记录的边界精度无法出现在图面上。本函数保留存储精度：整数值省略小数
+    （``66.0`` → ``"66"``），其余取 6 位小数后去尾零（``251.902`` →
+    ``"251.902"``，``0.0117`` → ``"0.0117"``）。快照年龄最多到 4 位小数，
+    因此 6 位截断不损失信息。
+
+    该规则逐字符等价于论文图 3 脚本中脚本侧的 ``fmt_boundary``；把它作为
+    ``tick_format="exact"`` 暴露，就是为了让调用方不必再覆写格式化器。
+    """
+    if age < 0:
+        raise InvalidRangeError(msg(f"age must not be negative: {age!r}", f"age 不能为负：{age!r}"))
+    value = float(age)
+    if value.is_integer():
+        return f"{value:g}"
+    return f"{value:.6f}".rstrip("0").rstrip(".")
 
 
 def dedupe_ages(ages, tol: float = 1e-9) -> list[float]:

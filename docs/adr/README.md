@@ -19,11 +19,12 @@ existing one.
 | ADR-3 | Return a `GeoAxisResult` result object instead of an `Axes` | [ADR-3-result-object-not-axes.md](ADR-3-result-object-not-axes.md) | `geophylo/render/linear.py` (`add_geo_axis`), `geophylo/render/result.py` (`GeoAxisResult`) |
 | ADR-4 | Adapters construct and validate coordinate contracts and do not draw | [ADR-4-adapters-build-contracts.md](ADR-4-adapters-build-contracts.md) | `geophylo/adapter/biopython.py` (module docstring) |
 | ADR-5 | Model a boundary as orthogonal states (`age_ma`, `qualifier`, `uncertainty_ma`, `definition`) | [ADR-5-per-boundary-state-model.md](ADR-5-per-boundary-state-model.md) | `geophylo/data/models.py` (`Boundary`) |
+| ADR-6 | Expose figure-quality knobs as opt-in overrides (`tick_format`, `track_register`, `fallback_truncation`, `min_label_gap`) and keep conservative defaults | [ADR-6-render-overrides-opt-in.md](ADR-6-render-overrides-opt-in.md) | `geophylo/render/labels.py` (`_candidate_sequence`), `geophylo/render/linear.py` (`add_geo_axis`) |
 
 ## Reading order
 
 Data layer first (ADR-1, ADR-5), then the coordinate/rendering layer
-(ADR-2, ADR-3), then the adapters (ADR-4): the adapter decision only makes sense
+(ADR-2, ADR-3), then the adapters (ADR-4), then the render overrides (ADR-6): the adapter decision only makes sense
 once the `CoordinateSpec` contract and the "rendering never touches the host"
 contract are in place.
 

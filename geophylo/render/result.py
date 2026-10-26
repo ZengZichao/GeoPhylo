@@ -13,8 +13,16 @@ from typing import TYPE_CHECKING, Any
 
 import matplotlib.transforms as mtransforms
 
+from .._i18n import msg
 from ..exceptions import CoordinateError, InvalidRangeError
-from ..validation import BORDERS, TICK_STYLES, require_bool, require_number
+from ..validation import (
+    BORDERS,
+    TICK_FORMATS,
+    TICK_STYLES,
+    TRACK_REGISTERS,
+    require_bool,
+    require_number,
+)
 
 if TYPE_CHECKING:  # pragma: no cover
     from matplotlib.axes import Axes
@@ -39,6 +47,7 @@ RENDER_PARAMS = (
     "label",
     "label_size",
     "label_color",
+    "min_label_gap",
     "skip",
     "abbreviate",
     "border",
@@ -47,28 +56,48 @@ RENDER_PARAMS = (
     "rotation",
     "tick_style",
     "tick_max_count",
+    "tick_format",
+    "track_register",
+    "fallback_truncation",
 )
 FORBIDDEN_UPDATE_PARAMS = ("spec", "position", "timescale")
 
 
 def _require_tick_max_count(name: str, value: Any) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-        raise InvalidRangeError(f"{name} 必须是正整数，得到 {value!r}")
+        raise InvalidRangeError(
+            msg(
+                f"{name} must be a positive integer, got {value!r}",
+                f"{name} 必须是正整数，得到 {value!r}",
+            )
+        )
     return value
 
 
 def _require_color_str(name: str, value: Any) -> None:
     if not isinstance(value, str):
-        raise CoordinateError(f"{name} 必须是字符串，得到 {value!r}")
+        raise CoordinateError(
+            msg(f"{name} must be a string, got {value!r}", f"{name} 必须是字符串，得到 {value!r}")
+        )
 
 
 def _require_skip_names(name: str, value: Any) -> tuple[str, ...]:
     if isinstance(value, str) or not isinstance(value, Sequence):
-        raise CoordinateError(f"{name} 必须是字符串序列（不可为单个字符串），得到 {value!r}")
+        raise CoordinateError(
+            msg(
+                f"{name} must be a sequence of strings (not a bare string), got {value!r}",
+                f"{name} 必须是字符串序列（不可为单个字符串），得到 {value!r}",
+            )
+        )
     names = tuple(value)
     for item in names:
         if not isinstance(item, str):
-            raise CoordinateError(f"{name} 的元素必须是字符串，得到 {item!r}")
+            raise CoordinateError(
+                msg(
+                    f"elements of {name} must be strings, got {item!r}",
+                    f"{name} 的元素必须是字符串，得到 {item!r}",
+                )
+            )
     return names
 
 
@@ -90,6 +119,8 @@ def validate_render_params(merged: dict[str, Any]) -> None:
         require_number("alpha", merged["alpha"], minimum=0.0, maximum=1.0)
     if "label_size" in merged:
         require_number("label_size", merged["label_size"], minimum=0.0, exclude_minimum=True)
+    if "min_label_gap" in merged:
+        require_number("min_label_gap", merged["min_label_gap"], minimum=0.0)
     if "border_width" in merged:
         require_number("border_width", merged["border_width"], minimum=0.0)
     if "rotation" in merged:
@@ -105,6 +136,38 @@ def validate_render_params(merged: dict[str, Any]) -> None:
         _require_color_str("border_color", merged["border_color"])
     if "skip" in merged:
         _require_skip_names("skip", merged["skip"])
+    if "tick_format" in merged:
+        value = merged["tick_format"]
+        # 可调用对象优先：允许调用方传入自定的 age -> str 规则。
+        if not callable(value) and value not in TICK_FORMATS:
+            raise InvalidRangeError(
+                msg(
+                    f"tick_format must be one of {TICK_FORMATS!r} or a callable (age -> str), got "
+                    f"{value!r}",
+                    f"tick_format 只能是 {TICK_FORMATS!r} 之一或可调用对象（age -> str），"
+                    f"得到 {value!r}",
+                )
+            )
+    if "track_register" in merged:
+        value = merged["track_register"]
+        if value not in TRACK_REGISTERS:
+            raise InvalidRangeError(
+                msg(
+                    f"track_register must be one of {TRACK_REGISTERS!r}, got {value!r}",
+                    f"track_register 只能是 {TRACK_REGISTERS!r} 之一，得到 {value!r}",
+                )
+            )
+    if "fallback_truncation" in merged:
+        value = merged["fallback_truncation"]
+        if value is not None and (
+            isinstance(value, bool) or not isinstance(value, int) or value < 2
+        ):
+            raise InvalidRangeError(
+                msg(
+                    f"fallback_truncation must be an integer >= 2 or None, got {value!r}",
+                    f"fallback_truncation 必须是 >= 2 的整数或 None，得到 {value!r}",
+                )
+            )
 
 
 class AxesState:
@@ -193,9 +256,13 @@ class GeoAxisResult:
         self.spec = spec
         self.key = key
         #: 布局诊断：记录标签降级到哪一步，供用户诊断与测试断言。
+        #: ``labels_shortened``/``labels_rotated`` 是"是否发生过"的布尔位；
+        #: ``labels_shortened_n``/``labels_rotated_n`` 是计数，可直接被图注引用。
         self.labels_shortened: bool = False
         self.labels_rotated: bool = False
         self.labels_hidden: int = 0
+        self.labels_shortened_n: int = 0
+        self.labels_rotated_n: int = 0
         #: 布局诊断：``sync()`` 因空间不足以完成厚度重分配而保持上次布局时为
         #: ``True``（规范 4.5/5.1 的「标签降级诊断通道」记录）。
         self.sync_degraded: bool = False
@@ -265,12 +332,23 @@ class GeoAxisResult:
         for name in self._forbidden_update_params():
             if name in kwargs:
                 raise CoordinateError(
-                    f"update() 不支持原地修改 {name!r}：坐标语义或承载 Axes 的变化会留下"
-                    "与新契约不一致的轨道状态；请 remove() 后重新创建"
+                    msg(
+                        f"update() cannot modify {name!r} in place: a change of coordinate "
+                        f"semantics or of the carrying Axes would leave track state inconsistent "
+                        f"with the new contract; remove() and create it again",
+                        f"update() 不支持原地修改 {name!r}：坐标语义或承载 Axes 的变化会留下"
+                        "与新契约不一致的轨道状态；请 remove() 后重新创建",
+                    )
                 )
         unknown = set(kwargs) - self._update_allowed_params()
         if unknown:
-            raise CoordinateError(f"update() 只接受渲染参数，得到未知参数 {sorted(unknown)!r}")
+            raise CoordinateError(
+                msg(
+                    f"update() accepts rendering parameters only, got the unknown parameters "
+                    f"{sorted(unknown)!r}",
+                    f"update() 只接受渲染参数，得到未知参数 {sorted(unknown)!r}",
+                )
+            )
         merged = dict(self.params)
         merged.update(kwargs)
         if "ranks" in merged:

@@ -10,6 +10,7 @@ import math
 from collections.abc import Callable, Sequence
 from typing import Any, cast
 
+from ._i18n import msg
 from .exceptions import AxesTypeError, CoordinateError, InvalidRangeError, InvalidRankError
 
 CORE_RANKS: tuple[str, ...] = ("Eon", "Era", "Period", "Epoch", "Age")
@@ -19,6 +20,8 @@ TIME_AXES: tuple[str, ...] = ("x", "y")
 MODES: tuple[str, ...] = ("absolute_age", "root_distance")
 BORDERS: tuple[str, ...] = ("none", "near", "far", "both")
 TICK_STYLES: tuple[str, ...] = ("none", "boundaries", "ages")
+TICK_FORMATS: tuple[str, ...] = ("default", "exact")
+TRACK_REGISTERS: tuple[str, ...] = ("interval", "uniform")
 BAND_UNITS: tuple[str, ...] = ("radial_fraction", "data")
 
 
@@ -43,23 +46,47 @@ def require_number(
     if value is None:
         if allow_none:
             return None
-        raise InvalidRangeError(f"{name} 不能为 None；请显式给出数值")
+        raise InvalidRangeError(
+            msg(
+                f"{name} must not be None; pass an explicit value",
+                f"{name} 不能为 None；请显式给出数值",
+            )
+        )
     if not is_real_number(value):
-        raise InvalidRangeError(f"{name} 必须是数值（int/float），得到 {value!r}；bool 不被接受")
+        raise InvalidRangeError(
+            msg(
+                f"{name} must be a real number (int/float), got {value!r}; bool is not accepted",
+                f"{name} 必须是数值（int/float），得到 {value!r}；bool 不被接受",
+            )
+        )
     number = float(value)
     if not math.isfinite(number):
-        raise InvalidRangeError(f"{name} 必须是有限值，得到 {value!r}")
+        raise InvalidRangeError(
+            msg(f"{name} must be finite, got {value!r}", f"{name} 必须是有限值，得到 {value!r}")
+        )
     if minimum is not None and (number < minimum or (exclude_minimum and number == minimum)):
         lower = ">" if exclude_minimum else ">="
-        raise InvalidRangeError(f"{name}={number} 超出合法下界（{lower}{minimum}）")
+        raise InvalidRangeError(
+            msg(
+                f"{name}={number} is below the allowed lower bound ({lower}{minimum})",
+                f"{name}={number} 超出合法下界（{lower}{minimum}）",
+            )
+        )
     if maximum is not None and number > maximum:
-        raise InvalidRangeError(f"{name}={number} 超出合法上界（<={maximum}）")
+        raise InvalidRangeError(
+            msg(
+                f"{name}={number} is above the allowed upper bound (<= {maximum})",
+                f"{name}={number} 超出合法上界（<={maximum}）",
+            )
+        )
     return number
 
 
 def require_bool(name: str, value: Any) -> bool:
     if not isinstance(value, bool):
-        raise InvalidRangeError(f"{name} 必须是布尔值，得到 {value!r}")
+        raise InvalidRangeError(
+            msg(f"{name} must be a bool, got {value!r}", f"{name} 必须是布尔值，得到 {value!r}")
+        )
     return value
 
 
@@ -67,7 +94,12 @@ def require_choice(
     name: str, value: Any, choices: Sequence[str], *, exc: type = CoordinateError
 ) -> str:
     if value not in choices:
-        raise exc(f"{name}={value!r} 非法；合法取值为 {sorted(choices)!r}")
+        raise exc(
+            msg(
+                f"{name}={value!r} is not allowed; valid values are {sorted(choices)!r}",
+                f"{name}={value!r} 非法；合法取值为 {sorted(choices)!r}",
+            )
+        )
     return str(value)
 
 
@@ -81,9 +113,15 @@ def check_position_time_axis(position: str, time_axis: str) -> None:
     if time_axis != expected:
         hint = "bottom/top" if expected == "x" else "left/right"
         raise CoordinateError(
-            f"position={position!r} 与 spec.time_axis={time_axis!r} 冲突："
-            f'position={position!r} 需要 spec.time_axis="{expected}"；'
-            f"请改用 position={hint} 之一，或修正 spec 的 time_axis"
+            msg(
+                f"position={position!r} conflicts with spec.time_axis={time_axis!r}: "
+                f"position={position!r} "
+                f'requires spec.time_axis="{expected}"; use one of position={hint}, or fix the '
+                f"spec's time_axis",
+                f"position={position!r} 与 spec.time_axis={time_axis!r} 冲突："
+                f'position={position!r} 需要 spec.time_axis="{expected}"；'
+                f"请改用 position={hint} 之一，或修正 spec 的 time_axis",
+            )
         )
 
 
@@ -96,23 +134,41 @@ def normalize_ranks(ranks: str | Sequence[str] | None, *, default: bool = True) 
     if ranks is None:
         if default:
             return ("Period",)
-        raise InvalidRankError("ranks 不能为 None")
+        raise InvalidRankError(msg("ranks must not be None", "ranks 不能为 None"))
     if isinstance(ranks, str):
         ranks = (ranks,)
     ranks = tuple(ranks)
     if len(ranks) == 0:
-        raise InvalidRankError('ranks 为空序列；至少需要一个 rank，或传 None 使用默认 ("Period",)')
+        raise InvalidRankError(
+            msg(
+                "ranks is an empty sequence; give at least one rank, or pass None for the default "
+                "('Period',)",
+                'ranks 为空序列；至少需要一个 rank，或传 None 使用默认 ("Period",)',
+            )
+        )
     seen: set[str] = set()
     for rank in ranks:
         if not isinstance(rank, str):
-            raise InvalidRankError(f"rank 必须是字符串，得到 {rank!r}")
+            raise InvalidRankError(
+                msg(f"rank must be a string, got {rank!r}", f"rank 必须是字符串，得到 {rank!r}")
+            )
         if rank in seen:
-            raise InvalidRankError(f"ranks 含重复元素 {rank!r}；重复 rank 会重复绘制，请去重后传入")
+            raise InvalidRankError(
+                msg(
+                    f"ranks contains the duplicate {rank!r}; duplicates would be drawn twice, "
+                    f"de-duplicate before passing",
+                    f"ranks 含重复元素 {rank!r}；重复 rank 会重复绘制，请去重后传入",
+                )
+            )
         seen.add(rank)
     illegal = [r for r in ranks if r not in CORE_RANKS]
     if illegal:
         raise InvalidRankError(
-            f"非法 rank {illegal!r}；核心 rank 为 {list(CORE_RANKS)!r}（大小写敏感的精确匹配）"
+            msg(
+                f"illegal rank {illegal!r}; the core ranks are {list(CORE_RANKS)!r} (exact, "
+                f"case-sensitive match)",
+                f"非法 rank {illegal!r}；核心 rank 为 {list(CORE_RANKS)!r}（大小写敏感的精确匹配）",
+            )
         )
     return ranks
 
@@ -139,11 +195,21 @@ def require_age_window(
         validated_max = require_number("max_age", max_age)
         hi = spec_max if validated_max is None else float(validated_max)
     if not lo < hi:
-        raise InvalidRangeError(f"要求 0 <= min_age < max_age，得到 min_age={lo}, max_age={hi}")
+        raise InvalidRangeError(
+            msg(
+                f"expected 0 <= min_age < max_age, got min_age={lo}, max_age={hi}",
+                f"要求 0 <= min_age < max_age，得到 min_age={lo}, max_age={hi}",
+            )
+        )
     if lo < spec_min - 1e-12 or hi > spec_max + 1e-12:
         raise InvalidRangeError(
-            f"绘制窗口 [{lo}, {hi}] 超出 spec.age_range=[{spec_min}, {spec_max}] 的合法域；"
-            "请扩大 spec.age_range 或缩小绘制窗口"
+            msg(
+                f"the draw window [{lo}, {hi}] lies outside spec.age_range=[{spec_min}, "
+                f"{spec_max}]; "
+                f"widen spec.age_range or narrow the window",
+                f"绘制窗口 [{lo}, {hi}] 超出 spec.age_range=[{spec_min}, {spec_max}] 的合法域；"
+                "请扩大 spec.age_range 或缩小绘制窗口",
+            )
         )
     return lo, hi
 
@@ -168,21 +234,39 @@ def resolve_age_conversion(
         factor = float(age_conversion)
         if not math.isfinite(factor) or factor <= 0:
             raise CoordinateError(
-                f"age_conversion={factor!r} 必须为正有限值（branch length 单位 → Ma）"
+                msg(
+                    f"age_conversion={factor!r} must be a positive finite value (branch-length "
+                    f"unit -> Ma)",
+                    f"age_conversion={factor!r} 必须为正有限值（branch length 单位 → Ma）",
+                )
             )
         convert = lambda bl: bl * factor  # noqa: E731
     else:
         raise CoordinateError(
-            f"age_conversion 必须是 float 或 callable，得到 {age_conversion!r}；"
-            "仅凭 root_age 无法把 substitutions/site 之类的单位换算成 Ma"
+            msg(
+                f"age_conversion must be a float or a callable, got {age_conversion!r}; root_age "
+                f"alone cannot convert units such as substitutions/site to Ma",
+                f"age_conversion 必须是 float 或 callable，得到 {age_conversion!r}；"
+                "仅凭 root_age 无法把 substitutions/site 之类的单位换算成 Ma",
+            )
         )
     probe = convert(1.0)
     try:
         probe_value = float(probe)
     except (TypeError, ValueError) as exc:
-        raise CoordinateError(f"age_conversion(1.0) = {probe!r} 不是数值") from exc
+        raise CoordinateError(
+            msg(
+                f"age_conversion(1.0) = {probe!r} is not a number",
+                f"age_conversion(1.0) = {probe!r} 不是数值",
+            )
+        ) from exc
     if not math.isfinite(probe_value):
-        raise CoordinateError(f"age_conversion(1.0) = {probe!r} 非有限值")
+        raise CoordinateError(
+            msg(
+                f"age_conversion(1.0) = {probe!r} is not finite",
+                f"age_conversion(1.0) = {probe!r} 非有限值",
+            )
+        )
     return convert
 
 
@@ -192,8 +276,12 @@ def require_linear_numeric_axes(ax: Any, *, name: str = "ax") -> None:
     y_scale = ax.get_yscale()
     if x_scale != "linear" or y_scale != "linear":
         raise AxesTypeError(
-            f"{name} 的轴刻度必须是 linear（x={x_scale!r}, y={y_scale!r}）；"
-            "log 轴被拒绝是因为 0 Ma 在 log 轴上无定义"
+            msg(
+                f"{name} must use linear axes (x={x_scale!r}, y={y_scale!r}); a log axis is "
+                f"rejected because 0 Ma is undefined on it",
+                f"{name} 的轴刻度必须是 linear（x={x_scale!r}, y={y_scale!r}）；"
+                "log 轴被拒绝是因为 0 Ma 在 log 轴上无定义",
+            )
         )
     for axis_name, axis in (("x", ax.xaxis), ("y", ax.yaxis)):
         get_converter = getattr(axis, "get_converter", None)
@@ -204,6 +292,10 @@ def require_linear_numeric_axes(ax: Any, *, name: str = "ax") -> None:
         module = type(converter).__module__ or ""
         if "DateConverter" in type_name or "StrCategoryConverter" in type_name or "dates" in module:
             raise AxesTypeError(
-                f"{name} 的 {axis_name} 轴是日期/分类轴（{type_name}），不是数值轴；"
-                "地质时间轴要求数值线性轴"
+                msg(
+                    f"the {axis_name} axis of {name} is a date/categorical axis ({type_name}), "
+                    f"not a numeric one; a geological time axis requires a numeric linear axis",
+                    f"{name} 的 {axis_name} 轴是日期/分类轴（{type_name}），不是数值轴；"
+                    "地质时间轴要求数值线性轴",
+                )
             )

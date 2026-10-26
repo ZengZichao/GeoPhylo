@@ -27,7 +27,7 @@ exactly these five).
    the version string prefixed with `v`):
 
    ```bash
-   VERSION=0.1.0
+   VERSION=0.1.1   # the version being released
    git tag -a "v${VERSION}" -m "GeoPhylo ${VERSION}"
    git push origin main "v${VERSION}"
    gh release create "v${VERSION}" --latest --title "GeoPhylo ${VERSION}" --generate-notes
@@ -103,7 +103,7 @@ Note: `workflow_dispatch` runs publish to PyPI but never touch GitHub Releases
 
 | Target | Location | What to fill in |
 | --- | --- | --- |
-| `CITATION.cff` | `identifiers[0].value` (currently `10.5281/zenodo.REPLACE_AT_FIRST_RELEASE`) | the Concept DOI |
+| `CITATION.cff` | `identifiers[0].value` — already filled in: the record carries the minted Concept DOI `10.5281/zenodo.23060662` (`10.5281/zenodo.REPLACE_AT_FIRST_RELEASE` is only the placeholder inserted before the first release) | the Concept DOI |
 | Optional | top-of-`README.md` badge, reference sections of `docs/user-guide.*.md` | a Version DOI badge `https://zenodo.org/badge/DOI/<version-doi>.svg` |
 
 Once filled in, also delete the `REPLACE_AT_FIRST_RELEASE` comment lines in

@@ -7,6 +7,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 from typing import Literal
 
+from .._i18n import msg
+
 BoundaryQualifier = Literal["defined", "constrained", "approximate", "present", "unknown"]
 BoundaryDefinition = Literal["gssp", "gssa", "numeric_estimate", "present", "unknown"]
 Capabilities = bool | Literal["unknown"]
@@ -133,8 +135,13 @@ class Interval:
         所以保留可调用，同时把 ``Interval`` 的谓词风格统一为属性。
         """
         warnings.warn(
-            "Interval.is_approximate_any() 已废弃，请改用属性 "
-            "Interval.has_approximate_boundary（谓词统一为属性）",
+            msg(
+                "Interval.is_approximate_any() is deprecated; use the property "
+                "Interval.has_approximate_boundary "
+                "instead (the predicate is unified as a property)",
+                "Interval.is_approximate_any() 已废弃，请改用属性 "
+                "Interval.has_approximate_boundary（谓词统一为属性）",
+            ),
             DeprecationWarning,
             stacklevel=2,
         )

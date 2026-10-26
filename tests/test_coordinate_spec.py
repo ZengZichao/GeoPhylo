@@ -71,7 +71,7 @@ class TestAgeToData:
 
     def test_negative_root_distance_rejected(self):
         spec = CoordinateSpec.root_distance(time_axis="x", age_range=(0.0, 66.0), root_age=50.0)
-        with pytest.raises(CoordinateError, match="根距离"):
+        with pytest.raises(CoordinateError, match="root distance"):
             spec.age_to_data(66.0)  # 66 > root_age → 负根距离
 
     def test_bool_rejected(self):

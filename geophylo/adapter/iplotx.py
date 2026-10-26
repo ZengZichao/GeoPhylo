@@ -19,6 +19,7 @@ import math
 from collections.abc import Callable
 from typing import Literal
 
+from .._i18n import msg
 from ..coordinate.spec import CoordinateSpec
 from ..exceptions import AxesTypeError, CoordinateError
 from ..validation import (
@@ -41,13 +42,21 @@ def spec_from_iplotx(
     require_time_axis(time_axis)
     if not hasattr(artist, "get_layout") or not hasattr(artist, "axes"):
         raise CoordinateError(
-            f"artist 必须是 iplotx 的 TreeArtist（暴露 .axes 与 get_layout()），"
-            f"得到 {type(artist).__name__}"
+            msg(
+                f"artist must be an iplotx TreeArtist (exposing .axes and get_layout()), got "
+                f"{type(artist).__name__}",
+                f"artist 必须是 iplotx 的 TreeArtist（暴露 .axes 与 get_layout()），"
+                f"得到 {type(artist).__name__}",
+            )
         )
     if root_age is None:
         raise CoordinateError(
-            "root_age 必填（根年龄来自外部时间校准结果，本库不接受 branch length "
-            "大概率是 Ma 这类假设）"
+            msg(
+                "root_age is required (the root age comes from an external time calibration; this "
+                "library does not accept assumptions such as 'branch lengths are probably Ma')",
+                "root_age 必填（根年龄来自外部时间校准结果，本库不接受 branch length "
+                "大概率是 Ma 这类假设）",
+            )
         )
     if (
         isinstance(root_age, bool)
@@ -55,7 +64,12 @@ def spec_from_iplotx(
         or not math.isfinite(float(root_age))
         or float(root_age) < 0
     ):
-        raise CoordinateError(f"root_age 必须是非负有限数值，得到 {root_age!r}")
+        raise CoordinateError(
+            msg(
+                f"root_age must be a non-negative finite number, got {root_age!r}",
+                f"root_age 必须是非负有限数值，得到 {root_age!r}",
+            )
+        )
     convert = resolve_age_conversion(age_conversion)  # 与 Bio 侧共用同一份解析
 
     _reject_radial(artist)
@@ -64,7 +78,12 @@ def spec_from_iplotx(
     positions = _layout_positions(layout)
     if positions is None:
         raise CoordinateError(
-            "无法从 TreeArtist.get_layout() 读取节点坐标；请核对其锁定的 iplotx 版本的布局对象结构"
+            msg(
+                "could not read node coordinates from TreeArtist.get_layout(); check the layout "
+                "object structure of the pinned iplotx version",
+                "无法从 TreeArtist.get_layout() 读取节点坐标；"
+                "请核对其锁定的 iplotx 版本的布局对象结构",
+            )
         )
     # 旧版布局可能返回 {node: complex}，对 complex 迭代会抛 TypeError。
     # 先判 isinstance(pair, complex)，再判可迭代元素的复数。
@@ -74,9 +93,15 @@ def spec_from_iplotx(
         for pair in positions.values()
     ):
         raise AxesTypeError(
-            "检测到 iplotx radial 布局（极坐标形式的布局数据）；"
-            "实验性 API 不承诺通过 add_geo_ring()/spec_from_iplotx() 适配 iplotx radial，"
-            "环形树请按规范 6.3 的配方在原生极坐标 Axes 上自绘"
+            msg(
+                "iplotx radial layout detected (polar-shaped layout data); the experimental API "
+                "does not promise to adapt iplotx radial through "
+                "add_geo_ring()/spec_from_iplotx(); draw the circular tree yourself on a native "
+                "polar Axes following spec 6.3; see user-guide.en.md FAQ Q13",
+                "检测到 iplotx radial 布局（极坐标形式的布局数据）；"
+                "实验性 API 不承诺通过 add_geo_ring()/spec_from_iplotx() 适配 iplotx radial，"
+                "环形树请按规范 6.3 的配方在原生极坐标 Axes 上自绘；见 user-guide.en.md FAQ Q13",
+            )
         )
     ax = artist.axes
     if ax is not None:
@@ -84,7 +109,11 @@ def spec_from_iplotx(
 
         if isinstance(ax, matplotlib.projections.polar.PolarAxes):
             raise AxesTypeError(
-                "iplotx radial 布局不支持：宿主 Axes 是极坐标 Axes；环形树请按 6.3 配方自绘"
+                msg(
+                    "iplotx radial layout is not supported: the host Axes is a polar Axes; draw "
+                    "the circular tree yourself following 6.3",
+                    "iplotx radial 布局不支持：宿主 Axes 是极坐标 Axes；环形树请按 6.3 配方自绘",
+                )
             )
         require_linear_numeric_axes(ax, name="artist.axes")
 
@@ -98,8 +127,12 @@ def spec_from_iplotx(
         ma = float(convert(distance))
         if not math.isfinite(ma) or ma < 0:
             raise CoordinateError(
-                f"age_conversion 产生了非法的 Ma 距离 {ma!r}（布局根距离 {distance!r}）；"
-                "换算结果必须非负且有限"
+                msg(
+                    f"age_conversion produced an invalid Ma distance {ma!r} (layout root distance "
+                    f"{distance!r}); converted distances must be non-negative and finite",
+                    f"age_conversion 产生了非法的 Ma 距离 {ma!r}（布局根距离 {distance!r}）；"
+                    "换算结果必须非负且有限",
+                )
             )
         ma_distances.append(ma)
     max_distance = max(ma_distances, default=0.0)
@@ -107,8 +140,12 @@ def spec_from_iplotx(
     min_age = root - max_distance
     if min_age < 0:
         raise CoordinateError(
-            f"布局数据域的最大根距离为 {max_distance!r}，超过 root_age={root}；"
-            "请核对 root_age 或 age_conversion"
+            msg(
+                f"the maximum root distance in the layout data is {max_distance!r}, exceeding "
+                f"root_age={root}; re-check root_age or age_conversion",
+                f"布局数据域的最大根距离为 {max_distance!r}，超过 root_age={root}；"
+                "请核对 root_age 或 age_conversion",
+            )
         )
     return CoordinateSpec.root_distance(
         time_axis=time_axis, age_range=(min_age, root), root_age=root
@@ -122,9 +159,16 @@ def _reject_radial(artist) -> None:
         coord_system = internal.get("layout_coordinate_system")
         if coord_system == "polar":
             raise AxesTypeError(
-                "检测到 iplotx radial 布局（layout_coordinate_system='polar'）；"
-                "实验性 API 不承诺通过 add_geo_ring()/spec_from_iplotx() 适配 iplotx radial，"
-                "环形树请按规范 6.3 的配方在原生极坐标 Axes 上自绘"
+                msg(
+                    "iplotx radial layout detected (layout_coordinate_system='polar'); the "
+                    "experimental API does not promise to adapt iplotx radial through "
+                    "add_geo_ring()/spec_from_iplotx(); draw the circular tree yourself on a "
+                    "native polar Axes following spec 6.3; see user-guide.en.md FAQ Q13",
+                    "检测到 iplotx radial 布局（layout_coordinate_system='polar'）；"
+                    "实验性 API 不承诺通过 add_geo_ring()/spec_from_iplotx() 适配 iplotx radial，"
+                    "环形树请按规范 6.3 的配方在原生极坐标 Axes 上自绘；"
+                    "见 user-guide.en.md FAQ Q13",
+                )
             )
     get_layout_name = getattr(artist, "get_layout_name", None)
     if callable(get_layout_name):
@@ -134,9 +178,16 @@ def _reject_radial(artist) -> None:
             name = None
         if name == "radial":
             raise AxesTypeError(
-                "检测到 iplotx radial 布局（get_layout_name() == 'radial'）；"
-                "实验性 API 不承诺通过 add_geo_ring()/spec_from_iplotx() 适配 iplotx radial，"
-                "环形树请按规范 6.3 的配方在原生极坐标 Axes 上自绘"
+                msg(
+                    "iplotx radial layout detected (get_layout_name() == 'radial'); the "
+                    "experimental API does not promise to adapt iplotx radial through "
+                    "add_geo_ring()/spec_from_iplotx(); draw the circular tree yourself on a "
+                    "native polar Axes following spec 6.3; see user-guide.en.md FAQ Q13",
+                    "检测到 iplotx radial 布局（get_layout_name() == 'radial'）；"
+                    "实验性 API 不承诺通过 add_geo_ring()/spec_from_iplotx() 适配 iplotx radial，"
+                    "环形树请按规范 6.3 的配方在原生极坐标 Axes 上自绘；"
+                    "见 user-guide.en.md FAQ Q13",
+                )
             )
 
 

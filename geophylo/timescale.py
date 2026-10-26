@@ -20,6 +20,7 @@ from collections.abc import Iterator, Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from ._i18n import msg
 from .data.builtin import SnapshotBackend, load_snapshot, snapshot_provenance
 from .data.models import BackendMetadata, Interval
 from .exceptions import DataValidationError
@@ -44,14 +45,24 @@ class Timescale:
         if isinstance(backend, str):
             if backend != "pyrolite":
                 raise ValueError(
-                    f"未知的 backend 字符串 {backend!r}；可用值为 'pyrolite'，"
-                    "或传入 TimescaleBackend 实例"
+                    msg(
+                        f"unknown backend string {backend!r}; valid values are 'pyrolite', or "
+                        f"pass a TimescaleBackend instance",
+                        f"未知的 backend 字符串 {backend!r}；可用值为 'pyrolite'，"
+                        "或传入 TimescaleBackend 实例",
+                    )
                 )
             from .data.pyrolite_backend import PyroliteBackend
 
             backend = PyroliteBackend()
             if version is not None:
-                raise ValueError("pyrolite 后端不支持 version 选择；内置快照才支持版本化")
+                raise ValueError(
+                    msg(
+                        "the pyrolite backend does not support version selection; only the bundled "
+                        "snapshots do",
+                        "pyrolite 后端不支持 version 选择；内置快照才支持版本化",
+                    )
+                )
         elif backend is None:
             backend = SnapshotBackend(load_snapshot(version))
             from_index = True
@@ -59,7 +70,12 @@ class Timescale:
             # 自定义实例同样拒绝 version 参数，与 pyrolite 分支口径一致
             if version is not None:
                 raise ValueError(
-                    "传入 TimescaleBackend 实例时不支持 version 选择；version 的数据来自实例本身"
+                    msg(
+                        "passing a TimescaleBackend instance does not support version selection; "
+                        "the version data comes from the instance itself",
+                        "传入 TimescaleBackend 实例时不支持 version 选择；"
+                        "version 的数据来自实例本身",
+                    )
                 )
         self._backend = backend
         # 只有经 versions.json 解析出来的载荷才拥有"已发布快照"的出处：离线
@@ -70,11 +86,19 @@ class Timescale:
         derived = (self._provenance or {}).get("derived_from")
         if derived:
             warnings.warn(
-                f"快照版本 {self.version!r} 是推导快照：由 "
-                f"{derived.get('chart_version')!r} 按 {derived.get('method')!r} 生成"
-                f"（{derived.get('note') or '见 PROVENANCE.md'}）；它不是上游归档，"
-                "与基线快照共享来源提交与哈希。完整披露见 "
-                "``Timescale.provenance['provenance_document']``。",
+                msg(
+                    f"snapshot {self.version!r} is a derived snapshot: rebuilt from "
+                    f"{derived.get('chart_version')!r} "
+                    f"by {derived.get('method')!r} ({derived.get('note') or 'see PROVENANCE.md'}); "
+                    f"it is not an upstream archive and shares its source commit and hash with "
+                    f"the baseline snapshot. Full disclosure: "
+                    f"Timescale.provenance['provenance_document'].",
+                    f"快照版本 {self.version!r} 是推导快照：由 "
+                    f"{derived.get('chart_version')!r} 按 {derived.get('method')!r} 生成"
+                    f"（{derived.get('note') or '见 PROVENANCE.md'}）；它不是上游归档，"
+                    "与基线快照共享来源提交与哈希。完整披露见 "
+                    "``Timescale.provenance['provenance_document']``。",
+                ),
                 UserWarning,
                 stacklevel=2,
             )

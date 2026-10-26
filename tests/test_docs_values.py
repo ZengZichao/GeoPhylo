@@ -293,7 +293,7 @@ def _adr_texts() -> dict[str, str]:
 def test_every_adr_documents_its_rejected_alternatives():
     """仓库结构约定：每个不显然的选择都在 ADR 里连同被否方案一并记录，需机器校验。"""
     adrs = _adr_texts()
-    assert len(adrs) == 5, f"docs/adr 下应有 ADR-1…5 五份，实得 {sorted(adrs)}"
+    assert len(adrs) == 6, f"docs/adr 下应有 ADR-1…6 六份，实得 {sorted(adrs)}"
     for name, text in adrs.items():
         assert "## Rejected alternatives" in text, f"{name} 缺少被否方案一节"
         body = text.split("## Rejected alternatives", 1)[1]

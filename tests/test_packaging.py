@@ -368,10 +368,17 @@ class TestReleaseMetadata:
             "CFF 人物键名写反了：应为 family-names / given-names"
         )
         authors_block = cff_text.split("references:")[0]
-        assert (
-            authors_block.count("family-names:") == 1 and authors_block.count("given-names:") == 1
-        )
-        for name in ("Zeng", "Zichao", "0000-0001-6553-970X"):
+        # 作者数与 given-names 数必须一致（防漏写或键名写反），且两位作者都要在。
+        assert authors_block.count("family-names:") == authors_block.count("given-names:")
+        assert authors_block.count("family-names:") == 2, "CITATION.cff 应为两位作者"
+        for name in (
+            "Zeng",
+            "Zichao",
+            "0000-0001-6553-970X",
+            "Wang",
+            "Yinzhao",
+            "0000-0001-8715-1386",
+        ):
             assert name in authors_block, f"CITATION.cff 作者缺少 {name}"
 
     def test_doi_is_placeholder_or_real_doi(self):

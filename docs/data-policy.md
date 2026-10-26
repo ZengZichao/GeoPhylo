@@ -114,7 +114,12 @@ The upstream changeNotes (`skos:changeNote "2026-06: hasBeginning 246.7 ->
 
 `--to 2024/12` rolls these changeNotes back one by one and restores the
 uncertainty of the Wuchiapingian base (0.084 → 0.21; the upstream changeNote
-recorded the age change but not the uncertainty change).
+recorded the age change but not the uncertainty change). The restored
+margin is not invented: 259.51 ± 0.21 Ma is the value adopted for the
+Guadalupian–Lopingian boundary by Shen et al. (2024, *Episodes* 47(1),
+147–177, U-Pb on the uppermost Emeishan basalt) and listed for the
+Wuchiapingian base in the Subcommission on Permian Stratigraphy's GSSP
+table; see `geophylo/data/snapshots/PROVENANCE.md` for the full citation.
 
 `--to` is the **sole decider** of the rollback set: the filter must not embed
 any concrete chart-version literal, otherwise `--to` would not participate in

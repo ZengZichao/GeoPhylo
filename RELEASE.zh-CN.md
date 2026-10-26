@@ -22,7 +22,7 @@ Concept DOI 后的 `CITATION.cff` 占位符（见下方"粘贴位置"）。
 2. 打标签并发布 release（本地命令，二选一；标签名是 `v` 前缀 + 版本串）：
 
    ```bash
-   VERSION=0.1.0
+   VERSION=0.1.1   # 本次发布的版本号
    git tag -a "v${VERSION}" -m "GeoPhylo ${VERSION}"
    git push origin main "v${VERSION}"
    gh release create "v${VERSION}" --latest --title "GeoPhylo ${VERSION}" --generate-notes
@@ -87,7 +87,7 @@ PyPI 发布已通过 **Trusted Publishing（OIDC）** 接入
 
 | 目标 | 位置 | 填什么 |
 | --- | --- | --- |
-| `CITATION.cff` | `identifiers[0].value`（当前是 `10.5281/zenodo.REPLACE_AT_FIRST_RELEASE`） | Concept DOI |
+| `CITATION.cff` | `identifiers[0].value`——已填写：记录里是铸造好的 Concept DOI `10.5281/zenodo.23060662`（`10.5281/zenodo.REPLACE_AT_FIRST_RELEASE` 只是首次发布之前填入的占位串） | Concept DOI |
 | 可选 | `README.md` 顶部徽章、`docs/user-guide.*.md` 引用节 | Version DOI 徽章 `https://zenodo.org/badge/DOI/<version-doi>.svg` |
 
 填写完成后，请一并删除 `CITATION.cff` 里那条 `REPLACE_AT_FIRST_RELEASE` 注释行。

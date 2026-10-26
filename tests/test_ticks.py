@@ -11,6 +11,7 @@ from geophylo.render.ticks import (
     fill_ages_style,
     filter_by_pixel_distance,
     format_age,
+    format_age_exact,
 )
 
 GOLDEN_CASES = [
@@ -24,10 +25,38 @@ GOLDEN_CASES = [
     (538.8, "539"),
 ]
 
+# tick_format="exact"：按快照存储精度打印，不取整。用例覆盖快照里出现过的
+# 全部小数位档（4 位、3 位、2 位、1 位、0 位），防止某档被静默舍入。
+EXACT_GOLDEN_CASES = [
+    (0.0, "0"),
+    (0.0117, "0.0117"),  # Holocene 底：一位小数会静默变成 0.0
+    (2.58, "2.58"),
+    (23.03, "23.03"),
+    (66.0, "66"),
+    (100.5, "100.5"),  # default 规则会取整成 101
+    (143.1, "143.1"),
+    (201.4, "201.4"),
+    (251.902, "251.902"),  # default 规则会取整成 252
+    (259.857, "259.857"),
+    (538.8, "538.8"),
+]
+
 
 @pytest.mark.parametrize(("age", "expected"), GOLDEN_CASES)
 def test_format_age_golden(age, expected):
     assert format_age(age) == expected
+
+
+@pytest.mark.parametrize(("age", "expected"), EXACT_GOLDEN_CASES)
+def test_format_age_exact_golden(age, expected):
+    assert format_age_exact(age) == expected
+
+
+def test_format_age_exact_rejects_negative():
+    from geophylo.exceptions import InvalidRangeError
+
+    with pytest.raises(InvalidRangeError):
+        format_age_exact(-1.0)
 
 
 def test_dedupe_snap():

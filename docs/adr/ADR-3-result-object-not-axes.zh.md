@@ -24,8 +24,12 @@
 - 属性暴露状态：`host_ax`、`geo_ax`、`artists`、`spec`、`position`、`key`、
   `params`，以及布局诊断 `labels_shortened`、`labels_rotated`、
   `labels_hidden`、`sync_degraded`。
-- 方法管理生命周期：`update(**params)`、`sync()`、`relayout()`、`finalize()`、
-  `remove()`、`restore()`、`attach_draw_callback()`。
+- 方法管理生命周期：`update(**params)`、`sync()`、`relayout(precise=True)`、
+  `finalize()`、`remove()`、`restore()`、`attach_draw_callback()`。真实签名为
+  `def relayout(self, *, precise: bool, renderer=None)`
+  （`geophylo/render/result.py`），因此调用写作
+  `result.relayout(precise=True)`；裸调 `result.relayout()` 会抛 `TypeError`，
+  因为 `precise` 是必填的仅关键字参数。
 - 该调用显式**不可**链式（`add_geo_axis(...).plot(...)` 不是有效用法）；
   `update()` 返回同一个结果对象以便反复改参数，`add_geo_axis(...)` 返回对象
   本身。

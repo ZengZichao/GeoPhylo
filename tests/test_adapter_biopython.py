@@ -63,7 +63,7 @@ class TestSpecFromBiophylo:
             if clade is not tree.root and clade.name in ("A", "C"):
                 clade.branch_length = None
         fig, ax = plt.subplots(figsize=(8, 5))
-        with pytest.raises(CoordinateError, match="问题节点"):
+        with pytest.raises(CoordinateError, match="offending nodes"):
             spec_from_biophylo(tree, ax, time_axis="x", age_conversion=1.0, root_age=63.0)
         plt.close(fig)
 
@@ -72,7 +72,7 @@ class TestSpecFromBiophylo:
             if clade.name == "A":
                 clade.branch_length = -1.0
         fig, ax = plt.subplots(figsize=(8, 5))
-        with pytest.raises(CoordinateError, match="负"):
+        with pytest.raises(CoordinateError, match="negative"):
             spec_from_biophylo(tree, ax, time_axis="x", age_conversion=1.0, root_age=63.0)
         plt.close(fig)
 
@@ -81,7 +81,7 @@ class TestSpecFromBiophylo:
             if clade is not tree.root:
                 clade.branch_length = None
         fig, ax = plt.subplots(figsize=(8, 5))
-        with pytest.raises(CoordinateError, match="等深回退"):
+        with pytest.raises(CoordinateError, match="equal-depth fallback"):
             spec_from_biophylo(tree, ax, time_axis="x", age_conversion=1.0, root_age=4.0)
         plt.close(fig)
 
@@ -90,7 +90,7 @@ class TestSpecFromBiophylo:
             if clade is not tree.root:
                 clade.branch_length = None
         fig, ax = plt.subplots(figsize=(8, 5))
-        with pytest.warns(UserWarning, match="不是时间单位"):
+        with pytest.warns(UserWarning, match="a time unit"):
             spec = spec_from_biophylo(
                 tree, ax, time_axis="x", age_conversion=1.0, root_age=4.0, allow_unit_depth=True
             )
@@ -106,7 +106,7 @@ class TestSpecFromBiophylo:
             if clade is not tree.root:
                 clade.branch_length = math.nan
         fig, ax = plt.subplots(figsize=(8, 5))
-        with pytest.raises(CoordinateError, match="非有限"):
+        with pytest.raises(CoordinateError, match="not finite"):
             spec_from_biophylo(
                 tree, ax, time_axis="x", age_conversion=1.0, root_age=4.0, allow_unit_depth=True
             )
@@ -123,7 +123,7 @@ class TestSpecFromBiophylo:
             if clade.name == "A":
                 clade.branch_length = math.nan
         fig, ax = plt.subplots(figsize=(8, 5))
-        with pytest.raises(CoordinateError, match="问题节点"):
+        with pytest.raises(CoordinateError, match="offending nodes"):
             spec_from_biophylo(tree, ax, time_axis="x", age_conversion=1.0, root_age=63.0)
         plt.close(fig)
 
@@ -138,7 +138,7 @@ class TestSpecFromBiophylo:
     def test_nonzero_root_branch_length_rejected(self, tree):
         tree.root.branch_length = 7.0
         fig, ax = plt.subplots(figsize=(8, 5))
-        with pytest.raises(CoordinateError, match="两条修复路径"):
+        with pytest.raises(CoordinateError, match="Two ways to fix it"):
             spec_from_biophylo(tree, ax, time_axis="x", age_conversion=1.0, root_age=63.0)
         plt.close(fig)
 

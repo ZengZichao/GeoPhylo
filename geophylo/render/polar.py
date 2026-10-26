@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING, Literal
 import matplotlib.projections.polar
 import matplotlib.text as mtext
 
+from .._i18n import msg
 from ..coordinate.radial import RadialSpec
 from ..exceptions import (
     AxesTypeError,
@@ -76,21 +77,42 @@ def add_geo_ring(
     """
     if not isinstance(ax, matplotlib.projections.polar.PolarAxes):
         raise AxesTypeError(
-            f"add_geo_ring 只支持原生 Matplotlib 极坐标 Axes，得到 {type(ax).__name__}；"
-            "iplotx 的 radial 布局在笛卡尔 Axes 上完成，与 PolarAxes 的 rlim 没有"
-            "定义好的对应关系，不属于本函数的适用范围（规范 4.8）"
+            msg(
+                f"add_geo_ring only supports native Matplotlib polar Axes, got "
+                f"{type(ax).__name__}; iplotx radial layout is laid out on Cartesian axes and has "
+                f"no defined correspondence with PolarAxes rlim, so it is out of scope here (spec "
+                f"4.8)",
+                f"add_geo_ring 只支持原生 Matplotlib 极坐标 Axes，得到 {type(ax).__name__}；"
+                "iplotx 的 radial 布局在笛卡尔 Axes 上完成，与 PolarAxes 的 rlim 没有"
+                "定义好的对应关系，不属于本函数的适用范围（规范 4.8）",
+            )
         )
     if not isinstance(spec, RadialSpec):
-        raise CoordinateError(f"spec 必须是 RadialSpec，得到 {type(spec).__name__}")
+        raise CoordinateError(
+            msg(
+                f"spec must be a RadialSpec, got {type(spec).__name__}",
+                f"spec 必须是 RadialSpec，得到 {type(spec).__name__}",
+            )
+        )
     if isinstance(rank, (list, tuple, set, frozenset)) or not isinstance(rank, str):
         raise InvalidRankError(
-            f"rank 必须是单个字符串；实验性时间环只支持单一 rank（多 rank 尚无成立"
-            f"的布局模型），得到序列 {rank!r}"
+            msg(
+                f"rank must be a single string; the experimental time ring supports a single rank "
+                f"only (no layout model yet for several ranks), got the sequence {rank!r}; see "
+                f"user-guide.en.md FAQ Q11 for the alternative",
+                f"rank 必须是单个字符串；实验性时间环只支持单一 rank（多 rank 尚无成立"
+                f"的布局模型），得到序列 {rank!r}；替代方案见 docs/user-guide.en.md FAQ Q11",
+            )
         )
     from ..validation import CORE_RANKS
 
     if rank not in CORE_RANKS:
-        raise InvalidRankError(f"非法 rank {rank!r}；核心 rank 为 {list(CORE_RANKS)!r}")
+        raise InvalidRankError(
+            msg(
+                f"illegal rank {rank!r}; the core ranks are {list(CORE_RANKS)!r}",
+                f"非法 rank {rank!r}；核心 rank 为 {list(CORE_RANKS)!r}",
+            )
+        )
     require_choice("band_unit", band_unit, ("radial_fraction", "data"), exc=InvalidRadiusError)
     require_bool("fill", fill)
     require_bool("label", label)
@@ -100,23 +122,41 @@ def add_geo_ring(
     require_number("label_size", label_size, minimum=0.0, exclude_minimum=True)
     require_number("rotation", rotation)
     if key is not None and not isinstance(key, str):
-        raise CoordinateError(f"key 必须是字符串或 None，得到 {key!r}")
+        raise CoordinateError(
+            msg(
+                f"key must be a string or None, got {key!r}",
+                f"key 必须是字符串或 None，得到 {key!r}",
+            )
+        )
     window = require_age_window(
         min_age, max_age, spec_min=spec.age_range[0], spec_max=spec.age_range[1]
     )
     # 入参类型校验与线性路径保持一致
     if timescale is not None and not isinstance(timescale, Timescale):
         raise CoordinateError(
-            f"timescale 必须是 Timescale 或 None，得到 {type(timescale).__name__}"
+            msg(
+                f"timescale must be a Timescale or None, got {type(timescale).__name__}",
+                f"timescale 必须是 Timescale 或 None，得到 {type(timescale).__name__}",
+            )
         )
     skip_names = _require_skip_names("skip", skip) if skip is not None else ()
     # band 类型校验：非数值元素在 spec.band_radius 之前即抛公共异常
     if not isinstance(band, (tuple, list)) or len(band) != 2:
-        raise InvalidRadiusError(f"band 必须是 (下, 上) 二元组，得到 {band!r}")
+        raise InvalidRadiusError(
+            msg(
+                f"band must be a (lower, upper) pair, got {band!r}",
+                f"band 必须是 (下, 上) 二元组，得到 {band!r}",
+            )
+        )
     try:
         band_tuple = tuple(float(v) for v in band)
     except (TypeError, ValueError) as exc:
-        raise InvalidRadiusError(f"band 的元素必须是数值，得到 {band!r}") from exc
+        raise InvalidRadiusError(
+            msg(
+                f"band elements must be numbers, got {band!r}",
+                f"band 的元素必须是数值，得到 {band!r}",
+            )
+        ) from exc
 
     params: dict = dict(
         ranks=(rank,),
@@ -138,7 +178,11 @@ def add_geo_ring(
         if existing is not None:
             if existing.spec != spec:
                 raise CoordinateError(
-                    f"key={key!r} 已存在且绑定了不同的 spec；请 remove() 后重新 add_geo_ring()"
+                    msg(
+                        f"key={key!r} already exists with a different spec; remove() and "
+                        f"add_geo_ring() again",
+                        f"key={key!r} 已存在且绑定了不同的 spec；请 remove() 后重新 add_geo_ring()",
+                    )
                 )
             # band_unit 与 rank/ranks（单 rank 契约）同属创建期语义，不可原地
             # 更新：从幂等更新参数中剔除，而不是让 update() 抛错（否则带 key
@@ -187,14 +231,26 @@ class _PolarResult(GeoAxisResult):
         """换算环带并校验其落在当前 ``rlim`` 内（4.8 硬约束 4）；只读，不改状态。"""
         band_inner, band_outer = self.spec.band_radius(params["band"], unit=params["band_unit"])
         if band_inner >= band_outer:
-            raise InvalidRadiusError(f"require r_inner < r_outer, got {band_inner}, {band_outer}")
+            raise InvalidRadiusError(
+                msg(
+                    f"require r_inner < r_outer, got {band_inner}, {band_outer}",
+                    f"require r_inner < r_outer, got {band_inner}, {band_outer}",
+                )
+            )
         # 极坐标 Axes 的 r 限制即 ylim（set_rlim 的配对 getter）。
         r_min, r_max = (float(v) for v in self.geo_ax.get_ylim())
         if band_inner < r_min - 1e-12 or band_outer > r_max + 1e-12:
             raise InvalidRadiusError(
-                f"换算后的环带 [{band_inner}, {band_outer}] 落在当前 rlim=[{r_min}, {r_max}] 之外；"
-                "本函数不修改极坐标 Axes 的径向视野（不调用 set_rlim/set_rorigin），"
-                "请调整 band 或先扩大 rlim"
+                msg(
+                    f"the converted band [{band_inner}, {band_outer}] lies outside the current "
+                    f"rlim=[{r_min}, {r_max}]; this function never changes the radial view of a "
+                    f"polar Axes (no set_rlim/set_rorigin), so adjust the band or enlarge rlim "
+                    f"first",
+                    f"换算后的环带 [{band_inner}, {band_outer}] "
+                    f"落在当前 rlim=[{r_min}, {r_max}] 之外；"
+                    "本函数不修改极坐标 Axes 的径向视野（不调用 set_rlim/set_rorigin），"
+                    "请调整 band 或先扩大 rlim",
+                )
             )
         return band_inner, band_outer
 
@@ -304,7 +360,12 @@ class _PolarResult(GeoAxisResult):
         band = merged.get("band")
         if band is not None:
             if len(band) != 2:
-                raise InvalidRadiusError(f"band 必须是 (下, 上) 二元组，得到 {band!r}")
+                raise InvalidRadiusError(
+                    msg(
+                        f"band must be a (lower, upper) pair, got {band!r}",
+                        f"band 必须是 (下, 上) 二元组，得到 {band!r}",
+                    )
+                )
             self._validate_band(merged)
 
     def remove(self) -> None:

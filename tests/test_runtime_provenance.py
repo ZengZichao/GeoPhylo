@@ -45,7 +45,9 @@ def test_derived_snapshot_exposes_provenance_and_warns_once() -> None:
         warnings.simplefilter("always")
         ts = Timescale(version=DERIVED_VERSION)
     derived = [
-        w for w in caught if issubclass(w.category, UserWarning) and "推导快照" in str(w.message)
+        w
+        for w in caught
+        if issubclass(w.category, UserWarning) and "derived snapshot" in str(w.message)
     ]
     assert len(derived) == 1, (
         f"构造推导快照应恰好发一次警告，实际 {[str(w.message)[:60] for w in caught]}"

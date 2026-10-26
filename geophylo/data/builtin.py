@@ -14,6 +14,7 @@ from collections.abc import Iterator, Sequence
 from importlib import resources
 from typing import Any
 
+from .._i18n import msg
 from ..exceptions import (
     AmbiguousIntervalError,
     DataValidationError,
@@ -116,18 +117,37 @@ def load_versions_index() -> dict[str, Any]:
     try:
         text = (resources.files(SNAPSHOT_PACKAGE) / "versions.json").read_text(encoding="utf-8")
     except FileNotFoundError as exc:  # pragma: no cover - 安装产物损坏
-        raise DataValidationError("versions.json 缺失：安装产物不完整") from exc
+        raise DataValidationError(
+            msg(
+                "versions.json is missing: the installed artefact is incomplete",
+                "versions.json 缺失：安装产物不完整",
+            )
+        ) from exc
     index = json.loads(text)
     for key in ("baseline", "versions"):
         if key not in index:
-            raise DataValidationError(f"versions.json 缺少必需键 {key!r}")
+            raise DataValidationError(
+                msg(
+                    f"versions.json is missing the required key {key!r}",
+                    f"versions.json 缺少必需键 {key!r}",
+                )
+            )
     for version, meta in index["versions"].items():
         for key in ("file", "payload_sha256"):
             if key not in meta:
-                raise DataValidationError(f"versions.json 中 {version!r} 缺少键 {key!r}")
+                raise DataValidationError(
+                    msg(
+                        f"versions.json entry {version!r} is missing the key {key!r}",
+                        f"versions.json 中 {version!r} 缺少键 {key!r}",
+                    )
+                )
         if not (resources.files(SNAPSHOT_PACKAGE) / meta["file"]).is_file():
             raise DataValidationError(
-                f"versions.json 指向的快照文件 {meta['file']!r}（版本 {version!r}）不存在"
+                msg(
+                    f"the snapshot file {meta['file']!r} named by versions.json (version "
+                    f"{version!r}) does not exist",
+                    f"versions.json 指向的快照文件 {meta['file']!r}（版本 {version!r}）不存在",
+                )
             )
     return index
 
@@ -146,7 +166,9 @@ def _read_snapshot_file(filename: str) -> dict[str, Any]:
     try:
         text = (resources.files(SNAPSHOT_PACKAGE) / filename).read_text(encoding="utf-8")
     except FileNotFoundError as exc:
-        raise DataValidationError(f"快照文件 {filename!r} 不存在") from exc
+        raise DataValidationError(
+            msg(f"snapshot file {filename!r} does not exist", f"快照文件 {filename!r} 不存在")
+        ) from exc
     return json.loads(text)
 
 
@@ -161,17 +183,25 @@ def load_snapshot(version: str | None = None) -> dict[str, Any]:
     meta = index["versions"].get(version)
     if meta is None:
         raise DataValidationError(
-            f"未发布的快照版本 {version!r}；可用版本为 {sorted(index['versions'])!r}，"
-            "基线快照为 "
-            f"{index['baseline']!r}"
+            msg(
+                f"unreleased snapshot version {version!r}; available versions are "
+                f"{sorted(index['versions'])!r}, the baseline is {index['baseline']!r}",
+                f"未发布的快照版本 {version!r}；可用版本为 {sorted(index['versions'])!r}，"
+                "基线快照为 "
+                f"{index['baseline']!r}",
+            )
         )
     snapshot = _read_snapshot_file(meta["file"])
     expected = meta["payload_sha256"]
     actual = hashlib.sha256(canonical_payload_bytes(snapshot["intervals"])).hexdigest()
     if actual != expected:
         raise DataValidationError(
-            f"快照 {version!r} 的 payload_sha256 与 versions.json 不符："
-            f"预期 {expected}，实际 {actual}"
+            msg(
+                f"payload_sha256 of snapshot {version!r} does not match versions.json: expected "
+                f"{expected}, got {actual}",
+                f"快照 {version!r} 的 payload_sha256 与 versions.json 不符："
+                f"预期 {expected}，实际 {actual}",
+            )
         )
     return snapshot
 
@@ -198,13 +228,22 @@ def snapshot_provenance(version: str | None = None) -> dict[str, Any]:
     meta = index["versions"].get(version)
     if meta is None:
         raise DataValidationError(
-            f"未发布的快照版本 {version!r}；可用版本为 {sorted(index['versions'])!r}"
+            msg(
+                f"unreleased snapshot version {version!r}; available versions are "
+                f"{sorted(index['versions'])!r}",
+                f"未发布的快照版本 {version!r}；可用版本为 {sorted(index['versions'])!r}",
+            )
         )
     doc = resources.files(SNAPSHOT_PACKAGE) / PROVENANCE_FILENAME
     if not doc.is_file():
         raise DataValidationError(
-            f"{PROVENANCE_FILENAME} 未随包安装：出处披露缺失（wheel 的 package-data "
-            "需包含快照目录下的 *.md）"
+            msg(
+                f"{PROVENANCE_FILENAME} is not installed with the package: provenance disclosure "
+                f"is missing (the wheel's package-data must include *.md under the snapshot "
+                f"directory)",
+                f"{PROVENANCE_FILENAME} 未随包安装：出处披露缺失（wheel 的 package-data "
+                "需包含快照目录下的 *.md）",
+            )
         )
     derived = meta.get("derived_from")
     return {
@@ -224,29 +263,65 @@ def snapshot_provenance(version: str | None = None) -> dict[str, Any]:
 def _require_keys(obj: dict, keys: Sequence[str], where: str) -> None:
     for key in keys:
         if key not in obj:
-            raise DataValidationError(f"{where} 缺少必需键 {key!r}；全部键必须显式出现")
+            raise DataValidationError(
+                msg(
+                    f"{where} is missing the required key {key!r}; every key must be present "
+                    f"explicitly",
+                    f"{where} 缺少必需键 {key!r}；全部键必须显式出现",
+                )
+            )
 
 
 def _boundary_from_payload(raw: Any, where: str) -> Boundary:
     if not isinstance(raw, dict):
-        raise DataValidationError(f"{where} 必须是对象")
+        raise DataValidationError(msg(f"{where} must be an object", f"{where} 必须是对象"))
     _require_keys(raw, _BOUNDARY_REQUIRED_KEYS, where)
     age = raw["age_ma"]
     if isinstance(age, bool) or not isinstance(age, (int, float)):
-        raise DataValidationError(f"{where}.age_ma 必须是数值，得到 {age!r}")
+        raise DataValidationError(
+            msg(
+                f"{where}.age_ma must be a number, got {age!r}",
+                f"{where}.age_ma 必须是数值，得到 {age!r}",
+            )
+        )
     age = float(age)
     if not math.isfinite(age) or age < 0:
-        raise DataValidationError(f"{where}.age_ma 必须是非负有限值，得到 {age!r}")
+        raise DataValidationError(
+            msg(
+                f"{where}.age_ma must be a non-negative finite value, got {age!r}",
+                f"{where}.age_ma 必须是非负有限值，得到 {age!r}",
+            )
+        )
     uncertainty = raw["uncertainty_ma"]
     if uncertainty is not None:
         if isinstance(uncertainty, bool) or not isinstance(uncertainty, (int, float)):
-            raise DataValidationError(f"{where}.uncertainty_ma 必须是数值或 null")
+            raise DataValidationError(
+                msg(
+                    f"{where}.uncertainty_ma must be a number or null",
+                    f"{where}.uncertainty_ma 必须是数值或 null",
+                )
+            )
         if not math.isfinite(float(uncertainty)) or float(uncertainty) < 0:
-            raise DataValidationError(f"{where}.uncertainty_ma 必须是非负有限值或 null")
+            raise DataValidationError(
+                msg(
+                    f"{where}.uncertainty_ma must be a non-negative finite value or null",
+                    f"{where}.uncertainty_ma 必须是非负有限值或 null",
+                )
+            )
     if raw["qualifier"] not in _VALID_QUALIFIERS:
-        raise DataValidationError(f"{where}.qualifier 非法：{raw['qualifier']!r}")
+        raise DataValidationError(
+            msg(
+                f"{where}.qualifier is not allowed: {raw['qualifier']!r}",
+                f"{where}.qualifier 非法：{raw['qualifier']!r}",
+            )
+        )
     if raw["definition"] not in _VALID_DEFINITIONS:
-        raise DataValidationError(f"{where}.definition 非法：{raw['definition']!r}")
+        raise DataValidationError(
+            msg(
+                f"{where}.definition is not allowed: {raw['definition']!r}",
+                f"{where}.definition 非法：{raw['definition']!r}",
+            )
+        )
     return Boundary(
         age_ma=age,
         qualifier=raw["qualifier"],
@@ -259,11 +334,17 @@ def _boundary_from_payload(raw: Any, where: str) -> Boundary:
 def _check_color(color: Any, where: str) -> None:
     if not isinstance(color, str) or len(color) != 7 or color[0] != "#":
         raise DataValidationError(
-            f"{where}.color 必须是 #RRGGBB 形式的十六进制颜色，得到 {color!r}"
+            msg(
+                f"{where}.color must be a #RRGGBB hex colour, got {color!r}",
+                f"{where}.color 必须是 #RRGGBB 形式的十六进制颜色，得到 {color!r}",
+            )
         )
     if any(c not in "0123456789ABCDEF" for c in color[1:]):
         raise DataValidationError(
-            f"{where}.color 必须是 #RRGGBB 形式的十六进制颜色，得到 {color!r}"
+            msg(
+                f"{where}.color must be a #RRGGBB hex colour, got {color!r}",
+                f"{where}.color 必须是 #RRGGBB 形式的十六进制颜色，得到 {color!r}",
+            )
         )
 
 
@@ -274,10 +355,17 @@ def validate_snapshot_payload(snapshot: dict[str, Any]) -> list[Interval]:
     if not isinstance(hash_field, dict):
         # ``hash`` 是字符串/列表等畸形结构时必须抛公共异常，不能让
         # ``AttributeError`` 逃出公共契约（规范 4.7）。
-        raise DataValidationError(f"快照顶层 hash 必须是对象，得到 {type(hash_field).__name__}")
+        raise DataValidationError(
+            msg(
+                f"the snapshot-level hash must be an object, got {type(hash_field).__name__}",
+                f"快照顶层 hash 必须是对象，得到 {type(hash_field).__name__}",
+            )
+        )
     intervals_raw = snapshot["intervals"]
     if not isinstance(intervals_raw, list) or not intervals_raw:
-        raise DataValidationError("intervals 必须是非空数组")
+        raise DataValidationError(
+            msg("intervals must be a non-empty array", "intervals 必须是非空数组")
+        )
 
     intervals: list[Interval] = []
     by_id: dict[str, Interval] = {}
@@ -287,30 +375,50 @@ def validate_snapshot_payload(snapshot: dict[str, Any]) -> list[Interval]:
 
     for record in intervals_raw:
         if not isinstance(record, dict):
-            raise DataValidationError("intervals 的每条记录必须是对象")
+            raise DataValidationError(
+                msg("every entry of intervals must be an object", "intervals 的每条记录必须是对象")
+            )
         _require_keys(record, _RECORD_REQUIRED_KEYS, "区间记录")
         where = f"区间 {record['id']!r}"
         older = _boundary_from_payload(record["older_boundary"], f"{where}.older_boundary")
         younger = _boundary_from_payload(record["younger_boundary"], f"{where}.younger_boundary")
         if not older.age_ma > younger.age_ma:
             raise DataValidationError(
-                f"{where} 的 older_ma={older.age_ma} 必须严格大于 younger_ma={younger.age_ma}；"
-                "零宽区间属于非法源数据"
+                msg(
+                    f"{where}: older_ma={older.age_ma} must be strictly greater than "
+                    f"younger_ma={younger.age_ma}; zero-width intervals are illegal source data",
+                    f"{where} 的 older_ma={older.age_ma} 必须严格大于 younger_ma={younger.age_ma}；"
+                    "零宽区间属于非法源数据",
+                )
             )
         _check_color(record["color"], where)
         if record["status"] not in _VALID_STATUSES:
             raise DataValidationError(
-                f"{where} 的 status 非法：{record['status']!r}；"
-                f"合法取值为 {sorted(_VALID_STATUSES)!r}"
+                msg(
+                    f"{where}: status is not allowed: {record['status']!r}; valid values are "
+                    f"{sorted(_VALID_STATUSES)!r}",
+                    f"{where} 的 status 非法：{record['status']!r}；"
+                    f"合法取值为 {sorted(_VALID_STATUSES)!r}",
+                )
             )
         if record["rank"] not in RANK_MAP:
-            raise DataValidationError(f"{where} 的 rank 非法：{record['rank']!r}")
+            raise DataValidationError(
+                msg(
+                    f"{where}: rank is not allowed: {record['rank']!r}",
+                    f"{where} 的 rank 非法：{record['rank']!r}",
+                )
+            )
         expected_class = (
             "geochronologic" if RANK_MAP[record["rank"]] != "structural" else "structural"
         )
         if record["rank_class"] != expected_class:
             raise DataValidationError(
-                f"{where} 的 rank_class={record['rank_class']!r} 与 rank={record['rank']!r} 不符"
+                msg(
+                    f"{where}: rank_class={record['rank_class']!r} does not match "
+                    f"rank={record['rank']!r}",
+                    f"{where} 的 rank_class={record['rank_class']!r} "
+                    f"与 rank={record['rank']!r} 不符",
+                )
             )
         interval = Interval(
             id=str(record["id"]),
@@ -328,19 +436,30 @@ def validate_snapshot_payload(snapshot: dict[str, Any]) -> list[Interval]:
             younger_boundary=younger,
         )
         if interval.id in by_id:
-            raise DataValidationError(f"区间 ID 重复：{interval.id!r}")
+            raise DataValidationError(
+                msg(f"duplicate interval id: {interval.id!r}", f"区间 ID 重复：{interval.id!r}")
+            )
         # source_iri 允许重复：Pridoli 同时是 Age 与 Epoch（上游同一概念在图表
         # 的两个行位显示）；按 source_iri 查询时返回规范序中的首个记录，
         # 因此这里用 setdefault 保留先出现的条目。
         folded = interval.name.casefold()
         if (folded, interval.rank) in names:
-            raise DataValidationError(f"rank={interval.rank} 内规范名称重复：{interval.name!r}")
+            raise DataValidationError(
+                msg(
+                    f"duplicate canonical name within rank={interval.rank}: {interval.name!r}",
+                    f"rank={interval.rank} 内规范名称重复：{interval.name!r}",
+                )
+            )
         names.add((folded, interval.rank))
         for alias in interval.aliases:
             key = alias.casefold()
             if key in aliases:
                 raise DataValidationError(
-                    f"别名 {alias!r} 大小写折叠后不唯一：{aliases[key]!r} 与 {interval.id!r}"
+                    msg(
+                        f"alias {alias!r} is not unique after case folding: {aliases[key]!r} and "
+                        f"{interval.id!r}",
+                        f"别名 {alias!r} 大小写折叠后不唯一：{aliases[key]!r} 与 {interval.id!r}",
+                    )
                 )
             aliases[key] = interval.id
         by_id[interval.id] = interval
@@ -360,20 +479,36 @@ def _check_hierarchy(intervals: list[Interval], by_id: dict[str, Interval]) -> N
             continue
         parent = by_id.get(parent_id)
         if parent is None:
-            raise DataValidationError(f"区间 {interval.id!r} 的 parent_id {parent_id!r} 不存在")
+            raise DataValidationError(
+                msg(
+                    f"interval {interval.id!r} names parent_id {parent_id!r}, which does not exist",
+                    f"区间 {interval.id!r} 的 parent_id {parent_id!r} 不存在",
+                )
+            )
         if not (
             parent.older_ma >= interval.older_ma - _TOL
             and parent.younger_ma <= interval.younger_ma + _TOL
         ):
             raise DataValidationError(
-                f"父区间 {parent.id!r} [{parent.older_ma}, {parent.younger_ma}] 未时间包含子区间 "
-                f"{interval.id!r} [{interval.older_ma}, {interval.younger_ma}]"
+                msg(
+                    f"parent {parent.id!r} [{parent.older_ma}, {parent.younger_ma}] does not "
+                    f"contain child {interval.id!r} [{interval.older_ma}, {interval.younger_ma}] "
+                    f"in time",
+                    f"父区间 {parent.id!r} [{parent.older_ma}, {parent.younger_ma}] "
+                    f"未时间包含子区间 "
+                    f"{interval.id!r} [{interval.older_ma}, {interval.younger_ma}]",
+                )
             )
         visited = {interval.id}
         cursor = parent
         while cursor.parent_id is not None:
             if cursor.id in visited:
-                raise DataValidationError(f"层级存在环：{interval.id!r}")
+                raise DataValidationError(
+                    msg(
+                        f"the hierarchy contains a cycle: {interval.id!r}",
+                        f"层级存在环：{interval.id!r}",
+                    )
+                )
             visited.add(cursor.id)
             nxt = by_id.get(cursor.parent_id)
             if nxt is None:
@@ -389,9 +524,14 @@ def _check_hierarchy(intervals: list[Interval], by_id: dict[str, Interval]) -> N
         for earlier, later in zip(ordered, ordered[1:], strict=False):
             if later.older_ma > earlier.younger_ma + _TOL:
                 raise DataValidationError(
-                    f"rank={rank} 存在重叠区间：{earlier.id!r} "
-                    f"[{earlier.older_ma}, {earlier.younger_ma}] 与 "
-                    f"{later.id!r} [{later.older_ma}, {later.younger_ma}]"
+                    msg(
+                        f"rank={rank} has overlapping intervals: {earlier.id!r} "
+                        f"[{earlier.older_ma}, {earlier.younger_ma}] and {later.id!r} "
+                        f"[{later.older_ma}, {later.younger_ma}]",
+                        f"rank={rank} 存在重叠区间：{earlier.id!r} "
+                        f"[{earlier.older_ma}, {earlier.younger_ma}] 与 "
+                        f"{later.id!r} [{later.older_ma}, {later.younger_ma}]",
+                    )
                 )
 
     # 共享边界一致性：同一年龄的边界必须给出相同的 qualifier / uncertainty_ma /
@@ -411,11 +551,17 @@ def _check_hierarchy(intervals: list[Interval], by_id: dict[str, Interval]) -> N
             if previous is not None and previous[1] != signature:
                 (prev_id, prev_side) = previous[0]
                 raise DataValidationError(
-                    f"共享边界 {boundary.age_ma} Ma 的元数据不一致："
-                    f"{prev_id}.{prev_side} {previous[1]} 与 "
-                    f"{interval.id}.{side} {signature}；"
-                    "同一年龄桶内的 qualifier、uncertainty_ma、definition "
-                    "三个字段必须完全一致（age_ma 是分桶键，不参与比较）"
+                    msg(
+                        f"shared boundary {boundary.age_ma} Ma has inconsistent metadata: "
+                        f"{prev_id}.{prev_side} {previous[1]} vs {interval.id}.{side} {signature}; "
+                        f"the qualifier, uncertainty_ma and definition fields must agree exactly "
+                        f"within one age bucket (age_ma is the bucket key and is not compared)",
+                        f"共享边界 {boundary.age_ma} Ma 的元数据不一致："
+                        f"{prev_id}.{prev_side} {previous[1]} 与 "
+                        f"{interval.id}.{side} {signature}；"
+                        "同一年龄桶内的 qualifier、uncertainty_ma、definition "
+                        "三个字段必须完全一致（age_ma 是分桶键，不参与比较）",
+                    )
                 )
             shared.setdefault(key, ((interval.id, side), signature))
 
@@ -451,7 +597,12 @@ def _check_hierarchy(intervals: list[Interval], by_id: dict[str, Interval]) -> N
                 )
         if defects:
             raise DataValidationError(
-                f"父区间 {parent_id!r} 的 rank={rank!r} 子区间未逐段完整覆盖：" + "；".join(defects)
+                msg(
+                    f"the children of parent {parent_id!r} at rank={rank!r} do not cover it "
+                    f"segment by segment: " + "; ".join(defects),
+                    f"父区间 {parent_id!r} 的 rank={rank!r} 子区间未逐段完整覆盖："
+                    + "；".join(defects),
+                )
             )
 
 
@@ -471,14 +622,22 @@ class SnapshotBackend:
             if not isinstance(hash_field, dict):
                 # 结构异常的 hash 走公共异常，不让 AttributeError 冒泡。
                 raise DataValidationError(
-                    f"快照顶层 hash 必须是对象，得到 {type(hash_field).__name__}"
+                    msg(
+                        f"the snapshot-level hash must be an object, got "
+                        f"{type(hash_field).__name__}",
+                        f"快照顶层 hash 必须是对象，得到 {type(hash_field).__name__}",
+                    )
                 )
             declared = hash_field.get("payload_sha256")
         if declared is not None:
             actual = hashlib.sha256(canonical_payload_bytes(snapshot["intervals"])).hexdigest()
             if actual != declared:
                 raise DataValidationError(
-                    f"快照 hash.payload_sha256 校验失败：声明 {declared}，实际 {actual}"
+                    msg(
+                        f"snapshot hash.payload_sha256 check failed: declared {declared}, computed "
+                        f"{actual}",
+                        f"快照 hash.payload_sha256 校验失败：声明 {declared}，实际 {actual}",
+                    )
                 )
         self._intervals = validate_snapshot_payload(snapshot)
         self._by_id = {i.id: i for i in self._intervals}
@@ -503,7 +662,12 @@ class SnapshotBackend:
 
     def get_interval(self, interval_id: str) -> Interval:
         if not isinstance(interval_id, str):
-            raise IntervalNotFoundError(f"interval_id 必须是字符串，得到 {interval_id!r}")
+            raise IntervalNotFoundError(
+                msg(
+                    f"interval_id must be a string, got {interval_id!r}",
+                    f"interval_id 必须是字符串，得到 {interval_id!r}",
+                )
+            )
         interval = self._by_id.get(interval_id) or self._by_source_iri.get(interval_id)
         if interval is None:
             hint = ""
@@ -511,7 +675,12 @@ class SnapshotBackend:
             match = next((i for i in self._intervals if i.name.casefold() == folded), None)
             if match is not None:
                 hint = f"；{interval_id!r} 看起来是名称，请改用 find_by_name()"
-            raise IntervalNotFoundError(f"未知的 interval_id {interval_id!r}{hint}")
+            raise IntervalNotFoundError(
+                msg(
+                    f"unknown interval_id {interval_id!r}{hint}",
+                    f"未知的 interval_id {interval_id!r}{hint}",
+                )
+            )
         return interval
 
     # -- 名称通道 ---------------------------------------------------------
@@ -525,11 +694,21 @@ class SnapshotBackend:
         case_sensitive: bool = False,
     ) -> Interval:
         if not isinstance(name, str) or not name:
-            raise IntervalNotFoundError(f"name 必须是非空字符串，得到 {name!r}")
+            raise IntervalNotFoundError(
+                msg(
+                    f"name must be a non-empty string, got {name!r}",
+                    f"name 必须是非空字符串，得到 {name!r}",
+                )
+            )
         pool = self._intervals
         if rank is not None:
             if rank not in CORE_RANKS:
-                raise InvalidRankError(f"非法 rank {rank!r}；核心 rank 为 {list(CORE_RANKS)!r}")
+                raise InvalidRankError(
+                    msg(
+                        f"illegal rank {rank!r}; the core ranks are {list(CORE_RANKS)!r}",
+                        f"非法 rank {rank!r}；核心 rank 为 {list(CORE_RANKS)!r}",
+                    )
+                )
             pool = [i for i in pool if i.rank == rank]
         else:
             # rank=None 时默认只搜 geochronologic 区间，结构节点（structural）
@@ -546,34 +725,68 @@ class SnapshotBackend:
             return hits[0]
         if verdict == "ambiguous":
             raise AmbiguousIntervalError(
-                f"名称查询 {name!r} 命中 {len(hits)} 个候选："
-                + ", ".join(f"{i.name}({i.id})" for i in hits)
-                + "；请用 rank= 或 parent= 消歧，或改用 get_interval() 按稳定 ID 精确查询",
+                msg(
+                    f"the name query {name!r} matched {len(hits)} candidates: "
+                    + ", ".join(f"{i.name}({i.id})" for i in hits)
+                    + "; disambiguate with rank= or parent=, or use get_interval()"
+                    + " with a stable id",
+                    f"名称查询 {name!r} 命中 {len(hits)} 个候选："
+                    + ", ".join(f"{i.name}({i.id})" for i in hits)
+                    + "；请用 rank= 或 parent= 消歧，或改用 get_interval() 按稳定 ID 精确查询",
+                ),
                 candidates=[i.id for i in hits],
             )
         raise IntervalNotFoundError(
-            f"名称 {name!r} 未命中任何区间（name/aliases/label 三个通道均无匹配；"
-            f"rank={rank!r}, parent={parent!r}）"
+            msg(
+                f"the name {name!r} matches no interval (none of name/aliases/label matches; "
+                f"rank={rank!r}, parent={parent!r})",
+                f"名称 {name!r} 未命中任何区间（name/aliases/label 三个通道均无匹配；"
+                f"rank={rank!r}, parent={parent!r}）",
+            )
         )
 
     # -- 年龄通道 ---------------------------------------------------------
 
     def find_by_age(self, age_ma: float, *, rank: str | None = None) -> Interval:
         if isinstance(age_ma, bool) or not isinstance(age_ma, (int, float)):
-            raise InvalidRangeError(f"age_ma 必须是数值，得到 {age_ma!r}")
+            raise InvalidRangeError(
+                msg(
+                    f"age_ma must be a number, got {age_ma!r}",
+                    f"age_ma 必须是数值，得到 {age_ma!r}",
+                )
+            )
         age = float(age_ma)
         if not math.isfinite(age):
-            raise InvalidRangeError(f"age_ma 必须是有限值，得到 {age_ma!r}")
+            raise InvalidRangeError(
+                msg(
+                    f"age_ma must be finite, got {age_ma!r}",
+                    f"age_ma 必须是有限值，得到 {age_ma!r}",
+                )
+            )
         if age < 0:
-            raise InvalidRangeError(f"age_ma={age} 不能为负；年龄以 Ma 为单位且越大越老")
+            raise InvalidRangeError(
+                msg(
+                    f"age_ma={age} must not be negative; ages are in Ma and larger means older",
+                    f"age_ma={age} 不能为负；年龄以 Ma 为单位且越大越老",
+                )
+            )
         if rank is not None and rank not in CORE_RANKS:
-            raise InvalidRankError(f"非法 rank {rank!r}；核心 rank 为 {list(CORE_RANKS)!r}")
+            raise InvalidRankError(
+                msg(
+                    f"illegal rank {rank!r}; the core ranks are {list(CORE_RANKS)!r}",
+                    f"非法 rank {rank!r}；核心 rank 为 {list(CORE_RANKS)!r}",
+                )
+            )
 
         pool = core_rank_pool(self._intervals, rank)
         if not pool:
             raise IntervalNotFoundError(
-                f"age_ma={age_ma!r} 在 rank={rank!r} 下无区间可用；"
-                f"可用的 rank 为 {list(CORE_RANKS)!r}"
+                msg(
+                    f"age_ma={age_ma!r} has no interval at rank={rank!r}; available ranks are "
+                    f"{list(CORE_RANKS)!r}",
+                    f"age_ma={age_ma!r} 在 rank={rank!r} 下无区间可用；"
+                    f"可用的 rank 为 {list(CORE_RANKS)!r}",
+                )
             )
 
         # 0.0 Ma 显式归入最年轻区间（不依赖普通不等式）；吸附到 0.0 的输入按
@@ -591,8 +804,13 @@ class SnapshotBackend:
         oldest = max(i.older_ma for i in pool)
         rank_label = repr(rank) if rank is not None else "None"
         raise IntervalNotFoundError(
-            f"age_ma={age_ma!r} 超出 rank={rank_label} 的覆盖范围（最老边界 {oldest} Ma，"
-            f"可用 rank {list(CORE_RANKS)!r}）；本库不做外推"
+            msg(
+                f"age_ma={age_ma!r} lies outside the coverage of rank={rank_label} (oldest "
+                f"boundary {oldest} Ma, available ranks {list(CORE_RANKS)!r}); this library never "
+                f"extrapolates",
+                f"age_ma={age_ma!r} 超出 rank={rank_label} 的覆盖范围（最老边界 {oldest} Ma，"
+                f"可用 rank {list(CORE_RANKS)!r}）；本库不做外推",
+            )
         )
 
     # -- 遍历 -------------------------------------------------------------
@@ -612,16 +830,27 @@ class SnapshotBackend:
         lo = 0.0 if min_age is None else float(self._validate_bound("min_age", min_age))
         hi = math.inf if max_age is None else float(self._validate_bound("max_age", max_age))
         if lo >= hi:
-            raise InvalidRangeError(f"要求 min_age < max_age，得到 min_age={lo}, max_age={hi}")
+            raise InvalidRangeError(
+                msg(
+                    f"expected min_age < max_age, got min_age={lo}, max_age={hi}",
+                    f"要求 min_age < max_age，得到 min_age={lo}, max_age={hi}",
+                )
+            )
         return iter(select_window(self._intervals, selected, lo, hi, tol=_TOL))
 
     @staticmethod
     def _validate_bound(name: str, value: float) -> float:
         if isinstance(value, bool) or not isinstance(value, (int, float)):
-            raise InvalidRangeError(f"{name} 必须是数值，得到 {value!r}")
+            raise InvalidRangeError(
+                msg(f"{name} must be a number, got {value!r}", f"{name} 必须是数值，得到 {value!r}")
+            )
         number = float(value)
         if not math.isfinite(number):
-            raise InvalidRangeError(f"{name} 必须是有限值，得到 {value!r}")
+            raise InvalidRangeError(
+                msg(f"{name} must be finite, got {value!r}", f"{name} 必须是有限值，得到 {value!r}")
+            )
         if number < 0:
-            raise InvalidRangeError(f"{name}={number} 不能为负")
+            raise InvalidRangeError(
+                msg(f"{name}={number} must not be negative", f"{name}={number} 不能为负")
+            )
         return number

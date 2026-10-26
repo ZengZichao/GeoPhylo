@@ -64,9 +64,9 @@ class TestInputValidation:
     def test_ranks_rejections(self, inverted_fig_ax):
         _fig, ax = inverted_fig_ax
         spec = CoordinateSpec.absolute(time_axis="x", age_range=(0.0, 541.0))
-        with pytest.raises(InvalidRankError, match="空"):
+        with pytest.raises(InvalidRankError, match="empty sequence"):
             add_geo_axis(ax, spec=spec, ranks=[])
-        with pytest.raises(InvalidRankError, match="重复"):
+        with pytest.raises(InvalidRankError, match="contains the duplicate"):
             add_geo_axis(ax, spec=spec, ranks=["Period", "Period"])
         with pytest.raises(InvalidRankError, match="period"):
             add_geo_axis(ax, spec=spec, ranks=["period"])
@@ -217,7 +217,7 @@ class TestLayoutInvariants:
 
     def test_feasibility_precheck(self):
         # min_frac × len(ranks) > total_thickness：分配前显式拒绝。
-        with pytest.raises(InvalidRangeError, match="不足以容纳"):
+        with pytest.raises(InvalidRangeError, match="is too small for"):
             compute_track_layout(
                 ["Period", "Epoch", "Age"], 0.01, MIN_TRACK_THICKNESS_PX, 100.0, 6.0
             )
@@ -280,3 +280,24 @@ class TestTicksRendered:
         ]
         numeric = [t for t in texts if t.get_text().replace(".", "").isdigit()]
         assert len(numeric) <= 5
+
+
+class TestDiagnostics:
+    def test_label_counts_match_the_items(self, inverted_fig_ax):
+        """公共诊断字段必须与逐 item 求和一致，图注可直接引用。
+
+        ``labels_shortened``/``labels_rotated`` 是"是否发生过"的布尔位，
+        ``labels_shortened_n``/``labels_rotated_n`` 是**可见**标签的计数。
+        """
+        fig, ax = inverted_fig_ax
+        spec = CoordinateSpec.absolute(time_axis="x", age_range=(0.0, 300.0))
+        result = add_geo_axis(ax, spec=spec, position="bottom", ranks=["Period", "Epoch"])
+        fig.canvas.draw()
+        result.finalize()
+        items = result._label_items
+        visible = [item for item in items if item.visible]
+        assert result.labels_shortened_n == sum(1 for item in visible if item.shortened)
+        assert result.labels_rotated_n == sum(1 for item in visible if item.rotated)
+        assert result.labels_hidden == len(items) - len(visible)
+        assert result.labels_shortened is (result.labels_shortened_n > 0)
+        assert result.labels_rotated is (result.labels_rotated_n > 0)

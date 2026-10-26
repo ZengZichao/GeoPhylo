@@ -9,6 +9,7 @@ from __future__ import annotations
 import math
 from typing import Literal
 
+from .._i18n import msg
 from ..exceptions import CoordinateError
 
 Mode = Literal["absolute_age", "root_distance"]
@@ -32,24 +33,39 @@ def age_to_data(
     模式下的负根距离和超出 ``root_age`` 的距离，抛 ``CoordinateError``。
     """
     if isinstance(age_ma, bool) or not isinstance(age_ma, (int, float)):
-        raise CoordinateError(f"age_ma 必须是数值，得到 {age_ma!r}")
+        raise CoordinateError(
+            msg(f"age_ma must be a number, got {age_ma!r}", f"age_ma 必须是数值，得到 {age_ma!r}")
+        )
     age = float(age_ma)
     if not math.isfinite(age):
-        raise CoordinateError(f"age_ma 必须是有限值，得到 {age_ma!r}")
+        raise CoordinateError(
+            msg(f"age_ma must be finite, got {age_ma!r}", f"age_ma 必须是有限值，得到 {age_ma!r}")
+        )
     lo, hi = age_range
     if age < lo - 1e-12 or age > hi + 1e-12:
         raise CoordinateError(
-            f"age_ma={age!r} 超出 spec.age_range=[{lo}, {hi}] 的合法域；"
-            "age_range 决定坐标换算的合法性域，绘制窗口决定裁剪边界"
+            msg(
+                f"age_ma={age!r} lies outside spec.age_range=[{lo}, {hi}]; age_range sets the "
+                f"legal domain of the conversion while the draw window sets the clipping bounds",
+                f"age_ma={age!r} 超出 spec.age_range=[{lo}, {hi}] 的合法域；"
+                "age_range 决定坐标换算的合法性域，绘制窗口决定裁剪边界",
+            )
         )
     if mode == "absolute_age":
         return age
     if root_age is None:  # pragma: no cover - 构造期已校验
-        raise CoordinateError("root_distance 模式必须有 root_age")
+        raise CoordinateError(
+            msg("root_distance mode requires a root_age", "root_distance 模式必须有 root_age")
+        )
     distance = root_age - age
     if distance < 0 or distance > root_age:
         raise CoordinateError(
-            f"age_ma={age!r} 在 root_age={root_age!r} 下产生非法根距离 {distance!r}；"
-            "负根距离或超出根年龄的距离无定义"
+            msg(
+                f"age_ma={age!r} produces an illegal root distance {distance!r} under "
+                f"root_age={root_age!r}; "
+                f"a negative distance or one beyond the root age is undefined",
+                f"age_ma={age!r} 在 root_age={root_age!r} 下产生非法根距离 {distance!r}；"
+                "负根距离或超出根年龄的距离无定义",
+            )
         )
     return distance

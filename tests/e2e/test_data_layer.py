@@ -72,7 +72,7 @@ class TestTimescaleDataE2E:
 
     def test_get_interval_unknown_id(self):
         ts = Timescale()
-        with pytest.raises(IntervalNotFoundError, match="未知"):
+        with pytest.raises(IntervalNotFoundError, match="unknown"):
             ts.get_interval("nonexistent-id-12345")
 
     def test_find_by_name_exact(self):
@@ -205,12 +205,12 @@ class TestTimescaleDataE2E:
 
     def test_iter_intervals_empty_ranks(self):
         ts = Timescale()
-        with pytest.raises(InvalidRankError, match="空"):
+        with pytest.raises(InvalidRankError, match="empty sequence"):
             list(ts.iter_intervals(ranks=[]))
 
     def test_iter_intervals_duplicate_ranks(self):
         ts = Timescale()
-        with pytest.raises(InvalidRankError, match="重复"):
+        with pytest.raises(InvalidRankError, match="contains the duplicate"):
             list(ts.iter_intervals(ranks=["Period", "Period"]))
 
     def test_from_json_offline(self, tmp_path):
@@ -236,14 +236,14 @@ class TestTimescaleDataE2E:
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
             ts = Timescale(version="2024/12")
-            assert any("推导快照" in str(wi.message) for wi in w)
+            assert any("derived snapshot" in str(wi.message) for wi in w)
         # It should still be queryable
         result = ts.find_by_name("Jurassic")
         assert result.name == "Jurassic"
 
     def test_unknown_version_rejected(self):
         ts_func = Timescale
-        with pytest.raises(GeophyloError, match="未发布"):
+        with pytest.raises(GeophyloError, match="unreleased"):
             ts_func(version="9999/99")
 
     def test_available_versions_sorted(self):
@@ -288,7 +288,7 @@ class TestTimescaleDataE2E:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             ts = Timescale(backend="pyrolite")
-        with pytest.raises(IntervalNotFoundError, match="稳定 ID"):
+        with pytest.raises(IntervalNotFoundError, match="stable ids"):
             ts.get_interval("anything")
 
     def test_pyrolite_backend_version(self):

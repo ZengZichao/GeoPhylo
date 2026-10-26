@@ -65,13 +65,13 @@ class TestInputValidation:
     def test_non_polar_axes_rejected(self):
         fig, ax = plt.subplots(figsize=(6, 4))
         spec = RadialSpec(age_range=(0.0, 63.0), radius_range=(0.0, 1.0), theta_range=(0.0, 1.0))
-        with pytest.raises(AxesTypeError, match="极坐标"):
+        with pytest.raises(AxesTypeError, match="polar"):
             add_geo_ring(ax, spec=spec, rank="Period")
         plt.close(fig)
 
     def test_multi_rank_rejected_with_note(self, polar_ax, radial):
         _fig, ax = polar_ax
-        with pytest.raises(InvalidRankError, match="单一 rank"):
+        with pytest.raises(InvalidRankError, match="single rank"):
             add_geo_ring(ax, spec=radial, rank=["Period", "Epoch"])  # type: ignore[arg-type]
 
     def test_result_field_mapping(self, polar_ax, radial):

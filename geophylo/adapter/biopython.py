@@ -16,6 +16,7 @@ import warnings
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, Literal
 
+from .._i18n import msg
 from ..coordinate.radial import RadialSpec
 from ..coordinate.spec import CoordinateSpec
 from ..exceptions import CoordinateError
@@ -36,7 +37,11 @@ def _import_phylo():
         from Bio import Phylo
     except ImportError as exc:  # pragma: no cover - 可选依赖缺失
         raise ImportError(
-            "Bio.Phylo 适配需要可选依赖 biopython；请安装 geophylo[biopython]"
+            msg(
+                "the Bio.Phylo adapter needs the optional dependency biopython; install "
+                "geophylo[biopython]",
+                "Bio.Phylo 适配需要可选依赖 biopython；请安装 geophylo[biopython]",
+            )
         ) from exc
     return Phylo
 
@@ -65,16 +70,25 @@ def _require_positive_span(max_distance: float, *, tree: Any, root: float) -> No
     leaves = tree.get_terminals()
     lengths = [c.branch_length for c in tree.find_clades() if c is not tree.root]
     raise CoordinateError(
-        f"树的最大根距离为 {max_distance!r}（root_age={root!r}）：年龄窗口退化为一个点，"
-        "无法建立坐标语义。真实成因：树只有 "
-        f"{len(leaves)} 个叶（tip_count={len(leaves)}），或参与换算的 branch length "
-        f"全部为 0（{sorted({repr(v) for v in lengths})}）。"
-        "单叶树请改用带真实分支长度的树；全零 branch length 请核对时间校准结果"
+        msg(
+            f"the tree's maximum root distance is {max_distance!r} (root_age={root!r}): the "
+            f"age window collapses to a point and no coordinate semantics can be established. "
+            f"Real causes: the tree has only {len(leaves)} leaves (tip_count={len(leaves)}), "
+            f"or every branch length is 0 ({sorted({repr(v) for v in lengths})}). Use a tree "
+            f"with real branch lengths for a single-leaf tree; for all-zero branch lengths "
+            f"re-check "
+            f"the time calibration",
+            f"树的最大根距离为 {max_distance!r}（root_age={root!r}）：年龄窗口退化为一个点，"
+            "无法建立坐标语义。真实成因：树只有 "
+            f"{len(leaves)} 个叶（tip_count={len(leaves)}），或参与换算的 branch length "
+            f"全部为 0（{sorted({repr(v) for v in lengths})}）。"
+            "单叶树请改用带真实分支长度的树；全零 branch length 请核对时间校准结果",
+        )
     )
 
 
 def _node_label(clade) -> str:
-    return clade.name if clade.name else f"<非命名 {type(clade).__name__}>"
+    return clade.name if clade.name else f"<unnamed {type(clade).__name__}>"
 
 
 def _scan_tree(
@@ -96,15 +110,31 @@ def _scan_tree(
             root_value = float(root_bl)
         except (TypeError, ValueError) as exc:
             raise CoordinateError(
-                f"根节点的 branch_length 不是数值（{root_bl!r}），无法确定时间语义"
+                msg(
+                    f"the root's branch_length is not a number ({root_bl!r}), so the time "
+                    f"semantics "
+                    f"cannot be established",
+                    f"根节点的 branch_length 不是数值（{root_bl!r}），无法确定时间语义",
+                )
             ) from exc
         if root_value != 0.0:
             raise CoordinateError(
-                f"根节点的 branch_length={root_bl!r} 非零：Phylo.draw() 与 tree.distance() 会把"
-                "根的 branch_length 计入路径，平移「根距离 ↔ 年龄」的对应。两条修复路径："
-                "（1）在树对象上将其清零或置 None；"
-                "（2）在后续距离计算中显式扣除该值（如环形配方的 root_offset）。"
-                "本适配器不允许静默包含，也不允许静默丢弃"
+                msg(
+                    f"the root's branch_length={root_bl!r} is non-zero: Phylo.draw() and "
+                    f"tree.distance() "
+                    f"both count the root's branch_length in every path, shifting the "
+                    f"root-distance "
+                    f"<-> age correspondence. Two ways to fix it: (1) zero it out or set it "
+                    f"to None on the tree; (2) subtract it explicitly in later distance "
+                    f"computations "
+                    f"(as the radial recipe does with root_offset). This adapter neither silently "
+                    f"includes it nor silently drops it",
+                    f"根节点的 branch_length={root_bl!r} 非零：Phylo.draw() 与 tree.distance() 会把"
+                    "根的 branch_length 计入路径，平移「根距离 ↔ 年龄」的对应。两条修复路径："
+                    "（1）在树对象上将其清零或置 None；"
+                    "（2）在后续距离计算中显式扣除该值（如环形配方的 root_offset）。"
+                    "本适配器不允许静默包含，也不允许静默丢弃",
+                )
             )
 
     parents: dict[int, object] = {}
@@ -123,19 +153,20 @@ def _scan_tree(
             bl = clade.branch_length
             if bl is None:
                 missing += 1
-                problems.append(f"{_node_label(clade)}: branch_length 缺失（None）")
+                problems.append(f"{_node_label(clade)}: branch_length is missing (None)")
             else:
                 try:
                     value = float(bl)
                 except (TypeError, ValueError) as exc:
                     problems.append(
-                        f"{_node_label(clade)}: branch_length 不是数值（{bl!r}；{exc}）"
+                        f"{_node_label(clade)}: branch_length is not a number ({bl!r}; {exc})"
                     )
                     invalid += 1
                 else:
                     if not math.isfinite(value) or value < 0:
                         problems.append(
-                            f"{_node_label(clade)}: branch_length 非有限或为负（{bl!r}）"
+                            f"{_node_label(clade)}: branch_length is not finite or is negative "
+                            f"({bl!r})"
                         )
                         invalid += 1
                     else:
@@ -146,8 +177,13 @@ def _scan_tree(
     unit_depth = total > 0 and missing == total and invalid == 0
     if not unit_depth and problems:
         raise CoordinateError(
-            "branch length 校验失败（存在缺失、None、NaN 或负值，无法确定时间语义）；"
-            "问题节点：\n  - " + "\n  - ".join(problems)
+            msg(
+                "branch-length validation failed (missing, None, NaN or negative values present, "
+                "so the time semantics cannot be established); offending nodes:\n  - "
+                + "\n  - ".join(problems),
+                "branch length 校验失败（存在缺失、None、NaN 或负值，无法确定时间语义）；"
+                "问题节点：\n  - " + "\n  - ".join(problems),
+            )
         )
     return unit_depth, parents, lengths
 
@@ -174,14 +210,27 @@ def _checked_root_and_lengths(tree: Any, *, allow_unit_depth: bool):
     if unit_depth:
         if not allow_unit_depth:
             raise CoordinateError(
-                "检测到 Bio.Phylo 的等深回退（unit-depth fallback）：全部 branch length "
-                "缺失，数据坐标不含时间信息。如确认仍要继续，请显式传 "
-                "allow_unit_depth=True（此时每条分支按长度 1 处理，且需要自行声明"
-                "age_conversion 的「非时间单位」性质）"
+                msg(
+                    "Bio.Phylo's equal-depth fallback (unit-depth fallback) detected: all branch "
+                    "lengths are missing and the data coordinates carry no time information. "
+                    "To continue anyway pass allow_unit_depth=True explicitly (each branch is "
+                    "then treated as length 1, and you must declare the 'not a time unit' nature "
+                    "of age_conversion yourself)",
+                    "检测到 Bio.Phylo 的等深回退（unit-depth fallback）：全部 branch length "
+                    "缺失，数据坐标不含时间信息。如确认仍要继续，请显式传 "
+                    "allow_unit_depth=True（此时每条分支按长度 1 处理，且需要自行声明"
+                    "age_conversion 的「非时间单位」性质）",
+                )
             )
         warnings.warn(
-            "branch length 全部缺失：等深回退的分支长度是拓扑深度（每条为 1），"
-            "不是时间单位；由此得到的「根距离 ↔ 年龄」换算没有时间学意义。",
+            msg(
+                "all branch lengths are missing: the equal-depth fallback gives every branch "
+                "length 1, a topological depth rather than a time unit, so the resulting "
+                "root-distance "
+                "<-> age conversion has no time meaning",
+                "branch length 全部缺失：等深回退的分支长度是拓扑深度（每条为 1），"
+                "不是时间单位；由此得到的「根距离 ↔ 年龄」换算没有时间学意义。",
+            ),
             UserWarning,
             stacklevel=3,
         )
@@ -234,7 +283,12 @@ def spec_from_biophylo(
         or not math.isfinite(float(root_age))
         or float(root_age) < 0
     ):
-        raise CoordinateError(f"root_age 必须是非负有限数值，得到 {root_age!r}")
+        raise CoordinateError(
+            msg(
+                f"root_age must be a non-negative finite number, got {root_age!r}",
+                f"root_age 必须是非负有限数值，得到 {root_age!r}",
+            )
+        )
     convert = _resolve_age_conversion(age_conversion)
     require_linear_numeric_axes(ax)
 
@@ -244,8 +298,12 @@ def spec_from_biophylo(
         ma = convert(value)
         if not math.isfinite(ma) or ma < 0:
             raise CoordinateError(
-                f"age_conversion 产生了非法的 Ma 长度 {ma!r}（节点 id={clade_id}）；"
-                "换算结果必须非负且有限"
+                msg(
+                    f"age_conversion produced an invalid Ma length {ma!r} (node id={clade_id}); "
+                    f"converted lengths must be non-negative and finite",
+                    f"age_conversion 产生了非法的 Ma 长度 {ma!r}（节点 id={clade_id}）；"
+                    "换算结果必须非负且有限",
+                )
             )
         ma_lengths[clade_id] = ma
 
@@ -255,9 +313,14 @@ def spec_from_biophylo(
     min_age = root - max_distance
     if min_age < 0:
         raise CoordinateError(
-            f"tree 的最大根距离按 age_conversion 换算后为 {max_distance!r} Ma，"
-            f"超过 root_age={root}；最老的叶将早于 0 Ma，坐标语义不成立。"
-            "请核对 root_age 或 age_conversion"
+            msg(
+                f"the tree's maximum root distance converts to {max_distance!r} Ma, exceeding "
+                f"root_age={root}; the oldest leaf would fall before 0 Ma and the coordinate "
+                f"semantics do not hold. Re-check root_age or age_conversion",
+                f"tree 的最大根距离按 age_conversion 换算后为 {max_distance!r} Ma，"
+                f"超过 root_age={root}；最老的叶将早于 0 Ma，坐标语义不成立。"
+                "请核对 root_age 或 age_conversion",
+            )
         )
     return CoordinateSpec.root_distance(
         time_axis=time_axis, age_range=(min_age, root), root_age=root
@@ -287,14 +350,24 @@ def radial_spec_from_biophylo(
         or not math.isfinite(float(root_age))
         or float(root_age) < 0
     ):
-        raise CoordinateError(f"root_age 必须是非负有限数值，得到 {root_age!r}")
+        raise CoordinateError(
+            msg(
+                f"root_age must be a non-negative finite number, got {root_age!r}",
+                f"root_age 必须是非负有限数值，得到 {root_age!r}",
+            )
+        )
     convert = _resolve_age_conversion(age_conversion)
     parents, lengths = _checked_root_and_lengths(tree, allow_unit_depth=allow_unit_depth)
     ma_lengths: dict[int, float] = {}
     for clade_id, value in lengths.items():
         ma = convert(value)
         if not math.isfinite(ma) or ma < 0:
-            raise CoordinateError(f"age_conversion 产生了非法的 Ma 长度 {ma!r}")
+            raise CoordinateError(
+                msg(
+                    f"age_conversion produced an invalid Ma length {ma!r}",
+                    f"age_conversion 产生了非法的 Ma 长度 {ma!r}",
+                )
+            )
         ma_lengths[clade_id] = ma
     _distances, max_distance = _accumulate(tree, parents, ma_lengths)
     root = float(root_age)
@@ -302,8 +375,12 @@ def radial_spec_from_biophylo(
     min_age = root - max_distance
     if min_age < 0:
         raise CoordinateError(
-            f"tree 的最大根距离按 age_conversion 换算后为 {max_distance!r} Ma，"
-            f"超过 root_age={root}；最老的叶将早于 0 Ma"
+            msg(
+                f"the tree's maximum root distance converts to {max_distance!r} Ma, exceeding "
+                f"root_age={root}; the oldest leaf would fall before 0 Ma",
+                f"tree 的最大根距离按 age_conversion 换算后为 {max_distance!r} Ma，"
+                f"超过 root_age={root}；最老的叶将早于 0 Ma",
+            )
         )
     return RadialSpec(
         age_range=(min_age, root),

@@ -25,8 +25,11 @@ the track's axes, artists and lifecycle.
 - Attributes expose state: `host_ax`, `geo_ax`, `artists`, `spec`, `position`,
   `key`, `params`, plus the layout diagnostics
   `labels_shortened`, `labels_rotated`, `labels_hidden`, `sync_degraded`.
-- Methods manage lifecycle: `update(**params)`, `sync()`, `relayout()`,
-  `finalize()`, `remove()`, `restore()`, `attach_draw_callback()`.
+- Methods manage lifecycle: `update(**params)`, `sync()`, `relayout(precise=True)`,
+  `finalize()`, `remove()`, `restore()`, `attach_draw_callback()`. The real signature is
+  `def relayout(self, *, precise: bool, renderer=None)` (`geophylo/render/result.py`), so
+  the call is `result.relayout(precise=True)`; a bare `result.relayout()` raises
+  `TypeError`, because `precise` is a required keyword-only argument.
 - The call is explicitly **not** chainable (`add_geo_axis(...).plot(...)` is not
   a thing); `update()` returns the same result object so parameter edits can be
   repeated, and `add_geo_axis(...)` returns the object itself.

@@ -17,10 +17,11 @@
 | ADR-3 | 返回 `GeoAxisResult` 结果对象，而不是返回宿主 `Axes` | [ADR-3-result-object-not-axes.md](ADR-3-result-object-not-axes.md)（[中文](ADR-3-result-object-not-axes.zh.md)） | `geophylo/render/linear.py`（`add_geo_axis`）、`geophylo/render/result.py`（`GeoAxisResult`） |
 | ADR-4 | 适配器只构造并校验坐标契约，不负责绘图 | [ADR-4-adapters-build-contracts.md](ADR-4-adapters-build-contracts.md)（[中文](ADR-4-adapters-build-contracts.zh.md)） | `geophylo/adapter/biopython.py`（模块 docstring） |
 | ADR-5 | 把边界建模为正交状态组（`age_ma`、`qualifier`、`uncertainty_ma`、`definition`） | [ADR-5-per-boundary-state-model.md](ADR-5-per-boundary-state-model.md)（[中文](ADR-5-per-boundary-state-model.zh.md)） | `geophylo/data/models.py`（`Boundary`） |
+| ADR-6 | 把图面质量开关做成显式开启项（`tick_format`、`track_register`、`fallback_truncation`、`min_label_gap`），默认保持保守 | [ADR-6-render-overrides-opt-in.md](ADR-6-render-overrides-opt-in.md)（[中文](ADR-6-render-overrides-opt-in.zh.md)） | `geophylo/render/labels.py`（`_candidate_sequence`）、`geophylo/render/linear.py`（`add_geo_axis`） |
 
 ## 阅读顺序
 
-先读数据层（ADR-1、ADR-5），再读坐标/渲染层（ADR-2、ADR-3），最后读适配器
+先读数据层（ADR-1、ADR-5），再读坐标/渲染层（ADR-2、ADR-3），然后读适配器，最后读渲染覆写（ADR-6）；适配器
 （ADR-4）：只有先确立 `CoordinateSpec` 契约与"渲染绝不触碰宿主"契约，适配器
 决策才说得通。
 

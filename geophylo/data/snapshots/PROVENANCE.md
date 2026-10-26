@@ -115,12 +115,23 @@ is marked open rather than presented as established fact.
   is the only available reconstruction. Re-check the listing if upstream ever
   back-fills history.
 
-- `TODO(author)` — the ± 0.21 Ma margin restored at the base of the
-  Wuchiapingian (item 3 above) is project-authored. Its stated source, the
-  development document §5.7, is not shipped with the code. Attach the
-  credential (an upstream issue/commit/chart-PDF reference that records
-  259.51 ± 0.21) or keep labelling the value as a project decision in the
-  documentation and `docs/data-policy.md`.
+- **Verified 2026-10-26** — the ± 0.21 Ma margin restored at the base of the
+  Wuchiapingian (item 3 above) is project-authored *in the sense that the
+  upstream change notes do not carry it*, but the value itself is published and
+  citable. Shen, S.-z., Yuan, D.-x., Zhang, Y.-c. & Mei, S.-l. (2024),
+  "Redefinition of the Global Stratotype Section and Point (GSSP) and new
+  Standard Auxiliary Boundary Stratotype (SABS) for the base of Wuchiapingian
+  Stage (Lopingian Series, Permian) in South China", *Episodes* 47(1), 147–177,
+  adopt the U-Pb date **259.51 ± 0.21 Ma** from the uppermost part of the
+  Emeishan basalt as the age of the Guadalupian–Lopingian boundary. The same
+  pair is listed for the Wuchiapingian base in the Subcommission on Permian
+  Stratigraphy's GSSP table (`stratigraphy.org/subcommission-permian/gssps`;
+  Penglaitan, Guangxi; ratified 2004, redefinition ratified 2023). The margin is
+  therefore attributed to that publication, not invented here. Note that the
+  2026/06 chart edition carries a different pair (259.857 ± 0.084 Ma): the two
+  editions disagree on both the age and the margin, which is exactly why the
+  rollback needed a margin patch in addition to the change-note revert. Re-check
+  both sources if the chart revises this boundary again.
 
 ## Diff artifact
 

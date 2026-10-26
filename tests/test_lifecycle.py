@@ -89,7 +89,7 @@ class TestUpdate:
     def test_update_rejects_unknown_params(self, inverted_fig_ax):
         _fig, ax = inverted_fig_ax
         result = add_geo_axis(ax, spec=make_spec())
-        with pytest.raises(CoordinateError, match="渲染参数"):
+        with pytest.raises(CoordinateError, match="rendering parameters"):
             result.update(root_age=5.0)
 
     def test_update_returns_self_and_applies(self, inverted_fig_ax):

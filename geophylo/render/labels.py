@@ -20,6 +20,9 @@ from typing import TYPE_CHECKING, Any
 
 import matplotlib.colors
 
+from .._i18n import msg
+from ..exceptions import InvalidRangeError
+
 if TYPE_CHECKING:  # pragma: no cover
     from geophylo.data.models import Interval
 
@@ -179,11 +182,27 @@ def time_axis_index_for(time_axis: str) -> int:
     return 0 if time_axis == "x" else 1
 
 
-def _collides(center: tuple[float, float], screen, placed) -> bool:
-    """候选包围盒是否与已放置标签相交（两侧均为显示坐标下的 x/y 尺寸）。"""
+def _collides(
+    center: tuple[float, float],
+    screen,
+    placed,
+    *,
+    gap_px: float = 0.0,
+    time_index: int = 0,
+) -> bool:
+    """候选包围盒是否与已放置标签冲突（两侧均为显示坐标下的 x/y 尺寸）。
+
+    ``gap_px`` 给出时间维上的最小净距：两枚标签在时间维上相距不足该值即视为
+    冲突，即使包围盒并未相交。默认 0（只判相交）。只在时间维施加净距，因为
+    厚度维已有"不得越出相邻轨道边界"的硬约束。
+    """
     cx, cy = center
+    gx = gap_px if time_index == 0 else 0.0
+    gy = gap_px if time_index == 1 else 0.0
     for ox, oy, ow, oh in placed:
-        if abs(cx - ox) < (screen[0] + ow) / 2.0 and abs(cy - oy) < (screen[1] + oh) / 2.0:
+        if abs(cx - ox) < (screen[0] + ow) / 2.0 + gx and abs(cy - oy) < (
+            screen[1] + oh
+        ) / 2.0 + gy:
             return True
     return False
 
@@ -214,10 +233,33 @@ def _clamp_to_track(
     return (clamped[0], clamped[1])
 
 
-def _candidate_sequence(name: str, abbreviated: str, base_rot: float) -> list[tuple[str, float]]:
-    """按规范 5.2 的降级顺序生成候选：全名 → 缩写 → 缩写旋转 → 全名旋转。
+def _group_by_track(items: list[LabelItem], key) -> dict[float, list[LabelItem]]:
+    """按轨道分组标签；``key(item)`` 返回该标签所属条带的分组键。"""
+    groups: dict[float, list[LabelItem]] = {}
+    for item in items:
+        groups.setdefault(key(item), []).append(item)
+    return groups
+
+
+def _candidate_sequence(
+    name: str,
+    abbreviated: str,
+    base_rot: float,
+    fallback_truncation: int | None = None,
+) -> tuple[list[tuple[str, float]], int]:
+    """按规范 5.2 的降级顺序生成候选：全名 → 缩写 → 缩写旋转 → 全名旋转 →（前缀）→ 隐藏。
 
     缩写与全名同名时省略第二个候选，避免无意义的重复测量。
+
+    ``fallback_truncation`` 给出时，在**旋转全名之后、隐藏之前**插入名称前缀
+    候选：先取 ``n`` 个字符的前缀，放不下再逐级缩短到 2 个字符。顺序不能提前：
+    旋转是降级阶梯里"保住全名"的最后一档，前缀截断是"造新记号"的兜底档——若把
+    前缀排在旋转之前，本可用旋转读全名的区间会被无谓截短。默认 ``None``：库不
+    凭空造记号，需要论文级"零隐藏标签"的调用方显式开启。
+
+    返回 ``(候选序列, strict_indices)``：``strict_indices`` 中的候选必须"放得进
+    自己的区间"才接受，其余候选只要求不与他者碰撞。前缀候选属于前者——否则
+    阶梯会停在最长的前缀上，白白溢入相邻区间而失去截断的意义。
     """
     perp_rot = 90.0 if base_rot in (0.0, 180.0) else 0.0
     candidates: list[tuple[str, float]] = [(name, base_rot)]
@@ -225,7 +267,14 @@ def _candidate_sequence(name: str, abbreviated: str, base_rot: float) -> list[tu
         candidates.append((abbreviated, base_rot))
     candidates.append((abbreviated, perp_rot))
     candidates.append((name, perp_rot))
-    return candidates
+    if fallback_truncation is None:
+        return candidates, frozenset({0})
+    strict = {0}
+    top = min(max(2, int(fallback_truncation)), max(len(name) - 1, 2))
+    for keep in range(top, 1, -1):
+        strict.add(len(candidates))
+        candidates.append((name[:keep], base_rot))
+    return candidates, frozenset(strict)
 
 
 def _measure_at_rotation(
@@ -250,6 +299,8 @@ def _select_candidate(
     measure,
     bounds: tuple[float, float] | None,
     placed,
+    strict_indices: frozenset[int] = frozenset({0}),
+    gap_px: float = 0.0,
 ) -> tuple[str, float, tuple[float, float], tuple[float, float]] | None:
     """按降级顺序挑第一个可放置的候选；全部不可放置时返回 ``None``（→ 隐藏）。
 
@@ -273,12 +324,15 @@ def _select_candidate(
         center = _clamp_to_track(item, box, bounds)
         if center is None:
             continue  # 时间维越出轨道矩形且无法夹紧
-        if index == 0:
-            # 首选只在自身区间内放得下且无碰撞时接受；夹紧后的位置同样参与判定。
-            if _fits_own_interval(item, box) and not _collides(center, screen, placed):
+        if index in strict_indices:
+            # 首选（全名原向）与前缀候选只在自身区间内放得下且无碰撞时接受；
+            # 夹紧后的位置同样参与判定。
+            if _fits_own_interval(item, box) and not _collides(
+                center, screen, placed, gap_px=gap_px, time_index=item.time_axis_index
+            ):
                 return (text, rot, size, center)
             continue
-        if not _collides(center, screen, placed):
+        if not _collides(center, screen, placed, gap_px=gap_px, time_index=item.time_axis_index):
             return (text, rot, size, center)
     return None
 
@@ -289,6 +343,9 @@ def apply_label_degradation(
     measure,
     abbreviate: bool,
     time_bounds_px: tuple[float, float] | None = None,
+    track_register: str = "interval",
+    fallback_truncation: int | None = None,
+    min_label_gap_px: float = 0.0,
 ) -> tuple[bool, bool, int]:
     """按 5.2 的降级顺序处理标签：① 缩写 ② 旋转 ③ 隐藏。
 
@@ -323,37 +380,105 @@ def apply_label_degradation(
         item.visible = False
         item.placed_px = item.px_center
 
+    if track_register not in ("interval", "uniform"):
+        raise InvalidRangeError(
+            msg(
+                f"track_register must be one of ('interval', 'uniform'), got {track_register!r}",
+                f"track_register 只能是 ('interval', 'uniform') 之一，得到 {track_register!r}",
+            )
+        )
+    if fallback_truncation is not None and (
+        isinstance(fallback_truncation, bool)
+        or not isinstance(fallback_truncation, int)
+        or fallback_truncation < 2
+    ):
+        raise InvalidRangeError(
+            msg(
+                f"fallback_truncation must be an integer >= 2 or None, got {fallback_truncation!r}",
+                f"fallback_truncation 必须是 >= 2 的整数或 None，得到 {fallback_truncation!r}",
+            )
+        )
+
     bounds = None
     if time_bounds_px is not None:
         lo_px, hi_px = float(time_bounds_px[0]), float(time_bounds_px[1])
         if not lo_px < hi_px:
-            raise ValueError(f"time_bounds_px 须满足 lo < hi，得到 {time_bounds_px!r}")
+            raise ValueError(
+                msg(
+                    f"time_bounds_px must satisfy lo < hi, got {time_bounds_px!r}",
+                    f"time_bounds_px 须满足 lo < hi，得到 {time_bounds_px!r}",
+                )
+            )
         bounds = (lo_px, hi_px)
 
-    order = sorted(items, key=lambda item: item.sort_key)
-    placed: list[tuple[float, float, float, float]] = []
-    hidden = 0
-    for item in order:
-        name = item.interval.name
-        abbreviated = abbreviate_text(item.interval) if abbreviate else name
-        base_rot = item.base_rotation
-        chosen = _select_candidate(
-            item, _candidate_sequence(name, abbreviated, base_rot), measure, bounds, placed
-        )
-        if chosen is None:
+    def _track_key(item: LabelItem) -> float:
+        """轨道分组键：时间维之外那一维的中心坐标，即所属条带的位置。
+
+        一条 ``add_geo_axis()`` 调用里多个 rank 各占一条轨道（各一个 inset
+        Axes），但 ``result`` 的 ``_label_items`` 把所有轨道的标签放在同一个
+        列表里。``track_register="uniform"`` 说的"同轨"是**一条条带**，不是
+        一次调用的全部标签——否则多 rank 时会把整张图一起降级成代号。
+        """
+        across = 1 - item.time_axis_index
+        return round(float(item.center[across]), 9)
+
+    def _place(force_abbreviate_for) -> int:
+        """单趟贪心放置；``force_abbreviate_for(item)`` 为真时不提供全名候选。"""
+        for item in items:
+            item.text = item.interval.name
+            item.rotation = item.base_rotation
+            item.shortened = False
+            item.rotated = False
             item.visible = False
-            hidden += 1
-            continue
-        text, rot, size, center = chosen
-        item.text = text
-        item.rotation = rot
-        item.size = size
-        item.shortened = text != name
-        item.rotated = rot != base_rot
-        item.visible = True
-        item.placed_px = center
-        screen = _screen_box(rot, size)
-        placed.append((center[0], center[1], screen[0], screen[1]))
+            item.placed_px = item.px_center
+        order = sorted(items, key=lambda item: item.sort_key)
+        placed: list[tuple[float, float, float, float]] = []
+        hidden_count = 0
+        for item in order:
+            name = item.interval.name
+            abbreviated = abbreviate_text(item.interval) if abbreviate else name
+            offered = abbreviated if force_abbreviate_for(item) else name
+            base_rot = item.base_rotation
+            sequence, strict_indices = _candidate_sequence(
+                offered, abbreviated, base_rot, fallback_truncation
+            )
+            chosen = _select_candidate(
+                item,
+                sequence,
+                measure,
+                bounds,
+                placed,
+                strict_indices,
+                gap_px=float(min_label_gap_px),
+            )
+            if chosen is None:
+                item.visible = False
+                hidden_count += 1
+                continue
+            text, rot, size, center = chosen
+            item.text = text
+            item.rotation = rot
+            item.size = size
+            item.shortened = text != name
+            item.rotated = rot != base_rot
+            item.visible = True
+            item.placed_px = center
+            screen = _screen_box(rot, size)
+            placed.append((center[0], center[1], screen[0], screen[1]))
+        return hidden_count
+
+    hidden = _place(lambda item: False)
+    # 同轨统一语域：某条轨道里只要有一个区间被迫缩写，该轨整体改用语域一致的
+    # 代号，避免"T3 · J1 · Lower Cretaceous"这类混排；别的轨道不受影响。
+    # 逐区间独立判定仍是默认。
+    if track_register == "uniform" and abbreviate:
+        forced_groups = {
+            key
+            for key, group in _group_by_track(items, _track_key).items()
+            if any(item.shortened for item in group)
+        }
+        if forced_groups:
+            hidden = _place(lambda item: _track_key(item) in forced_groups)
 
     shortened = any(item.shortened for item in items)
     rotated = any(item.rotated for item in items)

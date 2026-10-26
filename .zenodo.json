@@ -1,8 +1,8 @@
 {
   "title": "GeoPhylo: reproducible geological timescale axes for Matplotlib, with an explicit coordinate-semantics contract and version-pinned ICS snapshots",
   "upload_type": "software",
-  "publication_date": "2026-10-02",
-  "version": "0.1.1",
+  "publication_date": "2026-10-26",
+  "version": "0.2.0",
   "language": "eng",
   "license": "MIT",
   "access_right": "open",
@@ -10,6 +10,11 @@
     {
       "orcid": "0000-0001-6553-970X",
       "name": "Zichao Zeng",
+      "affiliation": "School of Life Sciences and Biotechnology, Shanghai Jiao Tong University, Shanghai, China"
+    },
+    {
+      "orcid": "0000-0001-8715-1386",
+      "name": "Yinzhao Wang",
       "affiliation": "School of Life Sciences and Biotechnology, Shanghai Jiao Tong University, Shanghai, China"
     }
   ],

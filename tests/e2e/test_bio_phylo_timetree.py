@@ -124,7 +124,7 @@ class TestBioPhyloTimetreeE2E:
         tree = Phylo.read(StringIO(NEWICK), "newick")
         tree.root.branch_length = 5.0
         fig, ax = plt.subplots(figsize=(8, 6))
-        with pytest.raises(CoordinateError, match="非零"):
+        with pytest.raises(CoordinateError, match="is non-zero"):
             spec_from_biophylo(tree, ax, time_axis="x", age_conversion=1.0, root_age=ROOT_AGE)
         plt.close(fig)
 
@@ -133,7 +133,7 @@ class TestBioPhyloTimetreeE2E:
         newick_all_none = "((A, B), (C, D));"
         tree = Phylo.read(StringIO(newick_all_none), "newick")
         fig, ax = plt.subplots(figsize=(8, 6))
-        with pytest.raises(CoordinateError, match="等深回退"):
+        with pytest.raises(CoordinateError, match="equal-depth fallback"):
             spec_from_biophylo(tree, ax, time_axis="x", age_conversion=1.0, root_age=100.0)
         plt.close(fig)
 
@@ -142,7 +142,7 @@ class TestBioPhyloTimetreeE2E:
         newick_all_none = "((A, B), (C, D));"
         tree = Phylo.read(StringIO(newick_all_none), "newick")
         fig, ax = plt.subplots(figsize=(8, 6))
-        with pytest.warns(UserWarning, match="等深回退"):
+        with pytest.warns(UserWarning, match="equal-depth fallback"):
             spec = spec_from_biophylo(
                 tree,
                 ax,
@@ -160,7 +160,7 @@ class TestBioPhyloTimetreeE2E:
         tree = Phylo.read(StringIO("A;"), "newick")
         tree.root.branch_length = None
         fig, ax = plt.subplots(figsize=(8, 6))
-        with pytest.raises(CoordinateError, match="退化为一个点"):
+        with pytest.raises(CoordinateError, match="collapses to a point"):
             spec_from_biophylo(tree, ax, time_axis="x", age_conversion=1.0, root_age=100.0)
         plt.close(fig)
 
@@ -168,7 +168,7 @@ class TestBioPhyloTimetreeE2E:
         """root_age too small → min_age < 0 → CoordinateError."""
         tree = Phylo.read(StringIO(NEWICK), "newick")
         fig, ax = plt.subplots(figsize=(8, 6))
-        with pytest.raises(CoordinateError, match="超过 root_age"):
+        with pytest.raises(CoordinateError, match="exceeding root_age"):
             spec_from_biophylo(tree, ax, time_axis="x", age_conversion=1.0, root_age=10.0)
         plt.close(fig)
 
@@ -176,7 +176,7 @@ class TestBioPhyloTimetreeE2E:
         """age_conversion=0.0 → CoordinateError."""
         tree = Phylo.read(StringIO(NEWICK), "newick")
         fig, ax = plt.subplots(figsize=(8, 6))
-        with pytest.raises(CoordinateError, match="正有限值"):
+        with pytest.raises(CoordinateError, match="positive finite value"):
             spec_from_biophylo(tree, ax, time_axis="x", age_conversion=0.0, root_age=245.0)
         plt.close(fig)
 
@@ -184,7 +184,7 @@ class TestBioPhyloTimetreeE2E:
         """Negative age_conversion → CoordinateError."""
         tree = Phylo.read(StringIO(NEWICK), "newick")
         fig, ax = plt.subplots(figsize=(8, 6))
-        with pytest.raises(CoordinateError, match="正有限值"):
+        with pytest.raises(CoordinateError, match="positive finite value"):
             spec_from_biophylo(tree, ax, time_axis="x", age_conversion=-1.0, root_age=245.0)
         plt.close(fig)
 
@@ -192,7 +192,7 @@ class TestBioPhyloTimetreeE2E:
         """String age_conversion → CoordinateError."""
         tree = Phylo.read(StringIO(NEWICK), "newick")
         fig, ax = plt.subplots(figsize=(8, 6))
-        with pytest.raises(CoordinateError, match="必须是 float 或 callable"):
+        with pytest.raises(CoordinateError, match="must be a float or a callable"):
             spec_from_biophylo(
                 tree,
                 ax,

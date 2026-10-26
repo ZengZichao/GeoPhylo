@@ -21,6 +21,7 @@ import math
 from dataclasses import dataclass
 from typing import Literal
 
+from .._i18n import msg
 from ..exceptions import CoordinateError, InvalidRadiusError, InvalidRangeError
 
 __all__ = ["FULL_CIRCLE_TOL", "RadialSpec"]
@@ -55,27 +56,64 @@ class RadialSpec:
             ("theta_range[1]", self.theta_range[1]),
         ):
             if isinstance(value, bool) or not isinstance(value, (int, float)):
-                raise InvalidRangeError(f"{name} 必须是数值，得到 {value!r}")
+                raise InvalidRangeError(
+                    msg(
+                        f"{name} must be a number, got {value!r}",
+                        f"{name} 必须是数值，得到 {value!r}",
+                    )
+                )
             if not math.isfinite(float(value)):
-                raise InvalidRangeError(f"{name} 必须是有限值，得到 {value!r}")
+                raise InvalidRangeError(
+                    msg(
+                        f"{name} must be finite, got {value!r}",
+                        f"{name} 必须是有限值，得到 {value!r}",
+                    )
+                )
         age_lo, age_hi = float(self.age_range[0]), float(self.age_range[1])
         r_inner, r_outer = float(self.radius_range[0]), float(self.radius_range[1])
         if age_lo < 0:
-            raise InvalidRangeError(f"age_range[0]={age_lo} 不能为负（年龄以 Ma 为单位）")
+            raise InvalidRangeError(
+                msg(
+                    f"age_range[0]={age_lo} must not be negative (ages are in Ma)",
+                    f"age_range[0]={age_lo} 不能为负（年龄以 Ma 为单位）",
+                )
+            )
         if age_lo >= age_hi:
-            raise InvalidRangeError(f"要求 age_range 满足 min < max，得到 ({age_lo}, {age_hi})")
+            raise InvalidRangeError(
+                msg(
+                    f"expected age_range to satisfy min < max, got ({age_lo}, {age_hi})",
+                    f"要求 age_range 满足 min < max，得到 ({age_lo}, {age_hi})",
+                )
+            )
         if r_inner < 0:
-            raise InvalidRadiusError(f"r_inner={r_inner} 不能为负")
+            raise InvalidRadiusError(
+                msg(f"r_inner={r_inner} must not be negative", f"r_inner={r_inner} 不能为负")
+            )
         if r_inner >= r_outer:
-            raise InvalidRadiusError(f"要求 r_inner < r_outer，得到 ({r_inner}, {r_outer})")
+            raise InvalidRadiusError(
+                msg(
+                    f"expected r_inner < r_outer, got ({r_inner}, {r_outer})",
+                    f"要求 r_inner < r_outer，得到 ({r_inner}, {r_outer})",
+                )
+            )
         object.__setattr__(self, "age_range", (age_lo, age_hi))
         object.__setattr__(self, "radius_range", (r_inner, r_outer))
         if self.root_age is not None:
             if isinstance(self.root_age, bool) or not isinstance(self.root_age, (int, float)):
-                raise CoordinateError(f"root_age 必须是数值或 None，得到 {self.root_age!r}")
+                raise CoordinateError(
+                    msg(
+                        f"root_age must be a number or None, got {self.root_age!r}",
+                        f"root_age 必须是数值或 None，得到 {self.root_age!r}",
+                    )
+                )
             root = float(self.root_age)
             if not math.isfinite(root) or root < 0:
-                raise CoordinateError(f"root_age 必须是非负有限值，得到 {self.root_age!r}")
+                raise CoordinateError(
+                    msg(
+                        f"root_age must be a non-negative finite value, got {self.root_age!r}",
+                        f"root_age 必须是非负有限值，得到 {self.root_age!r}",
+                    )
+                )
             object.__setattr__(self, "root_age", root)
         # 角度正规化与展开：按 +2π 的整数倍展开后要求跨度落在 (0, 2π + tol]。
         t0, t1 = float(self.theta_range[0]), float(self.theta_range[1])
@@ -84,8 +122,13 @@ class RadialSpec:
         span = t1 - t0
         if span <= 0 or span > 2.0 * math.pi + FULL_CIRCLE_TOL:
             raise CoordinateError(
-                f"theta_range 展开后跨度非法：({self.theta_range[0]}, {self.theta_range[1]}) "
-                f"→ 跨度 {span:.12f} rad；要求 0 < 跨度 <= 2π + {FULL_CIRCLE_TOL}"
+                msg(
+                    f"theta_range expands to an illegal span: ({self.theta_range[0]}, "
+                    f"{self.theta_range[1]}) -> span {span:.12f} rad; expected 0 < span <= 2*pi + "
+                    f"{FULL_CIRCLE_TOL}",
+                    f"theta_range 展开后跨度非法：({self.theta_range[0]}, {self.theta_range[1]}) "
+                    f"→ 跨度 {span:.12f} rad；要求 0 < 跨度 <= 2π + {FULL_CIRCLE_TOL}",
+                )
             )
         object.__setattr__(self, "theta_range", (t0, t1))
 
@@ -98,16 +141,36 @@ class RadialSpec:
         if radius_range is None:
             return (float(self.radius_range[0]), float(self.radius_range[1]))
         if len(radius_range) != 2:
-            raise InvalidRadiusError(f"radius_range 必须是 (下, 上) 二元组，得到 {radius_range!r}")
+            raise InvalidRadiusError(
+                msg(
+                    f"radius_range must be a (lower, upper) pair, got {radius_range!r}",
+                    f"radius_range 必须是 (下, 上) 二元组，得到 {radius_range!r}",
+                )
+            )
         lo, hi = radius_range
         for name, value in (("radius_range[0]", lo), ("radius_range[1]", hi)):
             if isinstance(value, bool) or not isinstance(value, (int, float)):
-                raise InvalidRadiusError(f"{name} 必须是数值，得到 {value!r}")
+                raise InvalidRadiusError(
+                    msg(
+                        f"{name} must be a number, got {value!r}",
+                        f"{name} 必须是数值，得到 {value!r}",
+                    )
+                )
             if not math.isfinite(float(value)):
-                raise InvalidRadiusError(f"{name} 必须是有限值，得到 {value!r}")
+                raise InvalidRadiusError(
+                    msg(
+                        f"{name} must be finite, got {value!r}",
+                        f"{name} 必须是有限值，得到 {value!r}",
+                    )
+                )
         lo, hi = float(lo), float(hi)
         if lo >= hi:
-            raise InvalidRadiusError(f"要求 radius_range 满足 lo < hi，得到 ({lo}, {hi})")
+            raise InvalidRadiusError(
+                msg(
+                    f"expected radius_range to satisfy lo < hi, got ({lo}, {hi})",
+                    f"要求 radius_range 满足 lo < hi，得到 ({lo}, {hi})",
+                )
+            )
         return lo, hi
 
     def age_to_radius(
@@ -135,13 +198,28 @@ class RadialSpec:
         半径用环带值域求逆，树上半径用完整 ``radius_range`` 求逆。
         """
         if isinstance(radius, bool) or not isinstance(radius, (int, float)):
-            raise CoordinateError(f"radius 必须是数值，得到 {radius!r}")
+            raise CoordinateError(
+                msg(
+                    f"radius must be a number, got {radius!r}",
+                    f"radius 必须是数值，得到 {radius!r}",
+                )
+            )
         radius = float(radius)
         if not math.isfinite(radius):
-            raise CoordinateError(f"radius 必须是有限值，得到 {radius!r}")
+            raise CoordinateError(
+                msg(
+                    f"radius must be finite, got {radius!r}",
+                    f"radius 必须是有限值，得到 {radius!r}",
+                )
+            )
         r_inner, r_outer = self._resolve_radius_range(radius_range)
         if radius < r_inner - 1e-12 or radius > r_outer + 1e-12:
-            raise CoordinateError(f"radius={radius!r} 超出 radius_range=[{r_inner}, {r_outer}]")
+            raise CoordinateError(
+                msg(
+                    f"radius={radius!r} lies outside radius_range=[{r_inner}, {r_outer}]",
+                    f"radius={radius!r} 超出 radius_range=[{r_inner}, {r_outer}]",
+                )
+            )
         min_age, max_age = self.age_range
         return max_age - (radius - r_inner) / (r_outer - r_inner) * (max_age - min_age)
 
@@ -152,36 +230,86 @@ class RadialSpec:
     ) -> tuple[float, float]:
         """把环带换算为 ``(r_inner, r_outer)``；单位换算只发生在这里。"""
         if len(band) != 2:
-            raise InvalidRadiusError(f"band 必须是 (下, 上) 二元组，得到 {band!r}")
+            raise InvalidRadiusError(
+                msg(
+                    f"band must be a (lower, upper) pair, got {band!r}",
+                    f"band 必须是 (下, 上) 二元组，得到 {band!r}",
+                )
+            )
         lo, hi = band
         for name, value in (("band[0]", lo), ("band[1]", hi)):
             if isinstance(value, bool) or not isinstance(value, (int, float)):
-                raise InvalidRadiusError(f"{name} 必须是数值，得到 {value!r}")
+                raise InvalidRadiusError(
+                    msg(
+                        f"{name} must be a number, got {value!r}",
+                        f"{name} 必须是数值，得到 {value!r}",
+                    )
+                )
             if not math.isfinite(float(value)):
-                raise InvalidRadiusError(f"{name} 必须是有限值，得到 {value!r}")
+                raise InvalidRadiusError(
+                    msg(
+                        f"{name} must be finite, got {value!r}",
+                        f"{name} 必须是有限值，得到 {value!r}",
+                    )
+                )
         lo, hi = float(lo), float(hi)
         if lo >= hi:
-            raise InvalidRadiusError(f"band 必须满足 band[0] < band[1]（4.8），得到 {band!r}")
+            raise InvalidRadiusError(
+                msg(
+                    f"band must satisfy band[0] < band[1] (4.8), got {band!r}",
+                    f"band 必须满足 band[0] < band[1]（4.8），得到 {band!r}",
+                )
+            )
         r_inner, r_outer = self.radius_range
         if unit == "radial_fraction":
             if not (0.0 <= lo <= 1.0 and 0.0 <= hi <= 1.0):
-                raise InvalidRadiusError(f"band={band!r} 在 radial_fraction 单位下必须落在 [0, 1]")
+                raise InvalidRadiusError(
+                    msg(
+                        f"band={band!r} must lie in [0, 1] in radial_fraction units",
+                        f"band={band!r} 在 radial_fraction 单位下必须落在 [0, 1]",
+                    )
+                )
             return (r_inner + lo * (r_outer - r_inner), r_inner + hi * (r_outer - r_inner))
         if unit == "data":
             if lo < r_inner - 1e-12 or hi > r_outer + 1e-12:
                 raise InvalidRadiusError(
-                    f"band={band!r} 在 data 单位下必须落在 radius_range=[{r_inner}, {r_outer}] 内"
+                    msg(
+                        f"band={band!r} must lie within radius_range=[{r_inner}, {r_outer}] in "
+                        f"data units",
+                        f"band={band!r} 在 data 单位下必须落在 "
+                        f"radius_range=[{r_inner}, {r_outer}] 内",
+                    )
                 )
             return (lo, hi)
-        raise InvalidRadiusError(f'band_unit={unit!r} 非法；合法取值为 ["radial_fraction", "data"]')
+        raise InvalidRadiusError(
+            msg(
+                f'band_unit={unit!r} is not allowed; valid values are ["radial_fraction", "data"]',
+                f'band_unit={unit!r} 非法；合法取值为 ["radial_fraction", "data"]',
+            )
+        )
 
     def _check_age(self, age_ma: float) -> float:
         if isinstance(age_ma, bool) or not isinstance(age_ma, (int, float)):
-            raise CoordinateError(f"age_ma 必须是数值，得到 {age_ma!r}")
+            raise CoordinateError(
+                msg(
+                    f"age_ma must be a number, got {age_ma!r}",
+                    f"age_ma 必须是数值，得到 {age_ma!r}",
+                )
+            )
         age = float(age_ma)
         if not math.isfinite(age):
-            raise CoordinateError(f"age_ma 必须是有限值，得到 {age_ma!r}")
+            raise CoordinateError(
+                msg(
+                    f"age_ma must be finite, got {age_ma!r}",
+                    f"age_ma 必须是有限值，得到 {age_ma!r}",
+                )
+            )
         lo, hi = self.age_range
         if age < lo - 1e-12 or age > hi + 1e-12:
-            raise CoordinateError(f"age_ma={age_ma!r} 超出 age_range=[{lo}, {hi}]")
+            raise CoordinateError(
+                msg(
+                    f"age_ma={age_ma!r} lies outside age_range=[{lo}, {hi}]",
+                    f"age_ma={age_ma!r} 超出 age_range=[{lo}, {hi}]",
+                )
+            )
         return age

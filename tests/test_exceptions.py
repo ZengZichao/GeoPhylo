@@ -49,4 +49,4 @@ def test_error_messages_carry_context():
     assert "Nope-Not-An-Interval" in message, message
     assert "Epoch" in message, message
     assert "rank" in message, message
-    assert "未命中" in message, message
+    assert "matches no interval" in message, message

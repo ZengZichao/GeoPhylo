@@ -1071,25 +1071,25 @@ class TestValidatorRejects:
     def test_zero_width_rejected(self):
         record = self._base_record()
         record["younger_boundary"]["age_ma"] = 10.0
-        with pytest.raises(DataValidationError, match="严格大于"):
+        with pytest.raises(DataValidationError, match="strictly greater"):
             validate_snapshot_payload(self._snapshot_with([record]))
 
     def test_negative_age_rejected(self):
         record = self._base_record()
         record["younger_boundary"]["age_ma"] = -1.0
-        with pytest.raises(DataValidationError, match="非负"):
+        with pytest.raises(DataValidationError, match="non-negative"):
             validate_snapshot_payload(self._snapshot_with([record]))
 
     def test_bad_color_rejected(self):
         record = self._base_record()
         record["color"] = "red"
-        with pytest.raises(DataValidationError, match="颜色"):
+        with pytest.raises(DataValidationError, match="hex colour"):
             validate_snapshot_payload(self._snapshot_with([record]))
 
     def test_missing_key_rejected(self):
         record = self._base_record()
         del record["source_parent_id"]  # 键必须显式出现
-        with pytest.raises(DataValidationError, match="必需键"):
+        with pytest.raises(DataValidationError, match="required key"):
             validate_snapshot_payload(self._snapshot_with([record]))
 
     def test_unknown_parent_rejected(self):

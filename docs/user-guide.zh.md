@@ -1,6 +1,6 @@
 # GeoPhylo 中文使用文档
 
-**版本**：对应 GeoPhylo 0.1.0（含实验性符号）
+**版本**：对应 GeoPhylo 0.1.1（含实验性符号）
 **适用环境**：Python 3.11～3.14 · Matplotlib ≥ 3.10 且 < 4 · NumPy ≥ 1.25
 **配套英文文档**：[user-guide.en.md](user-guide.en.md)
 
@@ -366,6 +366,9 @@ result = add_geo_axis(
     rotation=0.0,                # 标签固定旋转角（度）
     tick_style="none",           # "none" | "boundaries" | "ages"
     tick_max_count=10,           # 刻度硬上限
+    tick_format="default",       # "default" | "exact" | 可调用对象(age) -> str
+    track_register="interval",   # "interval" | "uniform"
+    fallback_truncation=None,    # None（关闭）或最短前缀字符数（>= 2）
     key=None,                    # 轨道标识（幂等更新），见 7.2
     preserve_axes_state=True,    # 是否承诺不改动宿主视图状态
 )
@@ -438,6 +441,24 @@ result = add_geo_axis(
 再按 WCAG（Web Content Accessibility Guidelines，Web 内容无障碍指南）相对亮度选择
 黑或白，保证半透明色块上的标签可读。
 
+**`min_label_gap`（相邻标签净距）**：同一条带内两枚标签沿时间维必须留出的最小间隙（pt）。默认 `0.0` 只要求"不相交"，两枚标签可能零间隙相贴、糊成一个不存在的词；设为 `4.0`（约半倍字高）即可让它们分开。净距在**放置阶段**执行，因此放不开的标签会沿降级阶梯继续退让，而不是先画上再丢弃。
+
+**`tick_format`（刻度数字精度）**：`"default"`（默认）沿用上面的确定性规则，
+`age ≥ 100` 取整（快照里的 `251.902` 会印成 `252`）；`"exact"` 按快照存储精度打印
+（整数省略小数点，其余保留至多 6 位小数并去掉尾零：`251.902`、`0.0117`、`66`）。
+小数位变多会使数字变宽，间距过滤可能丢弃更多刻度，丢弃数见 `result.ticks_dropped`。
+也可直接传入 `age -> str` 的可调用对象替换整条规则。
+
+**`track_register`（同轨语域一致性）**：`"interval"`（默认）逐区间独立决定是否缩写，
+因此一条轨道可能混排代号与全名；`"uniform"` 时只要本轨有一个区间被迫缩写，整轨统一
+改用官方代号。全名都放得下的轨道不受影响，`abbreviate=False` 始终优先。
+
+**`fallback_truncation`（名称前缀回退）**：`None`（默认）时阶梯止于"旋转 → 隐藏"，
+库不凭空造记号；给出整数 `n ≥ 2` 时，**在旋转全名也被拒之后**才回退到 `n` 个字符的
+名称前缀（连它都放不进自身区间时再递减到 2 个字符）。顺序不能颠倒：旋转是"按原样
+读出全名"的那一档，前缀截断是"造新记号"的那一档，截断不得抢占旋转。用于拥挤轨道里
+保住"文字作为第二通道"（`Aalenian → Aal`）。该能力默认关闭，需显式开启。
+
 ### 6.3 副作用契约
 
 `preserve_axes_state=True`（默认）时，`add_geo_axis()` **不修改宿主 Axes 的任何视图
@@ -470,7 +491,8 @@ result.restore()     # 按创建时快照还原宿主 Axes 状态
 
 - **`update()`** 只接受渲染参数（`ranks`、`thickness_ratio`、`min_age`、
   `max_age`、`fill`、`alpha`、`label`、`label_size`、`label_color`、`skip`、
-  `abbreviate`、`border*`、`rotation`、`tick_style`、`tick_max_count`）。`spec`、
+  `abbreviate`、`border*`、`rotation`、`tick_style`、`tick_max_count`、
+  `tick_format`、`track_register`、`fallback_truncation`）。`spec`、
   `position`、`timescale` **不可**原地更新——这三个参数意味着坐标语义或承载 Axes
   变化，传入即抛 `CoordinateError`。所有取值域校验和几何预检通过后才提交：失败的
   `update()` 不改动任何状态（原 Artist 与原参数保持不变）。
@@ -719,6 +741,10 @@ ts.find_by_name("Ectasian")
 所有公共异常继承 `geophylo.GeophyloError`。异常消息包含失败参数名、实际值和
 修复建议。
 
+**消息与本地化。** 异常与警告消息默认英文；设 `GEOPHYLO_LANG=zh`（任意以 `zh`
+开头的取值）切回中文。两种文案在每个调用点并排书写（`geophylo._i18n.msg`），
+不经过机器翻译，也没有任何消息被删减。docstring 保持双语，不影响运行时输出。
+
 | 异常 | 典型触发 | 排查建议 |
 | --- | --- | --- |
 | `DataValidationError` | 快照 schema、哈希、共享边界校验失败；请求未发布版本 | 检查 `available_versions()`；自定义 JSON 对照内置快照 schema；勿手改快照文件 |
@@ -874,7 +900,7 @@ python examples/bio_phylo_timetree.py
   （由 `tools/make_diff.py` 或 `build_snapshot.py --diff-with` 生成），以及
   `versions.json` 中 2024/12 条目的 `derived_from` 字段；说明见
   `geophylo/data/snapshots/PROVENANCE.md`。
-- **设计决策**：[`docs/adr/`](adr/README.md) 下的架构决策记录（ADR-1～ADR-5）
+- **设计决策**：[`docs/adr/`](adr/README.md) 下的架构决策记录（ADR-1～ADR-6）
   写明各处的非显然选择和已否决的替代方案。
 - **引用**：使用本库请引用 GeoPhylo（`CITATION.cff`），并按 `NOTICE` 要求
   同时引用《国际年代地层表》。

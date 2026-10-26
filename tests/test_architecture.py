@@ -37,6 +37,7 @@ MODULE_LAYER: Final[dict[str, str]] = {
     "geophylo": "facade",
     "geophylo._version": "facade",
     # 契约基础层（最底层：被大量引用，自身不引用任何内部业务模块）
+    "geophylo._i18n": "foundation",
     "geophylo.exceptions": "foundation",
     "geophylo.validation": "foundation",
     # 数据层

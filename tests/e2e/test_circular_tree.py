@@ -82,7 +82,7 @@ class TestCircularTreeE2E:
         """Cartesian Axes must be rejected."""
         fig, ax = plt.subplots(figsize=(6, 4))
         radial = _full_radial()
-        with pytest.raises(AxesTypeError, match="极坐标"):
+        with pytest.raises(AxesTypeError, match="polar"):
             add_geo_ring(ax, spec=radial, rank="Period")
         plt.close(fig)
 

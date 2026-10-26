@@ -57,7 +57,7 @@ error instead of guessing silently.
 - [中文使用文档](docs/user-guide.zh.md)（完整教程、参数详解、FAQ 和排错指南）
 - [Data policy](docs/data-policy.md) (provenance, licensing, update and
   rollback of the ICS snapshots)
-- [Architecture decision records](docs/adr/README.md) (ADR-1…ADR-5: non-obvious
+- [Architecture decision records](docs/adr/README.md) (ADR-1…ADR-6: non-obvious
   choices and the alternatives they rejected)
 
 ## Installation
