@@ -6,6 +6,25 @@ least a minor release; transcription fixes are listed even when patch-level).
 
 中文版：[CHANGELOG.zh-CN.md](CHANGELOG.zh-CN.md)
 
+## [0.2.1] - 2026-10-27
+
+诊断信息与文档修正版。公共 API、默认渲染行为、随包数据与三处数字产物均与 0.2.0
+一致（图 3 重跑后 PNG/PDF 的 SHA-256 与交付件逐字节相同）。
+
+### Added
+- 公共异常新增稳定机器码 `code`：类级声明 `data.validation`、`rank.invalid`、
+  `interval.not_found`、`interval.ambiguous`、`range.invalid`、`radius.invalid`、
+  `axes.type`、`coordinate.spec`，需要更细判别时可在构造点用 `code=` 按实例收窄。
+  调用方与测试应据此分支，不再依赖消息文案或 `GEOPHYLO_LANG`。手册第 12 节
+  新增「稳定机器码」一段，`tests/test_exceptions.py` 增加码形态、唯一性与
+  实例收窄的契约用例。
+
+### Fixed
+- 用户手册 FAQ 编号重复：新增的三条（多级地质年代环、ETE4/toytree、iplotx 径向）
+  与原 Q11–Q14 撞号，现统一为 Q1–Q17；中文手册补齐同样三条，两份手册条目数一致。
+- 手册中「径向适配器排在 v0.2」的过期承诺改为「更晚的 0.x 版本」。
+- README 增「稳定性与路线图」一节，明确 0.2 不包含实验性符号的稳定化范围。
+
 ## [0.2.0] - 2026-10-26
 
 ### Added

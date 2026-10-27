@@ -21,9 +21,8 @@ authors:
       name: School of Life Sciences and Biotechnology, Shanghai Jiao Tong University
       address: Shanghai
       country: CN
-version: 0.2.0
-date-released: 2026-10-26
-doi: 10.5281/zenodo.23665876
+version: 0.2.1
+date-released: 2026-10-27
 license: MIT
 type: software
 repository-code: "https://github.com/ZengZichao/GeoPhylo"
@@ -42,8 +41,11 @@ identifiers:
       10.5281/zenodo.23060663. Releases from 0.1.1 onward are archived by the
       Zenodo GitHub integration under a separate concept lineage (concept DOI
       10.5281/zenodo.23093968); the version DOI for 0.1.1 is
-      10.5281/zenodo.23093969 and the version DOI for 0.2.0, the release
-      recorded here, is 10.5281/zenodo.23665876.
+      10.5281/zenodo.23093969 and the version DOI for 0.2.0 is
+      10.5281/zenodo.23665876. Release 0.2.1 (diagnostics and documentation only;
+      public API, rendering defaults and bundled data identical to 0.2.0) is
+      archived the same way, and its version DOI is recorded here once the
+      integration has minted it.
   - type: url
     value: "https://pypi.org/project/geophylo/"
     description: PyPI distribution; every tag of this repository is published there automatically (pip install geophylo).
