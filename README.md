@@ -165,6 +165,21 @@ third-party data files are independent of the code license.
 - The library runs headless (Agg backend). Examples are all organised as
   `add_geo_axis() → tight_layout() → finalize() → savefig()`.
 
+## Stability and roadmap
+
+- **Stable since 0.1.0**: `Timescale`, `CoordinateSpec`, `add_geo_axis()`,
+  `GeoAxisResult` and `spec_from_biophylo()`. The public API is unchanged in
+  0.2.x, which only adds opt-in keyword arguments (`tick_format`,
+  `track_register`, `fallback_truncation`, `min_label_gap`) plus `code` on the
+  public exceptions; the defaults reproduce the 0.1.x behaviour exactly.
+- **Experimental, not frozen**: `RadialSpec`, `add_geo_ring()`,
+  `radial_spec_from_biophylo()` and `spec_from_iplotx()`. 0.2 does **not**
+  stabilise them — signatures may still change. Stabilisation is planned for a
+  later 0.x release, and multi-rank radial rings stay out of scope until a sound
+  layout model exists.
+- **Not planned**: adapters for ETE4 or toytree (neither hands tree geometry
+  back as a Matplotlib Axes), and online updates of the chart data.
+
 ## Development
 
 ```bash

@@ -145,6 +145,18 @@ ICS 数据的引用与归因见 [NOTICE](NOTICE) 与
 - 本库可在无 GUI 环境运行（Agg 后端）。示例统一按
   `add_geo_axis() → tight_layout() → finalize() → savefig()` 的顺序组织。
 
+## 稳定性与路线图
+
+- **0.1.0 起稳定**：`Timescale`、`CoordinateSpec`、`add_geo_axis()`、
+  `GeoAxisResult` 与 `spec_from_biophylo()`。0.2.x 不改公共 API，只新增可选关键字
+  参数（`tick_format`、`track_register`、`fallback_truncation`、`min_label_gap`）
+  与公共异常上的 `code`；默认值完全复现 0.1.x 行为。
+- **实验性、未冻结**：`RadialSpec`、`add_geo_ring()`、`radial_spec_from_biophylo()`
+  与 `spec_from_iplotx()`。0.2 **不**稳定化这些符号，签名仍可能变化；稳定化排在
+  更晚的 0.x 版本，多级地质年代环在布局模型成立之前不纳入范围。
+- **不计划支持**：ETE4 与 toytree 适配器（两者都不把树几何交回成 Matplotlib
+  Axes），以及图表数据的在线更新。
+
 ## 开发
 
 ```bash

@@ -823,6 +823,14 @@ to Chinese. The two texts are written side by side at each call site
 (`geophylo._i18n.msg`), so nothing is machine-translated and no message is lost;
 docstrings stay bilingual and do not affect runtime output.
 
+**Stable machine codes.** Every public exception class declares a `code` —
+`data.validation`, `rank.invalid`, `interval.not_found`, `interval.ambiguous`,
+`range.invalid`, `radius.invalid`, `axes.type`, `coordinate.spec` — that does
+not change with the wording of a message or with `GEOPHYLO_LANG`. Branch on
+`exc.code` rather than on the message text; a call site that needs a finer
+distinction can narrow it per instance
+(`CoordinateError(..., code="coordinate.spec_type")`).
+
 | Exception | Typical trigger | What to do |
 | --- | --- | --- |
 | `DataValidationError` | snapshot schema/hash/shared-boundary failure; unpublished version requested | check `available_versions()`; validate custom JSON against the bundled schema; never hand-edit snapshots |
@@ -939,10 +947,10 @@ as long as you own the drawing call.
 Because iplotx's radial layout is polar, while the linear strip contract needs a
 Cartesian time axis; silently converting would change the coordinate semantics
 that this library exists to protect. Draw the circular layout yourself and use
-`RadialSpec` + `add_geo_ring()` (Section 9); the radial adapter is tracked for
-v0.2.
+`RadialSpec` + `add_geo_ring()` (Section 9); the radial adapter is tracked for a
+later 0.x release.
 
-**Q11: Why is the base of the Cretaceous 143.1 Ma (and the top of the Berriasian
+**Q14: Why is the base of the Cretaceous 143.1 Ma (and the top of the Berriasian
 137.05 Ma) rather than the widely quoted GTS2012 values 145.0 and 139.8?**
 The two values in this snapshot come from the **GTS2020 time calibration**
 carried by the ICS chart version they were built from (`rdfs:isDefinedBy
@@ -952,7 +960,7 @@ not be mixed with them. When a figure is read against an older table, state the
 source in the caption: every number GeoPhylo draws comes from the bundled
 snapshot's `chart_version` (check it with `Timescale().metadata.data_version`).
 
-**Q12: Why does the snapshot stop at 4567 Ma instead of the 4600 that many
+**Q15: Why does the snapshot stop at 4567 Ma instead of the 4600 that many
 time scales start from?**
 The Hadean / Precambrian older boundary is 4567.0 Ma upstream (the pinned TTL
 describes it as `A time period from 4567 to 4031 million years ago`), and
@@ -962,7 +970,7 @@ with `max_age=4600.0`. The interval between 4567 and 4600 then stays empty — a
 direct consequence of never fabricating a unit the source does not give; say so
 in the caption.
 
-**Q13: The Carboniferous Mississippian / Pennsylvanian are classified as
+**Q16: The Carboniferous Mississippian / Pennsylvanian are classified as
 `structural` — how do I draw that two-fold division?**
 The ICS chart carries them at the `Sub-Period` level, which ADR-5 classifies as
 structural: they never enter `Timescale.ranks`, nor the default pools of
@@ -984,7 +992,7 @@ aliases are composite `ccgmShortCode` values — see §6.2).
 Epoch candidates); disambiguate with `rank=` / `parent=` or use an ID such as
 `ics:epoch:lower-mississippian`.
 
-**Q14: The `"Ma"` unit label sits outside the coloured strip — is that a
+**Q17: The `"Ma"` unit label sits outside the coloured strip — is that a
 placement bug?**
 No, it is the documented anchor: the label is pinned to the **older end of the
 window** and offset away from the track by a gap measured in display pixels

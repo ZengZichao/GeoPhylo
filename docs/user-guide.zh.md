@@ -745,6 +745,12 @@ ts.find_by_name("Ectasian")
 开头的取值）切回中文。两种文案在每个调用点并排书写（`geophylo._i18n.msg`），
 不经过机器翻译，也没有任何消息被删减。docstring 保持双语，不影响运行时输出。
 
+**稳定机器码。** 每个公共异常类都声明一个 `code`——`data.validation`、
+`rank.invalid`、`interval.not_found`、`interval.ambiguous`、`range.invalid`、
+`radius.invalid`、`axes.type`、`coordinate.spec`——它不随消息措辞和
+`GEOPHYLO_LANG` 变化。分支判断请用 `exc.code` 而不是消息文本；需要更细判别时，
+可在构造点按实例收窄（`CoordinateError(..., code="coordinate.spec_type")`）。
+
 | 异常 | 典型触发 | 排查建议 |
 | --- | --- | --- |
 | `DataValidationError` | 快照 schema、哈希、共享边界校验失败；请求未发布版本 | 检查 `available_versions()`；自定义 JSON 对照内置快照 schema；勿手改快照文件 |
@@ -821,7 +827,30 @@ ts.find_by_name("Ectasian")
 见仓库 `examples/`：每个示例脚本的边界数值和颜色都从内置快照动态读取，无手写
 数值；按示例自带的输出路径与 `dpi` 重跑即可复现同一张图。
 
-**Q11：为什么白垩系底界是 143.1 Ma（贝里阿斯顶界 137.05 Ma），而不是常引用的
+**Q11：为什么不支持多级地质年代环？**
+`add_geo_ring()` 只接受一个 `rank`，传入序列会抛 `InvalidRankError`。把多个年代
+层级沿径向叠起来，需要一个决定内外环如何共用同一条"半径—年龄"映射的布局模型；
+该模型尚不成立，所以 API 选择拒绝而不是猜。在此之前，请用线性多轨条带
+（`ranks=["Period", "Epoch"]`）做叠层，环形树按 9.3 节自绘，外面只挂一条环。
+
+**Q12：我用 ETE4 或 toytree，还能用 geophylo 吗？**
+能，但走间接路径。随包适配器只有 `spec_from_biophylo()`（稳定）与
+`spec_from_iplotx()`（实验性）；ETE4 和 toytree 不把树几何交回成 Matplotlib
+Axes，因此不计划为它们写适配器。自己画树、声明一次语义、再挂条带即可：
+
+```python
+spec = CoordinateSpec.absolute(time_axis="x", age_range=(0.0, my_max_age))
+result = add_geo_axis(ax, spec=spec, position="bottom", ranks=["Period", "Epoch"])
+```
+
+任何 x（或 y）轴承载 Ma 的 Axes 都适用——只要绘制调用在你手里，树库是哪个都无关。
+
+**Q13：`spec_from_iplotx()` 为什么拒绝径向树？**
+因为 iplotx 的径向布局是极坐标，而线性条带契约需要笛卡尔时间轴；静默转换会改变
+本库要守护的坐标语义。请按 9.3 节自绘环形布局，并用 `RadialSpec` +
+`add_geo_ring()`（第 9 节）；径向适配器排在更晚的 0.x 版本。
+
+**Q14：为什么白垩系底界是 143.1 Ma（贝里阿斯顶界 137.05 Ma），而不是常引用的
 GTS2012 值 145.0 和 139.8？**
 本快照的这两个数值取自 ICS 图表版本携带的 **GTS2020 时间校准**（上游锁定输入
 pinned TTL 文件中相应界线节点的 `rdfs:isDefinedBy ts:gts2020`），不是抄录错误。
@@ -829,7 +858,7 @@ pinned TTL 文件中相应界线节点的 `rdfs:isDefinedBy ts:gts2020`），不
 写明来源：本库图上的数字全部来自随包快照的 `chart_version`（可用
 `Timescale().metadata.data_version` 复核）。
 
-**Q12：为什么快照最老只到 4567 Ma，而不是多数时间标尺用的 4600？**
+**Q15：为什么快照最老只到 4567 Ma，而不是多数时间标尺用的 4600？**
 冥古宙和前寒武系的底界在上游 TTL 中就是 4567.0 Ma（原文描述 `A time period from
 4567 to 4031 million years ago`），本库不修改上游数值。若坐标轴需要以 4600 作为
 标尺起点，显式声明
@@ -837,7 +866,7 @@ pinned TTL 文件中相应界线节点的 `rdfs:isDefinedBy ts:gts2020`），不
 `max_age=4600.0` 即可。4567 和 4600 之间会留下一段没有色块的区间，这是“上游未给出
 的单元一律不伪造”的直接结果，请在图注中说明。
 
-**Q13：石炭纪的密西西比亚统和宾夕法尼亚亚统归为结构节点，怎么画出这个两分？**
+**Q16：石炭纪的密西西比亚统和宾夕法尼亚亚统归为结构节点，怎么画出这个两分？**
 ICS 图表把它们放在 `Sub-Period` 一层，本库按 ADR-5 将该层归为结构节点。它们不进入
 `Timescale.ranks`，也不进入 `find_by_age()`、`iter_intervals()` 的默认池，
 `ranks=["Sub-Period"]` 抛 `InvalidRankError`。可以绘制的是快照**确实携带**的下一级，
@@ -856,7 +885,7 @@ add_geo_axis(ax, spec=spec, position="bottom", ranks=["Period", "Epoch"],
 请用 `rank=` 或 `parent=` 消歧，或直接用 ID（如
 `ics:epoch:lower-mississippian`）。
 
-**Q14：`"Ma"` 单位标签出现在彩色条带外面，这是定位错误吗？**
+**Q17：`"Ma"` 单位标签出现在彩色条带外面，这是定位错误吗？**
 不是，这是有意的锚定规则。标签钉在**窗口的较老一端**，并按显示像素向外偏移一段
 间隙（`geophylo/render/linear.py` 的 `_draw_unit_label()`），因此不会和最老端的刻度
 数字相撞。
