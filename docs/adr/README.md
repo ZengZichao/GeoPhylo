@@ -1,5 +1,7 @@
 # Architecture decision records
 
+English | [中文](README.zh.md)
+
 Long-form rationale for the non-obvious choices in `geophylo`. Each record
 states what was decided, which alternatives were rejected, and what the
 consequences bind future contributors to. Inline `ADR-n` markers in the source
@@ -30,7 +32,7 @@ contract are in place.
 
 ## Scope
 
-These five records cover only the decisions listed above. Other deliberate
+These six records cover only the decisions listed above. Other deliberate
 choices that are *not* recorded here, and are documented elsewhere instead:
 
 - the exception hierarchy and the "no raw `TypeError`/`ValueError` escapes a
@@ -39,5 +41,5 @@ choices that are *not* recorded here, and are documented elsewhere instead:
 - append-only snapshots and the sentinel-assertion release ritual →
   [`docs/data-policy.md`](../data-policy.md);
 - provenance of the derived `2024/12` snapshot →
-  [`geophylo/data/snapshots/PROVENANCE.md`](../../GeoPhylo/data/snapshots/PROVENANCE.md);
+  [`geophylo/data/snapshots/PROVENANCE.md`](../../geophylo/data/snapshots/PROVENANCE.md);
 

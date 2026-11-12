@@ -1,60 +1,89 @@
 # Changelog
 
+English | [中文](CHANGELOG.zh-CN.md)
+
 All notable changes to this project are documented in this file. Data changes
 are listed separately from code changes (scientific data changes trigger at
 least a minor release; transcription fixes are listed even when patch-level).
 
-中文版：[CHANGELOG.zh-CN.md](CHANGELOG.zh-CN.md)
-
 ## [0.2.1] - 2026-10-27
 
-诊断信息与文档修正版。公共 API、默认渲染行为、随包数据与三处数字产物均与 0.2.0
-一致（图 3 重跑后 PNG/PDF 的 SHA-256 与交付件逐字节相同）。
+Diagnostics and documentation fix release. The public API, the default
+rendering behaviour, the bundled data and the three digital artefacts are all
+unchanged from 0.2.0 (re-running figure 3 reproduces the delivered PNG/PDF
+SHA-256 hashes byte for byte).
 
 ### Added
-- 公共异常新增稳定机器码 `code`：类级声明 `data.validation`、`rank.invalid`、
-  `interval.not_found`、`interval.ambiguous`、`range.invalid`、`radius.invalid`、
-  `axes.type`、`coordinate.spec`，需要更细判别时可在构造点用 `code=` 按实例收窄。
-  调用方与测试应据此分支，不再依赖消息文案或 `GEOPHYLO_LANG`。手册第 12 节
-  新增「稳定机器码」一段，`tests/test_exceptions.py` 增加码形态、唯一性与
-  实例收窄的契约用例。
+- Public exceptions gained a stable machine code `code`: class-level
+  declarations `data.validation`, `rank.invalid`, `interval.not_found`,
+  `interval.ambiguous`, `range.invalid`, `radius.invalid`, `axes.type`,
+  `coordinate.spec`, which a call site that needs a finer distinction may
+  narrow per instance with `code=`. Callers and tests should branch on it
+  rather than on message wording or on `GEOPHYLO_LANG`. Section 12 of the
+  manual gained a "Stable machine codes" paragraph, and
+  `tests/test_exceptions.py` gained contract cases for code shape, uniqueness
+  and per-instance narrowing.
 
 ### Fixed
-- 用户手册 FAQ 编号重复：新增的三条（多级地质年代环、ETE4/toytree、iplotx 径向）
-  与原 Q11–Q14 撞号，现统一为 Q1–Q17；中文手册补齐同样三条，两份手册条目数一致。
-- 手册中「径向适配器排在 v0.2」的过期承诺改为「更晚的 0.x 版本」。
-- README 增「稳定性与路线图」一节，明确 0.2 不包含实验性符号的稳定化范围。
+- Duplicate FAQ numbering in the user manual: the three new entries
+  (multi-rank geological time rings, ETE4/toytree, iplotx radial) collided
+  with the former Q11–Q14 and are now unified as Q1–Q17; the Chinese manual
+  was brought up to the same three entries, so both manuals carry an equal
+  number of items.
+- Replaced the stale promise in the manual that the radial adapter was
+  "scheduled for v0.2" with "a later 0.x release".
+- Added a "Stability and roadmap" section to README, making explicit that 0.2
+  does not cover a stabilisation scope for the experimental symbols.
 
 ## [0.2.0] - 2026-10-26
 
 ### Added
-- `add_geo_axis(tick_format=...)`：`"default"` 保持原有取整规则，`"exact"` 按快照
-  存储精度打印（`251.902` 不再印成 `252`），也可传入 `age -> str` 可调用对象。
-- `add_geo_axis(track_register=...)`：`"uniform"` 使一条轨道在任一处被迫缩写时
-  整轨改用官方代号，消除"代号 + 全名"混排。
-- `add_geo_axis(fallback_truncation=...)`：可选的名称前缀回退（先取 n 个字符，
-  必要时递减到 2 个），排在旋转之后、隐藏之前，让没有官方别名的拥挤区间不再只能
-  隐藏。三者默认关闭，既有调用行为不变。
-- `add_geo_axis(min_label_gap=...)`：同轨相邻标签沿时间维的最小净距（默认 0，只判
-  相交）；净距在放置阶段执行，放不开的标签沿降级阶梯退让，而不是先画上再丢弃。
-- `GeoAxisResult` 新增 `labels_shortened_n` / `labels_rotated_n`（**可见**标签计数），
-  图注可直接引用；`labels_shortened`/`labels_rotated` 仍是"是否发生过"的布尔位。
-- 新增 `docs/adr/ADR-6-render-overrides-opt-in.md`（中英），记录四个显式开启项的取舍
-  与被否方案；ADR 份数守卫与各处编号引用同步更新。
-- 下游作图脚本不再需要携带补丁：`relabel_boundaries`（刻度精度覆写）、
-  `uniform_track_register`（整轨统一）、`prefix_fallback`（前缀回退）三处已删除，
-  改用 `tick_format="exact"` / `track_register="uniform"` / `fallback_truncation=3`。
-  等价重跑的产物逐字节一致。
-- `examples/figures/fig2.py`、`fig3.py`、`fig4.py`、`figb3.py`：纯 ASCII 入口，供无法
-  键入中文路径的环境复现论文数据图（输出仍按归档脚本的 stem 命名，重跑字节一致）。
+- `add_geo_axis(tick_format=...)`: `"default"` keeps the previous rounding
+  rule, `"exact"` prints each value at the precision the snapshot stores
+  (`251.902` is no longer printed as `252`); any `age -> str` callable may
+  also be passed.
+- `add_geo_axis(track_register=...)`: `"uniform"` switches a whole track to
+  the official short codes as soon as any interval in it has to be
+  abbreviated, removing the mixed "code + full name" register.
+- `add_geo_axis(fallback_truncation=...)`: an optional name-prefix fallback
+  (take n characters first, decreasing to 2 when needed) that ranks after
+  rotation and before hiding, so crowded intervals with no official alias are
+  no longer left with hiding as their only option. All three are off by
+  default and existing calls behave unchanged.
+- `add_geo_axis(min_label_gap=...)`: the minimum clearance along the time
+  dimension between adjacent labels in the same track (default 0, i.e.
+  intersection only); the clearance is enforced during placement, so a label
+  that cannot keep it steps down the degradation ladder instead of being
+  drawn and then discarded.
+- `GeoAxisResult` gained `labels_shortened_n` / `labels_rotated_n` (**visible**
+  label counts), which a figure caption can quote directly;
+  `labels_shortened` / `labels_rotated` remain the "did it ever happen" flags.
+- Added `docs/adr/ADR-6-render-overrides-opt-in.md` (English and Chinese),
+  recording the trade-offs of the four opt-in overrides and the rejected
+  alternatives; the ADR-count guard and the numbered references to it were
+  updated in step.
+- Downstream figure scripts no longer need to carry patches: the
+  `relabel_boundaries` (tick-precision override), `uniform_track_register`
+  (whole-track register) and `prefix_fallback` (name-prefix fallback)
+  workarounds were removed in favour of `tick_format="exact"` /
+  `track_register="uniform"` / `fallback_truncation=3`. Equivalent re-runs
+  produce byte-identical artefacts.
+- Added `examples/figures/fig2.py`, `fig3.py`, `fig4.py`, `figb3.py`:
+  pure-ASCII entry points for reproducing the paper's data figures from
+  environments that cannot type Chinese paths (output is still named after
+  the archiving scripts' stems; re-runs are byte-identical).
 
 ### Changed
-- 异常与警告消息默认改为英文，`GEOPHYLO_LANG=zh` 切回中文（`geophylo._i18n.msg`，
-  双语在每个调用点并排书写，非机器翻译）。共迁移 203 处 `raise`/`warnings.warn`，
-  覆盖 `validation`、`coordinate`、`render`、`adapter`、`data` 全部调用点。
-- README/README.zh-CN：PyPI 可用性表述更正（`geophylo 0.1.1` 已于 2026-10-18 发布），
-  徽章改为指向索引页版本。
-- 归档元数据：`CITATION.cff` 与 `.zenodo.json` 的 `creators` 补第二位作者。
+- Exception and warning messages are English by default, with
+  `GEOPHYLO_LANG=zh` switching them back to Chinese (`geophylo._i18n.msg`;
+  both texts are written side by side at each call site, not machine
+  translated). Migrated 203 `raise`/`warnings.warn` sites, covering every
+  call site in `validation`, `coordinate`, `render`, `adapter` and `data`.
+- README/README.zh-CN: corrected the PyPI availability statement
+  (`geophylo 0.1.1` was published on 2026-10-18) and pointed the badge at the
+  version on the index page.
+- Archival metadata: added the second author to `creators` in `CITATION.cff`
+  and `.zenodo.json`.
 
 ## [0.1.1] - 2026-10-02
 
@@ -92,7 +121,7 @@ Initial release.
   hierarchy, overlap, shared-boundary and hash validation.
 - Exception hierarchy rooted at `GeophyloError`.
 
-### Added — 实验性 / experimental
+### Added — experimental
 - `pyrolite_backend` (read-only, version-locked `pyrolite>=0.3.7`; import from
   `geophylo.data.pyrolite_backend`).
 - Experimental symbols, API not frozen:

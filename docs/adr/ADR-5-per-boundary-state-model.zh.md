@@ -1,4 +1,4 @@
-# ADR-5：把每个边界建模为一组正交状态，而不是一个裸年龄
+# ADR-5：把每个边界建模为三元正交状态，而不是一个裸年龄
 
 [English](ADR-5-per-boundary-state-model.md) | 中文
 
@@ -12,7 +12,7 @@
 ## 背景
 
 一个公开发表的边界年龄不是一个数。在随包的 2026/06 快照里，下列不同情形全部
-存在，而每一种都许可不同的下游主张：
+存在，而每一种各自支撑不同的下游主张：
 
 | 边界 | 年龄 | 定义 | 误差 | `qualifier` |
 | --- | --- | --- | --- | --- |
@@ -20,16 +20,16 @@
 | top Jurassic | 143.1 ± 0.6 Ma | 数值估计 | 已公布 | `constrained` |
 | base Quaternary | 2.58 Ma | GSSP | 未公布 | `defined` |
 | base Anisian | 247.0 Ma | 数值估计 | 未公布 | `unknown` |
-| top Phanerozoic | 0.0 Ma | present | — | `present` |
+| top Phanerozoic | 0.0 Ma | 现今 | — | `present` |
 
 如果把这一切都压成一个浮点数，两类不同的事实就被混为一谈：
 
-1. **边界是如何定义的** —— 经批准的 GSSP、GSSA、数值估计、present，或根本没有
-   说明。
+1. **边界是如何定义的** —— 经批准的 GSSP、GSSA、数值估计、以现今（`present`）
+   定义，或根本没有说明。
 2. **数值的认识论状态是什么** —— 有声明误差约束、精确定义、显式近似（`~`）、
-   present-day，或未知。
+   现今，或未知。
 
-在下游，"0.0 的误差"与"未公布误差"的区别，正是会静默变成图注里虚假精度陈述的
+在下游，“0.0 的误差”与“未公布误差”的区别，正是会静默变成图注里虚假精度陈述的
 那类差别。
 
 ## 决策
@@ -46,18 +46,18 @@ Boundary(age_ma, qualifier, uncertainty_ma, definition, source_iri)
 - `uncertainty_ma` 是 `float | None`；`None` 表示上游未公布定量误差，显式
   **不**表示误差为零。
 - 派生属性保持两条轴一致：`is_defined` 仅对 GSSP/GSSA 为真；`is_numeric` 要求
-  qualifier 与 definition 同时可数值，并把 `qualifier="unknown"` 视为*未*受数值
+  qualifier 与 definition 都携带数值，并把 `qualifier="unknown"` 视为*未*受数值
   约束；`effective_uncertainty` 对 `unknown` 返回 `None`，永不返回 `0.0`。
 - 两个字段在加载时按枚举校验；未知字符串抛 `DataValidationError`。
   `qualifier="approximate"` 承载图表的 `~`，提取器从边界端点的上游
-  `skos:note "uncertain"` 标记读取它——包括空节点内部的情形，此时对行的剩余
-  部分做匹配（`_NOTE_RE.search(rest)`）——并且 `boundary_qualifier()` 把它排在
+  `skos:note "uncertain"` 标记读取它——包括空白节点内部的情形，此时对行的剩余
+  部分做匹配（`_STRING_RE.match(rest)`）——并且 `boundary_qualifier()` 把它排在
   GSSP/GSSA 判定*之上*，因此一条 GSSP 定义、但其公布数值被上游明示为近似的
   边界被记为 `approximate` 而不是 `defined`。两份随包快照都携带全部 36 个这样的
   端点。因为这些值位于 `intervals` 内部，改动这一语义就会改动 payload 字节，
   进而牵动 `versions.json`、哨兵计数以及任何打印这些 qualifier 的图件：它是
-  一次**数据变更**，必须按数据变更的流程发布（见 `docs/data-policy.md` 的
-  "快照更新流程"），不能作为顺手修改混过去。
+  一次**数据变更**，必须按数据变更的流程发布（见 `docs/data-policy.zh.md` 的
+  “快照更新流程”一节），不能作为顺手修改混过去。
 - 由于一条共享边界会出现在两条相邻记录里，加载器要求记录间共享的每个边界年龄
   在 `age_ma`、`qualifier`、`uncertainty_ma`、`definition` 四个字段上逐字段一致
   （`_check_hierarchy`）；生成器则从上游标记确定性地推导这两个字段，而不是逐
@@ -65,17 +65,17 @@ Boundary(age_ma, qualifier, uncertainty_ma, definition, source_iri)
 
 ## 被否决的替代方案
 
-- **`age_ma: float` 加 `error: float = 0.0`。** 否决：把"未公布误差"与"误差为
-  零"混为一谈，而这是软件无权代替科学做出的可证伪主张。
+- **`age_ma: float` 加 `error: float = 0.0`。** 否决：把“未公布误差”与“误差为
+  零”混为一谈，而这是软件无权代替科学做出的可证伪主张。
 - **单个合并字段（`"201.4 ± 0.2"`、`"~201.4"`、字符串 `"GSSP"`）。** 否决：
   契约上不可解析，而且共享边界一致性检查将无从做起。
-- **把 definition 与 qualifier 合并成一个"精度"枚举。** 否决：两组状态是真
+- **把 definition 与 qualifier 合并成一个“精度”枚举。** 否决：两组状态是真
   正交的——GSSP 定义的边界可以带定量的放射测年误差，数值估计也可以被标记为
   近似——合并恰好会丢掉图注需要的那部分信息。
 - **用邻近 rank 或 pyrolite 回填缺失元数据。** 否决：能保持诚实的替代做法就是
   写 `unknown`，这也正是实验性 pyrolite 后端被要求做到的（ADR-1）。
-- **存储 `datetime`/`uncertain-float` 对象。** 否决：标准库没有能表达"由 GSSP
-  定义、± 0.2 Ma"的类型，除非引入新依赖；而 JSON 往返本身就是快照契约。
+- **存储 `datetime`/`uncertain-float` 对象。** 否决：标准库没有能表达“由 GSSP
+  定义、± 0.2 Ma”的类型，除非引入新依赖；而 JSON 往返本身就是快照契约。
 
 ## 后果
 

@@ -1,6 +1,6 @@
 # GeoPhylo 中文使用文档
 
-**版本**：对应 GeoPhylo 0.1.1（含实验性符号）
+**版本**：对应 GeoPhylo 0.2.1（含实验性符号）
 **适用环境**：Python 3.11～3.14 · Matplotlib ≥ 3.10 且 < 4 · NumPy ≥ 1.25
 **配套英文文档**：[user-guide.en.md](user-guide.en.md)
 
@@ -22,7 +22,7 @@
 12. [异常体系与排错指南](#12-异常体系与排错指南)
 13. [常见问题 FAQ](#13-常见问题-faq)
 14. [示例脚本索引](#14-示例脚本索引)
-15. [数据来源、许可和引用](#15-数据来源许可和引用)
+15. [数据溯源、许可和引用](#15-数据溯源许可和引用)
 
 ---
 
@@ -30,7 +30,7 @@
 
 `geophylo` 是一个面向 Matplotlib 的地质时间轴可视化库。它把 ICS（International
 Commission on Stratigraphy，国际地层委员会）发布的《国际年代地层表》（International
-Chronostratigraphic Chart）作为**可复现的内置快照**，叠加到两类图上：时间校准系统
+Chronostratigraphic Chart）作为**可复现、版本化的快照**，叠加到两类图上：时间校准系统
 发育树（timetree），以及任何以 Ma（百万年）为横轴或纵轴的图。
 
 R 语言生态中的 `deeptime` 通过 `coord_geo()` 为 ggplot2、ggtree 提供同类能力；
@@ -40,14 +40,14 @@ R 语言生态中的 `deeptime` 通过 `coord_geo()` 为 ggplot2、ggtree 提供
 - **无法确定坐标语义就报错，绝不静默猜测。** 每个公开入口都显式校验坐标语义。
   需要推断时，只能走带 `acknowledge_inference=True` 的唯一入口。
 - **快照只增不改、可哈希校验。** ICS 数据以版本化 JSON 快照随包分发，
-  加载时逐字节校验 SHA-256；同一版本的数据永远返回相同查询结果。
+  加载时校验其 SHA-256 载荷哈希；同一快照版本永远返回相同查询结果。
 - **不改动宿主图。** 时间条带绘制在 inset 轨道 Axes 上，宿主 Axes 的 limits、
   scales、autoscale 状态与 `dataLim` 在调用前后逐字段不变。
 - **强类型公共异常。** 所有异常继承 `GeophyloError`；第三方库的原始
   `TypeError`、`ValueError` 不会从公共入口传出。
 
 **明确不做的事**：不绘制树本身（矩形树由 Bio.Phylo 或 iplotx 绘制，环形树按第 9 节
-配方自绘）；不做时间校准或分子钟分析；不联网更新 ICS 数据。
+配方自绘）；不推断时间校准；不联网更新 ICS 数据。
 
 ---
 
@@ -106,7 +106,8 @@ tree = Phylo.read(
 fig, ax = plt.subplots(figsize=(12, 8))
 Phylo.draw(tree, axes=ax, do_show=False)
 
-# root_age 来自外部时间校准；age_conversion 声明 branch length 单位 → Ma。
+# root_age 来自外部时间校准；age_conversion 声明 branch length 单位 → Ma
+# （1.0 表示已是 Ma）。
 spec = spec_from_biophylo(tree, ax, time_axis="x", age_conversion=1.0, root_age=48.0)
 
 result = add_geo_axis(ax, spec=spec, position="bottom",
@@ -131,7 +132,7 @@ from geophylo import CoordinateSpec, add_geo_axis
 fig, ax = plt.subplots(figsize=(10, 4))
 # ... 在 ax 上绘制你的数据（x 轴为 Ma，0 在右侧时可 ax.invert_xaxis()）...
 
-# 显式声明：时间沿 x、绝对年龄模式、坐标语义范围 0～298.9 Ma（石炭系-二叠系界线）
+# 显式声明：时间沿 x、绝对年龄模式、坐标语义范围 0～298.9 Ma（随包 ICS 快照中的石炭系-二叠系界线）
 spec = CoordinateSpec.absolute(time_axis="x", age_range=(0.0, 298.9))
 result = add_geo_axis(ax, spec=spec, position="bottom", ranks=["Period"])
 result.finalize()
@@ -155,7 +156,7 @@ list(ts.iter_intervals(ranks=["Epoch"], min_age=0, max_age=66))
 
 ### 4.1 为什么需要 CoordinateSpec
 
-一张时间树图的横轴有两种可能含义：
+一张时间树图的时间轴有两种可能含义：
 
 - **绝对年龄**（`absolute_age`）：轴上每个数值就是一个 Ma 年龄；
 - **根距离**（`root_distance`）：轴上每个数值是“到根的累积 branch length”，
@@ -226,12 +227,12 @@ age 的 patch 数据坐标在正反视图下完全相同，只是显示方向不
 ### 4.5 范围推断（默认拒绝）
 
 从 Axes 数据范围推断 `age_range` 属于隐式假设，默认直接抛 `CoordinateError`。
-确认数据范围可信后，可以显式放行这次推断：
+要显式启用（opt-in）这次推断：
 
 ```python
 spec = CoordinateSpec.from_data_limits(
     ax, mode="absolute_age", time_axis="x",
-    acknowledge_inference=True,   # 显式确认「我接受这次推断」
+    acknowledge_inference=True,   # 显式确认“我接受这次推断”
 )
 ```
 
@@ -266,9 +267,12 @@ ts.metadata       # BackendMetadata（数据版本、能力声明、rank 映射�
 
 ```python
 ts.get_interval("ics:period:jurassic")
-ts.get_interval("ics:period:jurassic").bounds       # (201.4 ±0.2, 143.1 ±0.7) 数值部分
+ts.get_interval("ics:period:jurassic").bounds       # (older_ma, younger_ma)
 ts.get_interval("ics:period:jurassic").boundaries   # (Boundary, Boundary) 逐边界状态
 ```
+
+`bounds` 只返回两个浮点，不含误差信息；`±` 值在 `boundaries` 的
+`uncertainty_ma` 字段上（见 5.5）。
 
 传入名称时抛 `IntervalNotFoundError`，消息提示改用 `find_by_name()`。
 
@@ -289,7 +293,7 @@ ts.find_by_name("Upper", rank="Epoch", parent="ics:period:cretaceous")  # 用 ra
 ```python
 ts.find_by_age(66.0, rank="Period").name    # 'Paleogene'
 ts.find_by_age(66.0, rank="Era").name       # 'Cenozoic'
-ts.find_by_age(0.0).name                    # 'Meghalayan'（最年轻 Age）
+ts.find_by_age(0.0).name                    # 'Meghalayan'（最年轻的区间）
 ```
 
 ### 5.3 年龄边界语义（`find_by_age`）
@@ -329,6 +333,9 @@ iv.is_approximate_any()           # 任一端点带 ~ 近似值
 iv.has_defined_boundary           # 任一端点由 GSSP/GSSA 定义
 ```
 
+> **已弃用**：`Interval.is_approximate_any()` 只作为可调用的兼容别名保留，会发出
+> `DeprecationWarning`；新代码请改用属性 `Interval.has_approximate_boundary`。
+
 `definition` 的取值 `gssp` 和 `gssa` 分别指由 GSSP（Global Boundary Stratotype
 Section and Point，全球界线层型剖面和点位）定义的界线，和由 GSSA（Global Standard
 Stratigraphic Age，全球标准地层年龄）定义的界线。
@@ -349,7 +356,7 @@ result = add_geo_axis(
     spec,                        # CoordinateSpec，必填
     position="bottom",           # "bottom" | "top" | "left" | "right"
     ranks=None,                  # None → ("Period",)；或 str / 序列
-    timescale=None,              # None → 默认内置快照
+    timescale=None,              # None → 随包的基线快照
     thickness_ratio=0.12,        # 轨道总厚度占宿主边长比例，(0, 0.5]
     min_age=None,                # 绘制窗口；None → spec.age_range
     max_age=None,
@@ -358,6 +365,7 @@ result = add_geo_axis(
     label=True,                  # 是否显示名称标签
     label_size=6.0,              # 标签字号（pt）
     label_color="auto",          # "auto" 按合成背景自动选黑/白
+    min_label_gap=0.0,           # 同带标签沿时间维的最小净距（pt）
     skip=None,                   # 跳过显示的区间名称序列
     abbreviate=True,             # 空间不足时允许缩写（用官方缩写）
     border="both",               # "none" | "near" | "far" | "both"
@@ -365,7 +373,7 @@ result = add_geo_axis(
     border_color="black",
     rotation=0.0,                # 标签固定旋转角（度）
     tick_style="none",           # "none" | "boundaries" | "ages"
-    tick_max_count=10,           # 刻度硬上限
+    tick_max_count=10,           # 刻度硬上限（仅 tick_style="ages" 时生效）
     tick_format="default",       # "default" | "exact" | 可调用对象(age) -> str
     track_register="interval",   # "interval" | "uniform"
     fallback_truncation=None,    # None（关闭）或最短前缀字符数（>= 2）
@@ -393,8 +401,8 @@ result = add_geo_axis(
 传入其他下限，`add_geo_axis()` 则一律使用该模块级值。空序列、重复 rank、非法 rank
 （大小写敏感，`"period"` 不自动纠正）都抛 `InvalidRankError`。
 
-**`min_age` 和 `max_age`（绘制窗口）**：`add_geo_axis()` 把窗口内的区间**裁剪**到
-窗口边界。与窗口相交但跨边界的区间，会画出窗口内的可见片段（窗口相交语义，不会
+**`min_age` 和 `max_age`（绘制窗口）**：`add_geo_axis()` 把与窗口相交的区间**裁剪**到
+窗口边界。跨窗口边界的区间，会画出窗口内的可见片段（窗口相交语义，不会
 漏绘）。窗口必须落在 `spec.age_range` 内。
 
 **`tick_style`（数值刻度）**：
@@ -427,10 +435,10 @@ result = add_geo_axis(
 缩写这一步有两条规则：
 
 - 只采纳快照 `aliases` 中的**单段短代码**——1～2 个字母后接至多 2 位数字、总长
-  不超过 4 字符（如 `J`、`P1`、`T3`、`c7`）。ICS 图表会把“子统 + 阶”两级分组编码
+  不超过 4 字符（如 `J`、`P1`、`T3`、`c7`）。ICS 图表会把“亚统 + 阶”两级分组编码
   拼成复合短代码（如 `C2c6c7`、`C1c1`、`C2c5`）。这类 `ccgmShortCode` **不是缩写**，
-  读者无法从图面上反解，因此对应区间改用**全名**标注。不按词长截断，以免凭空造出
-  记号。用户显式 `abbreviate=False` 时整步跳过；
+  读者无法从图面上反解，因此对应区间改用**全名**标注。用户显式
+  `abbreviate=False` 时整步跳过；
 - 碰撞检测基于 renderer 实测的文本包围盒，两条几何约束都按**每个候选的旋转角**
   求值。厚度维是硬约束，旋转与不旋转的标签都**永不越过相邻轨道边界**。时间维上，
   标签可以溢出自身区间，进入**同一轨道矩形内**的空白。贴窗口边缘的标签会向内夹紧，
@@ -441,23 +449,33 @@ result = add_geo_axis(
 再按 WCAG（Web Content Accessibility Guidelines，Web 内容无障碍指南）相对亮度选择
 黑或白，保证半透明色块上的标签可读。
 
-**`min_label_gap`（相邻标签净距）**：同一条带内两枚标签沿时间维必须留出的最小间隙（pt）。默认 `0.0` 只要求"不相交"，两枚标签可能零间隙相贴、糊成一个不存在的词；设为 `4.0`（约半倍字高）即可让它们分开。净距在**放置阶段**执行，因此放不开的标签会沿降级阶梯继续退让，而不是先画上再丢弃。
+**`min_label_gap`（相邻标签净距）**：同一条带内两枚标签沿时间维必须留出的最小间隙（pt）。默认 `0.0` 只要求“不相交”，两枚标签可能零间隙相贴、糊成一个不存在的词；给它设一个取值（如 `4.0`，约为半行高）即可让它们分开。净距在**放置阶段**执行，因此放不开的标签会沿降级阶梯继续退让，而不是先画上再丢弃。
 
-**`tick_format`（刻度数字精度）**：`"default"`（默认）沿用上面的确定性规则，
-`age ≥ 100` 取整（快照里的 `251.902` 会印成 `252`）；`"exact"` 按快照存储精度打印
-（整数省略小数点，其余保留至多 6 位小数并去掉尾零：`251.902`、`0.0117`、`66`）。
-小数位变多会使数字变宽，间距过滤可能丢弃更多刻度，丢弃数见 `result.ticks_dropped`。
-也可直接传入 `age -> str` 的可调用对象替换整条规则。
+**`tick_format`（刻度数字精度）**：
 
-**`track_register`（同轨语域一致性）**：`"interval"`（默认）逐区间独立决定是否缩写，
-因此一条轨道可能混排代号与全名；`"uniform"` 时只要本轨有一个区间被迫缩写，整轨统一
-改用官方代号。全名都放得下的轨道不受影响，`abbreviate=False` 始终优先。
+- `"default"`（默认）：沿用上面的确定性规则，`age ≥ 100` 取整（快照里存的
+  `251.902` 会印成 `252`）；
+- `"exact"`：按快照存储的精度打印每个数值——整数省略小数点（`66`），其余保留至多
+  6 位小数并去掉尾零（`251.902`、`0.0117`）。图面要展示快照的边界精度而不是取整后的
+  读数时用它；注意小数位变多会使数字变宽，间距过滤可能丢弃更多刻度数字（丢弃数见
+  `result.ticks_dropped`）；
+- 传入可调用对象 `age -> str` 则整条规则被替换。
 
-**`fallback_truncation`（名称前缀回退）**：`None`（默认）时阶梯止于"旋转 → 隐藏"，
-库不凭空造记号；给出整数 `n ≥ 2` 时，**在旋转全名也被拒之后**才回退到 `n` 个字符的
-名称前缀（连它都放不进自身区间时再递减到 2 个字符）。顺序不能颠倒：旋转是"按原样
-读出全名"的那一档，前缀截断是"造新记号"的那一档，截断不得抢占旋转。用于拥挤轨道里
-保住"文字作为第二通道"（`Aalenian → Aal`）。该能力默认关闭，需显式开启。
+**`track_register`（同轨语域一致性）**：
+
+- `"interval"`（默认）：逐区间独立决定是否缩写，因此一条轨道可能混排代号与全名
+  （`T3 · J1 · Lower Cretaceous · K2`）；
+- `"uniform"`：只要本轨有一个区间被迫缩写，整轨统一改用官方代号，使该轨读起来
+  是同一语域。全名都放得下的轨道不受影响，`abbreviate=False` 始终优先。
+
+**`fallback_truncation`（名称前缀回退）**：
+
+- `None`（默认）：阶梯止于“旋转 → 隐藏”。库不凭空造记号：没有官方短代码的区间，
+  要么用全名画出来，要么干脆不画；
+- 整数 `n ≥ 2`：**在旋转全名也被拒之后**才回退到 `n` 个字符的名称前缀（连它都放不进
+  自身区间时再递减到 2 个字符）。顺序不能颠倒：旋转是“按原样读出全名”的那一档，
+  前缀截断是“造新记号”的那一档，截断不得抢占旋转。图面要求每条色带都带上标签时
+  用它（`Aalenian → Aal`）。
 
 ### 6.3 副作用契约
 
@@ -465,7 +483,7 @@ result = add_geo_axis(
 状态**：`get_xlim()`、`get_ylim()`、`get_xscale()`、`get_yscale()`、
 `get_autoscalex_on()`、`get_autoscaley_on()` 和 `dataLim` 在调用前后逐字段相等。
 轨道绘制在 `host_ax.inset_axes()` 创建的独立 Axes 上，其数据范围“复制宿主数值但不
-共享”。把该参数设为 `False` 是本库留出的显式放行入口，允许实现改动宿主状态
+共享”。把该参数设为 `False` 是本库留出的显式关闭（opt-out），允许本库改动宿主状态
 （`result.restore()` 可还原）。
 
 `remove()` 沿同一承诺的反方向成立。它**只在宿主视图仍与创建时的快照一致**时才自动
@@ -490,10 +508,10 @@ result.restore()     # 按创建时快照还原宿主 Axes 状态
 ```
 
 - **`update()`** 只接受渲染参数（`ranks`、`thickness_ratio`、`min_age`、
-  `max_age`、`fill`、`alpha`、`label`、`label_size`、`label_color`、`skip`、
-  `abbreviate`、`border*`、`rotation`、`tick_style`、`tick_max_count`、
-  `tick_format`、`track_register`、`fallback_truncation`）。`spec`、
-  `position`、`timescale` **不可**原地更新——这三个参数意味着坐标语义或承载 Axes
+  `max_age`、`fill`、`alpha`、`label`、`label_size`、`label_color`、
+  `min_label_gap`、`skip`、`abbreviate`、`border*`、`rotation`、`tick_style`、
+  `tick_max_count`、`tick_format`、`track_register`、`fallback_truncation`）。
+  `spec`、`position`、`timescale` **不可**原地更新——这三个参数意味着坐标语义或承载 Axes
   变化，传入即抛 `CoordinateError`。所有取值域校验和几何预检通过后才提交：失败的
   `update()` 不改动任何状态（原 Artist 与原参数保持不变）。
 - **`sync()`** 有两层语义：① 把轨道时间维数据范围重新复制为宿主当前值；
@@ -508,7 +526,7 @@ result.restore()     # 按创建时快照还原宿主 Axes 状态
   快照，但**仅当宿主视图仍与快照一致**时才这样做；用户在其间改动的视图保持原样
   （见 6.3）。
 - **`restore()`** 无条件按快照还原宿主状态，是用户缩放、反向轴之后回到创建时刻
-  的显式入口。一直使用默认 `preserve_axes_state=True` 且未改动视图时通常无需调用。
+  的显式入口。
 
 ### 7.2 key 注册表（幂等更新）
 
@@ -560,8 +578,8 @@ spec = spec_from_biophylo(
 - **`age_conversion` 必填**：`float`（线性比例）或 `callable(bl) -> Ma`。
   substitutions/site 一类的单位无法凭空换算成 Ma，这是语义前提而不是装饰。
 - **`age_range` 从树的实际数据域推导**（不是视图范围 view limits——Bio.Phylo 会加
-  约 5% 和 25% 的留白（padding））。最老叶超过 `root_age`（年龄为负）时抛
-  `CoordinateError`。
+  约 5% 和 25% 的留白（padding））。若 `root_age` 减去最大根到叶距离会把最老叶推到
+  0 Ma 之前（即算出的年龄为负），越界校验抛 `CoordinateError`。
 - **`ax` 只用于两件事**：校验数值线性轴（log、日期和分类轴抛 `AxesTypeError`）、
   读取当前数据范围。轴对象本身不是时间语义的证据。
 
@@ -608,8 +626,9 @@ result = add_geo_ring(
     ax,                    # 原生 Matplotlib 极坐标 Axes（fig.add_subplot(projection="polar")）
     spec=radial,           # RadialSpec
     rank="Period",         # 单个 rank（实验性限制；传序列抛 InvalidRankError）
-    band=(0.9, 1.0),       # 环带占用的径向区间（参与几何计算，不只是参与校验）
+    band=(0.9, 1.0),       # 环带占用的径向区间（参与几何计算）
     band_unit="radial_fraction",  # 或 "data"（与 radius_range 同单位）
+    timescale=None,        # None → 随包的基线快照
     min_age=None, max_age=None,   # 绘制窗口；None → spec.age_range
     fill=True, alpha=1.0, label=True, label_size=5.0,
     skip=None, abbreviate=True,
@@ -660,7 +679,7 @@ radial = radial_spec_from_biophylo(
 fig = plt.figure(figsize=(8, 8))
 ax = fig.add_subplot(111, projection="polar")
 
-# 1) 画树：叶按顺序均分角域，内部节点取子节点平均角；半径一律查 spec。
+# 1) 画树：叶按顺序均分角度跨度，内部节点取子节点平均角；半径一律查 spec。
 leaves = tree.get_terminals()
 theta = {id(leaf): radial.theta_range[0]
          + (radial.theta_range[1] - radial.theta_range[0]) * i / len(leaves)
@@ -721,15 +740,15 @@ ts.find_by_name("Ectasian")
 - 能力受限：无稳定 ID（`get_interval()` 恒抛 `IntervalNotFoundError`）、无
   父子关系（`parent=` 不支持）、无 GSSP 和误差元数据（一律 `unknown`，
   不伪造成精确值）。
-- 查询语义与内置后端**同源**（两后端都从 `geophylo.data._query` 取答案）：结构
+- 查询语义与随包后端**同源**（两后端都从 `geophylo.data._query` 取答案）：结构
   节点（`Supereon`、`Subepoch`、石炭纪的两个 `Sub-Period`）永不成为
   `find_by_age()` 的命中项；边界值归属以其为 `older_ma` 的较年轻区间（左闭右开）；
   `0.0 Ma` 归最年轻区间；多个 rank 同时命中时返回最具体者；
   `iter_intervals(ranks=None)` 指五个核心 rank（**不是**全部行），窗口同样带
   `1e-9` 容差；`find_by_name()` 走 `name → aliases → label` 三通道、通道内精确
   匹配优先。以上均已用 `pyrolite 0.3.7` 实测，而非静态推断。
-- 内置快照仍是默认且推荐的来源（架构决策记录
-  [ADR-1](adr/ADR-1-bundled-snapshots-over-pyrolite.md)）；
+- 随包快照仍是默认且推荐的来源（架构决策记录
+  [ADR-1](adr/ADR-1-bundled-snapshots-over-pyrolite.zh.md)）；
   pyrolite 后端仅用于交叉核对。
 - 上游缺少颜色的行改用中性占位色 `#CCCCCC`，并在构造完成后用一次
   `UserWarning` 报告受影响行数：本库不会把缺失的元数据伪装成可信的 ICS 配色。
@@ -742,25 +761,29 @@ ts.find_by_name("Ectasian")
 修复建议。
 
 **消息与本地化。** 异常与警告消息默认英文；设 `GEOPHYLO_LANG=zh`（任意以 `zh`
-开头的取值）切回中文。两种文案在每个调用点并排书写（`geophylo._i18n.msg`），
-不经过机器翻译，也没有任何消息被删减。docstring 保持双语，不影响运行时输出。
+开头的取值）切回中文。请在 `import geophylo` **之前**设置 `GEOPHYLO_LANG`（例如
+通过环境变量）：语言在 import 时一次性求值，之后再改不会生效。两种文案在每个
+调用点并排书写（`geophylo._i18n.msg`），不经过机器翻译，也没有任何消息被删减。
+docstring 以中文为主、尚未逐条配英文，不影响运行时输出。
 
-**稳定机器码。** 每个公共异常类都声明一个 `code`——`data.validation`、
-`rank.invalid`、`interval.not_found`、`interval.ambiguous`、`range.invalid`、
-`radius.invalid`、`axes.type`、`coordinate.spec`——它不随消息措辞和
-`GEOPHYLO_LANG` 变化。分支判断请用 `exc.code` 而不是消息文本；需要更细判别时，
-可在构造点按实例收窄（`CoordinateError(..., code="coordinate.spec_type")`）。
+**稳定机器码。** 每个公共异常类都声明一个 `code`：基类 `GeophyloError` 声明
+`geophylo`，各子类声明 `data.validation`、`rank.invalid`、`interval.not_found`、
+`interval.ambiguous`、`range.invalid`、`radius.invalid`、`axes.type`、
+`coordinate.spec`。这些取值不随消息措辞和 `GEOPHYLO_LANG` 变化。分支判断请用 `exc.code` 而不是消息文本；需要更细判别时，
+可在构造点用 `code=` 按实例覆写类级默认值（`CoordinateError(..., code="coordinate.spec")`
+——示例取的正是 `CoordinateError` 声明的那个取值；覆写时只能选用上面列出的 code，
+本库目前没有任何覆写类级默认值的调用点）。
 
 | 异常 | 典型触发 | 排查建议 |
 | --- | --- | --- |
-| `DataValidationError` | 快照 schema、哈希、共享边界校验失败；请求未发布版本 | 检查 `available_versions()`；自定义 JSON 对照内置快照 schema；勿手改快照文件 |
+| `DataValidationError` | 快照 schema、哈希、共享边界校验失败；请求未发布版本 | 检查 `available_versions()`；自定义 JSON 对照随包的 schema；勿手改快照文件 |
 | `InvalidRankError` | rank 拼写错误、`ranks` 为空或重复、给 `add_geo_ring` 传序列 | 核心 rank 为 `Eon/Era/Period/Epoch/Age`，大小写敏感 |
 | `IntervalNotFoundError` | ID、名称、年龄查不到；该 rank 在该年龄无区间 | 名称查询改用 `find_by_name()`；年龄超出快照覆盖范围属正常拒绝 |
 | `AmbiguousIntervalError` | 名称命中多个候选（如 `"Upper"`） | 加 `rank=` 或 `parent=` 消歧，或查看 `exc.candidates` 用 ID 精确查询 |
 | `InvalidRangeError` | `min_age >= max_age`、负年龄、NaN、`thickness_ratio` 越界、`tick_max_count < 1`、轨道空间不足 | 按消息中的合法域修正参数 |
 | `InvalidRadiusError` | `band` 倒置或越界；环带超出当前 `rlim` | 调整 `band`，或先 `ax.set_rlim()` 扩大视野 |
 | `AxesTypeError` | log、日期和分类轴；非极坐标 Axes 传给 `add_geo_ring`；iplotx radial 布局 | 使用线性数值轴或原生极坐标轴 |
-| `CoordinateError` | `position` 与 `spec.time_axis` 冲突；`root_age` 缺失或多余；未确认的推断；`age_to_data` 域外输入 | 按消息修正 `CoordinateSpec` 或参数配对 |
+| `CoordinateError` | `position` 与 `spec.time_axis` 冲突；`root_age` 缺失或在不应提供时被提供；未确认的推断；`age_to_data` 域外输入 | 按消息修正 `CoordinateSpec` 或参数配对 |
 
 **捕获顺序要注意**：`AmbiguousIntervalError` 是 `IntervalNotFoundError` 的**子类**
 （为兼容只捕获“查不到”的用户代码而保留），所以 `except IntervalNotFoundError`
@@ -772,11 +795,11 @@ ts.find_by_name("Ectasian")
 1. 报 `CoordinateError: position 与 spec.time_axis 冲突` → `bottom`、`top` 配
    `"x"`，`left`、`right` 配 `"y"`；
 2. 条带看起来空白 → 检查绘制窗口 `min_age` 和 `max_age` 是否与数据范围相交；
-   检查宿主轴是否反向（不影响正确性，只影响方向）；
+   轴反向是合法的，只改变方向；
 3. `InvalidRangeError: thickness_ratio 不足以容纳 N 条轨道` → 减少 rank 数、
    增大 `thickness_ratio` 或加大图幅；
-4. 标签隐藏过多 → 先增大 `thickness_ratio`；调整 `label_size` 改善可读性后仍拥挤
-   时，用 `skip=` 手动跳过次要区间，或分成两条轨道显示；
+4. 标签隐藏过多 → 增大 `thickness_ratio` 腾出空间、用 `skip=` 手动跳过次要区间，
+   或分成两条轨道显示；
 5. 树和条带未对齐 → 确认条带使用的是 `spec_from_biophylo()`（根距离模式）产出的
    `spec`，且根 `branch_length` 已清零。
 
@@ -791,12 +814,12 @@ ts.find_by_name("Ectasian")
 
 **Q2：为什么不能只传 `position="bottom"` 让库自己判断坐标？**
 因为同一个轴可能对应两种科学含义（Ma 或根距离），猜错就是科学错误。
-本库要求 `spec` 显式声明。确需从 Axes 推断时，也要通过
+本库要求 `spec` 显式声明。确需从 Axes 推断时，也必须通过
 `CoordinateSpec.from_data_limits(..., acknowledge_inference=True)` 显式确认。
 
 **Q3：轴反向（`invert_xaxis()`）需要特殊处理吗？**
 不需要。`age_to_data()` 是纯函数，反向只改变显示方向，条带数据坐标不变。
-这正是真值表（4.4 节）八行情形统一的原因。
+这正是真值表（4.4 节）八行情形共用同一套实现的原因。
 
 **Q4：`age_range` 与 `min_age`、`max_age` 有什么区别？**
 `age_range` 是坐标语义范围（换算合法性域），`min_age` 和 `max_age` 是本次绘制
@@ -813,7 +836,7 @@ ts.find_by_name("Ectasian")
 
 **Q7：标签文字能换颜色或旋转吗？**
 `label_color="auto"`（默认）按合成背景自动选黑或白，也可以指定任意颜色名或
-十六进制值。`rotation` 给定固定角度；轨道方向（垂直轨道）会自动加 90° 基准角。
+十六进制值。`rotation` 给定固定角度；垂直轨道会自动叠加 90° 基准旋转角。
 
 **Q8：环形树为什么要调用方自己画？**
 角度编码的是分类单元顺序，属于树布局的职责，本库不推断拓扑到角度的映射。
@@ -824,12 +847,12 @@ ts.find_by_name("Ectasian")
 `spec_from_biophylo()` + `add_geo_axis()` 属于稳定 API 路径。
 
 **Q10：如何复现库的示例图？**
-见仓库 `examples/`：每个示例脚本的边界数值和颜色都从内置快照动态读取，无手写
+见仓库 `examples/`：每个示例脚本的边界数值和颜色都从随包快照动态读取，无手写
 数值；按示例自带的输出路径与 `dpi` 重跑即可复现同一张图。
 
 **Q11：为什么不支持多级地质年代环？**
 `add_geo_ring()` 只接受一个 `rank`，传入序列会抛 `InvalidRankError`。把多个年代
-层级沿径向叠起来，需要一个决定内外环如何共用同一条"半径—年龄"映射的布局模型；
+层级沿径向叠起来，需要一个决定内外环如何共用同一条“半径—年龄”映射的布局模型；
 该模型尚不成立，所以 API 选择拒绝而不是猜。在此之前，请用线性多轨条带
 （`ranks=["Period", "Epoch"]`）做叠层，环形树按 9.3 节自绘，外面只挂一条环。
 
@@ -846,27 +869,28 @@ result = add_geo_axis(ax, spec=spec, position="bottom", ranks=["Period", "Epoch"
 任何 x（或 y）轴承载 Ma 的 Axes 都适用——只要绘制调用在你手里，树库是哪个都无关。
 
 **Q13：`spec_from_iplotx()` 为什么拒绝径向树？**
-因为 iplotx 的径向布局是极坐标，而线性条带契约需要笛卡尔时间轴；静默转换会改变
-本库要守护的坐标语义。请按 9.3 节自绘环形布局，并用 `RadialSpec` +
+因为 iplotx 的径向排布发生在笛卡尔 Axes 上——呈极坐标形态的只是布局数据——而
+`RadialSpec` + `add_geo_ring()` 工作在原生 Matplotlib `PolarAxes` 上；静默转换会
+改变本库要守护的坐标语义。请按 9.3 节自绘环形布局，并用 `RadialSpec` +
 `add_geo_ring()`（第 9 节）；径向适配器排在更晚的 0.x 版本。
 
 **Q14：为什么白垩系底界是 143.1 Ma（贝里阿斯顶界 137.05 Ma），而不是常引用的
 GTS2012 值 145.0 和 139.8？**
-本快照的这两个数值取自 ICS 图表版本携带的 **GTS2020 时间校准**（上游锁定输入
-pinned TTL 文件中相应界线节点的 `rdfs:isDefinedBy ts:gts2020`），不是抄录错误。
+本快照的这两个数值取自 ICS 图表版本携带的 **GTS2020 时间校准**（上游钉定的
+TTL 文件中相应界线节点的 `rdfs:isDefinedBy ts:gts2020`），不是抄录错误。
 145.0 和 139.8 是 GTS2012 的校准值，两者本就不该混用。与旧表对照读图时，请在图注中
 写明来源：本库图上的数字全部来自随包快照的 `chart_version`（可用
 `Timescale().metadata.data_version` 复核）。
 
-**Q15：为什么快照最老只到 4567 Ma，而不是多数时间标尺用的 4600？**
-冥古宙和前寒武系的底界在上游 TTL 中就是 4567.0 Ma（原文描述 `A time period from
+**Q15：为什么快照最老只到 4567 Ma，而不是多数地质时间尺度采用的 4600？**
+冥古宙和前寒武系的底界在上游钉定的 TTL 中就是 4567.0 Ma（原文描述 `A time period from
 4567 to 4031 million years ago`），本库不修改上游数值。若坐标轴需要以 4600 作为
 标尺起点，显式声明
 `CoordinateSpec.absolute(time_axis="x", age_range=(0.0, 4600.0))` 并配
 `max_age=4600.0` 即可。4567 和 4600 之间会留下一段没有色块的区间，这是“上游未给出
 的单元一律不伪造”的直接结果，请在图注中说明。
 
-**Q16：石炭纪的密西西比亚统和宾夕法尼亚亚统归为结构节点，怎么画出这个两分？**
+**Q16：石炭纪的密西西比亚系和宾夕法尼亚亚系归为结构节点，怎么画出这个两分？**
 ICS 图表把它们放在 `Sub-Period` 一层，本库按 ADR-5 将该层归为结构节点。它们不进入
 `Timescale.ranks`，也不进入 `find_by_age()`、`iter_intervals()` 的默认池，
 `ranks=["Sub-Period"]` 抛 `InvalidRankError`。可以绘制的是快照**确实携带**的下一级，
@@ -880,7 +904,7 @@ add_geo_axis(ax, spec=spec, position="bottom", ranks=["Period", "Epoch"],
 ```
 
 世级轨道即给出密西西比和宾夕法尼亚的两分及其细分。注意这六个世的图面缩写会因
-缩写闸门（见 6.2 节）回退全名，因为它们的别名是复合 `ccgmShortCode`。
+缩写门禁（见 6.2 节）回退全名，因为它们的别名是复合 `ccgmShortCode`。
 `find_by_name("Mississippian")` 按设计抛 `AmbiguousIntervalError`（三个世级候选），
 请用 `rank=` 或 `parent=` 消歧，或直接用 ID（如
 `ics:epoch:lower-mississippian`）。
@@ -918,20 +942,21 @@ python examples/bio_phylo_timetree.py
 
 ---
 
-## 15. 数据来源、许可和引用
+## 15. 数据溯源、许可和引用
 
 - **代码**：MIT（见 `LICENSE`）。
 - **ICS 快照数据**：由 `tools/build_snapshot.py` 从 ICS 官方版本化数据
   确定性生成，CC-BY-4.0 发布（见 `LICENSES/CC-BY-4.0.txt` 与 `NOTICE`）。
-  数据来源、快照更新和回退政策见 `docs/data-policy.md`。
-- **机器可读的出处**：`tools/build-logs/` 内的逐快照生成日志、
+  数据溯源（provenance）、快照更新和回退政策见 `docs/data-policy.zh.md`。
+- **机器可读的溯源**：`tools/build-logs/` 内的逐快照生成日志、
   `geophylo/data/snapshots/diff-2024-12_to_2026-06.json` 版本间逐字段 diff
   （由 `tools/make_diff.py` 或 `build_snapshot.py --diff-with` 生成），以及
   `versions.json` 中 2024/12 条目的 `derived_from` 字段；说明见
   `geophylo/data/snapshots/PROVENANCE.md`。
-- **设计决策**：[`docs/adr/`](adr/README.md) 下的架构决策记录（ADR-1～ADR-6）
+- **设计决策**：[`docs/adr/`](adr/README.zh.md) 下的架构决策记录（ADR-1～ADR-6）
   写明各处的非显然选择和已否决的替代方案。
-- **引用**：使用本库请引用 GeoPhylo（`CITATION.cff`），并按 `NOTICE` 要求
+- **引用**：在研究或出版物中使用 GeoPhylo **必须**按 CC BY 4.0 署名，引用写法见
+  `NOTICE`。本库本身请引用 GeoPhylo（`CITATION.cff`），并按 `NOTICE` 的要求
   同时引用《国际年代地层表》。
 
 术语约定（全文一致）：`older_ma` 和 `younger_ma` 分别是区间较老边界、较年轻
@@ -941,5 +966,5 @@ Axes；“绘制窗口”指 `min_age` 和 `max_age` 指定的裁剪范围。
 ---
 
 *本文档与代码同步维护；若与代码注释所引用的规范条目冲突，以
-[`docs/spec/README.md`](spec/README.md) 索引与本仓库代码为准——仓库之外不存在
+[`docs/spec/README.zh.md`](spec/README.zh.md) 索引与本仓库代码为准——仓库之外不存在
 需要查阅的“开发文档”。*

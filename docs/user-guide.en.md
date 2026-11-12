@@ -1,8 +1,8 @@
 # GeoPhylo User Guide
 
-**Version**: corresponds to GeoPhylo 0.1.1 (including the experimental symbols)
+**Version**: corresponds to GeoPhylo 0.2.1 (including the experimental symbols)
 **Requirements**: Python 3.11–3.14 · Matplotlib ≥ 3.10, < 4 · NumPy ≥ 1.25
-**中文版文档**：[user-guide.zh.md](user-guide.zh.md)
+**Companion Chinese document**: [user-guide.zh.md](user-guide.zh.md)
 
 ---
 
@@ -60,6 +60,17 @@ does not infer time calibration, and never updates data over the network.
 
 ## 2. Installation
 
+### 2.1 Environment requirements
+
+- Python 3.11–3.14, Matplotlib ≥ 3.10 and < 4, NumPy ≥ 1.25.
+- The core functionality needs only Matplotlib and NumPy. The Bio.Phylo, iplotx
+  and pyrolite paths each correspond to one optional extra group — install the
+  ones you use.
+- Headless environments (servers, CI) need no extra configuration: the Agg
+  backend works out of the box.
+
+### 2.2 Installation
+
 ```bash
 pip install geophylo                 # core (Matplotlib + NumPy only)
 pip install "geophylo[biopython]"    # Bio.Phylo adapter (stable API)
@@ -74,11 +85,14 @@ Install from source (development mode):
 git clone <repository-url> geophylo
 cd geophylo
 pip install -e ".[dev]"
+```
+
+### 2.3 Verifying the installation
+
+```bash
 pytest                # full suite
 pytest -m "not experimental"   # stable API scope only
 ```
-
-Headless environments (servers, CI) work out of the box via the Agg backend.
 
 ---
 
@@ -273,8 +287,11 @@ lists what is available).
 ```python
 ts.get_interval("ics:period:jurassic")
 ts.get_interval("ics:period:jurassic").bounds       # (older_ma, younger_ma)
-ts.get_interval("ics:period:jurassic").boundaries   # (Boundary, Boundary)
+ts.get_interval("ics:period:jurassic").boundaries   # (Boundary, Boundary), per-boundary state
 ```
+
+`bounds` returns two plain floats and carries no uncertainty; the `±` values live
+on `boundaries`, in each `Boundary.uncertainty_ma` (see 5.5).
 
 Passing a *name* raises `IntervalNotFoundError` with a hint to use
 `find_by_name()`.
@@ -338,6 +355,15 @@ old_b.is_defined                  # defined by a GSSP/GSSA?
 iv.is_approximate_any()           # any endpoint carries a ~ approximate value
 iv.has_defined_boundary           # any endpoint defined by GSSP/GSSA
 ```
+
+> **Deprecated**: `Interval.is_approximate_any()` is kept only as a callable
+> compatibility alias and emits a `DeprecationWarning`; use the property
+> `Interval.has_approximate_boundary`, which is the API to write new code
+> against.
+
+The `definition` values `gssp` and `gssa` mean a boundary defined by a GSSP
+(Global Boundary Stratotype Section and Point) and by a GSSA (Global Standard
+Stratigraphic Age), respectively.
 
 Structural nodes (e.g. `Precambrian`, `Super-Eon`) exist only as `parent_id`
 anchors; they never appear in `ts.ranks` and are never drawn.
@@ -460,8 +486,9 @@ labels_hidden`. Two rules bound what abbreviation may do:
   `MIN_LABEL_LENGTH_PX` (0.5 px) produce no name label at all.
 
 **`label_color="auto"`** first alpha-composites the block colour onto the track
-background, then applies the WCAG relative-luminance contrast rule to choose
-black or white — labels stay readable on translucent fills.
+background, then applies the WCAG (Web Content Accessibility Guidelines)
+relative-luminance contrast rule to choose black or white — labels stay
+readable on translucent fills.
 
 **`min_label_gap` (neighbour clearance)**: the minimum gap, in points, that two labels in the same band must leave along the time dimension. The default `0.0` means "no overlap" only, so two labels can touch and read as one invented word; set it (e.g. `4.0`, half a line height) to keep them apart. It is applied during placement, so a label that cannot keep the gap falls back down the ladder instead of being drawn and dropped later.
 
@@ -534,7 +561,7 @@ result.restore()     # restore the host Axes state snapshot taken at creation
 
 - **`update()`** accepts rendering parameters only (`ranks`, `thickness_ratio`,
   `min_age/max_age`, `fill`, `alpha`, `label`, `label_size`, `label_color`,
-  `skip`, `abbreviate`, `border*`, `rotation`, `tick_style`,
+  `min_label_gap`, `skip`, `abbreviate`, `border*`, `rotation`, `tick_style`,
   `tick_max_count`, `tick_format`, `track_register`,
   `fallback_truncation`). `spec`, `position` and `timescale` are **not**
   updatable —
@@ -616,8 +643,10 @@ Key behaviours:
   `callable(bl) -> Ma`. Units such as substitutions/site cannot be converted to
   Ma by assumption — this parameter is a semantic precondition.
 - **`age_range` derives from the tree's actual data domain**, not the padded
-  view limits (Bio.Phylo pads xlim by roughly 5 %/25 %). If the oldest leaf
-  would be younger than 0 Ma, `CoordinateError` is raised.
+  view limits (Bio.Phylo pads xlim by roughly 5 %/25 %). If `root_age` minus
+  the largest root-to-tip distance would place the oldest leaf before 0 Ma
+  (i.e. the computed age is negative), the range check raises
+  `CoordinateError`.
 - **`ax` is used for two things only**: validating a numeric-linear axes
   (log/date/category axes raise `AxesTypeError`) and reading the current data
   range. It is never evidence of time semantics.
@@ -669,6 +698,7 @@ result = add_geo_ring(
     rank="Period",         # a single rank (experimental limitation; sequences raise InvalidRankError)
     band=(0.9, 1.0),       # radial interval the ring occupies (drives geometry)
     band_unit="radial_fraction",  # or "data" (same units as radius_range)
+    timescale=None,        # None → bundled baseline snapshot
     min_age=None, max_age=None,   # drawing window; None → spec.age_range
     fill=True, alpha=1.0, label=True, label_size=5.0,
     skip=None, abbreviate=True,
@@ -819,17 +849,24 @@ the failing parameter, its actual value, and a fix suggestion.
 
 **Messages and localisation.** Exception and warning messages are English by
 default. Setting `GEOPHYLO_LANG=zh` (any value starting with `zh`) switches them
-to Chinese. The two texts are written side by side at each call site
-(`geophylo._i18n.msg`), so nothing is machine-translated and no message is lost;
-docstrings stay bilingual and do not affect runtime output.
+to Chinese. Set `GEOPHYLO_LANG` **before** importing GeoPhylo (e.g. in the
+environment): the language is resolved once at import time, so changing it
+afterwards has no effect. The two texts are written side by side at each call
+site (`geophylo._i18n.msg`), so nothing is machine-translated and no message is
+lost. Docstrings are currently Chinese-first and are not fully mirrored in
+English; they do not affect runtime output.
 
-**Stable machine codes.** Every public exception class declares a `code` —
+**Stable machine codes.** Every public exception class declares a `code`: the
+base `GeophyloError` declares `geophylo`, and its subclasses declare
 `data.validation`, `rank.invalid`, `interval.not_found`, `interval.ambiguous`,
-`range.invalid`, `radius.invalid`, `axes.type`, `coordinate.spec` — that does
-not change with the wording of a message or with `GEOPHYLO_LANG`. Branch on
+`range.invalid`, `radius.invalid`, `axes.type`, `coordinate.spec`. None of these
+change with the wording of a message or with `GEOPHYLO_LANG`. Branch on
 `exc.code` rather than on the message text; a call site that needs a finer
-distinction can narrow it per instance
-(`CoordinateError(..., code="coordinate.spec_type")`).
+distinction can override the class default per instance by passing `code=` to
+the constructor (`CoordinateError(..., code="coordinate.spec")` — the value
+shown is the code declared on `CoordinateError`; an override must pick one of
+the codes listed above, and the library itself has no call site that overrides
+the class default today).
 
 | Exception | Typical trigger | What to do |
 | --- | --- | --- |
@@ -837,17 +874,16 @@ distinction can narrow it per instance
 | `InvalidRankError` | rank typo, empty/duplicate `ranks`, a sequence passed to `add_geo_ring` | core ranks are `Eon/Era/Period/Epoch/Age`, case-sensitive |
 | `IntervalNotFoundError` | ID/name/age not found; no interval of that rank at that age | names go to `find_by_name()`; ages beyond the snapshot are refused by design |
 | `AmbiguousIntervalError` | a name matches several candidates (e.g. `"Upper"`) | add `rank=` or `parent=`, or pick an ID from `exc.candidates` |
+| `InvalidRangeError` | `min_age >= max_age`, negative ages, NaN, `thickness_ratio` out of range, `tick_max_count < 1`, insufficient track space | follow the legal domain stated in the message |
+| `InvalidRadiusError` | inverted/out-of-range `band`; band outside the current `rlim` | adjust `band`, or widen the view with `ax.set_rlim()` first |
+| `AxesTypeError` | log/date/category axes; non-polar Axes passed to `add_geo_ring`; iplotx radial layout | use linear numeric axes / a native polar axes |
+| `CoordinateError` | `position` vs `spec.time_axis` conflict; `root_age` missing or forbidden; unacknowledged inference; out-of-domain `age_to_data` | fix the `CoordinateSpec` or the parameter pairing as suggested |
 
 **Catch order matters**: `AmbiguousIntervalError` is a *subclass* of
 `IntervalNotFoundError` (kept for backwards compatibility with code that only
 catches "not found"), so `except IntervalNotFoundError` also swallows "matched
 several". Put the `except AmbiguousIntervalError` clause **first** whenever the
 two cases call for different handling.
-
-| `InvalidRangeError` | `min_age >= max_age`, negative ages, NaN, `thickness_ratio` out of range, `tick_max_count < 1`, insufficient track space | follow the legal domain stated in the message |
-| `InvalidRadiusError` | inverted/out-of-range `band`; band outside the current `rlim` | adjust `band`, or widen the view with `ax.set_rlim()` first |
-| `AxesTypeError` | log/date/category axes; non-polar Axes passed to `add_geo_ring`; iplotx radial layout | use linear numeric axes / a native polar axes |
-| `CoordinateError` | `position` vs `spec.time_axis` conflict; `root_age` missing or forbidden; unacknowledged inference; out-of-domain `age_to_data` | fix the `CoordinateSpec` or the parameter pairing as suggested |
 
 **General checklist**:
 
@@ -944,11 +980,12 @@ Any Axes whose x (or y) axis carries Ma works — the tree library is irrelevant
 as long as you own the drawing call.
 
 **Q13: Why does `spec_from_iplotx()` reject a radial tree?**
-Because iplotx's radial layout is polar, while the linear strip contract needs a
-Cartesian time axis; silently converting would change the coordinate semantics
-that this library exists to protect. Draw the circular layout yourself and use
-`RadialSpec` + `add_geo_ring()` (Section 9); the radial adapter is tracked for a
-later 0.x release.
+Because iplotx draws its radial layout on Cartesian Axes — only the layout data
+are polar in form — while `RadialSpec` + `add_geo_ring()` work on a native
+Matplotlib `PolarAxes`; silently converting would change the coordinate
+semantics this library exists to protect. Draw the circular layout yourself and
+use `RadialSpec` + `add_geo_ring()` (Section 9); the radial adapter is tracked
+for a later 0.x release.
 
 **Q14: Why is the base of the Cretaceous 143.1 Ma (and the top of the Berriasian
 137.05 Ma) rather than the widely quoted GTS2012 values 145.0 and 139.8?**
@@ -1044,9 +1081,10 @@ savefig()` order and run headless on Agg (PNG output next to the script).
 - **Design rationale**: the architecture decision records in [`docs/adr/`](adr/README.md)
   (ADR-1 … ADR-6) document the non-obvious choices and their rejected
   alternatives.
-- **Citation**: if you use GeoPhylo in research, cite it (`CITATION.cff`) and
-  cite the ICS International Chronostratigraphic Chart as requested in
-  `NOTICE`.
+- **Citation**: using GeoPhylo in research or publications **requires**
+  attribution under CC BY 4.0; the required citation form is given in `NOTICE`.
+  Cite GeoPhylo itself (`CITATION.cff`) and cite the ICS International
+  Chronostratigraphic Chart as requested in `NOTICE`.
 
 Terminology used consistently in this guide: `older_ma`/`younger_ma` are the
 Ma values of an interval's older/younger boundaries (`older_ma > younger_ma`);

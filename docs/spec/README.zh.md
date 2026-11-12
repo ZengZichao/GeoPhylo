@@ -50,7 +50,7 @@
 | 4.7 | 异常体系：全部公共异常继承 `GeophyloError`；`AmbiguousIntervalError` 同时是 `IntervalNotFoundError` 的子类（只为让只捕获“查不到”的调用方代码继续工作），捕获顺序见用户手册异常表 | `geophylo/exceptions.py`、`docs/user-guide.*.md` 第 12 节 | `tests/test_exceptions.py` |
 | 4.8 | 环形路径五条硬约束：单 rank；仅原生 `PolarAxes`；环段半径 = `spec.age_to_radius(age, radius_range=band_radius(band))`（**`band` 参与几何**）；`band` 越出当前 `rlim` 抛 `InvalidRadiusError`；从不调用 `set_rlim`、`set_rorigin` | `geophylo/render/polar.py` 模块 docstring 与 `add_geo_ring`、`_validate_band`、`rebuild` | `tests/test_polar.py::TestBandGeometryDrivesRingRadii`、`TestNoRadialViewModification` |
 | 4.9 | 一致性契约：环与树共用同一个 `RadialSpec`；`age_to_radius` 是 `age_range → radius_range` 的严格单调递减仿射映射，值域限制仍是同一条映射（不另立第二套公式）；`radius_to_age` 在同一值域上精确可逆 | `geophylo/coordinate/radial.py` 模块 docstring 与 `age_to_radius`、`radius_to_age`、`band_radius` | `tests/test_radial_spec.py::TestRadiusMapping`、`tests/test_polar.py::TestBandGeometryDrivesRingRadii` |
-| 4.10 | 适配器强制根基线为 `None` 或 `0`；非零根 branch length 显式拒绝并给出两条修复路径；退化树（单叶或全零分支长度）显式报出成因 | `geophylo/adapter/biopython.py::_scan_tree`、`_require_positive_span` | `tests/test_adapter_biopython.py::TestDegenerateTree`、`tests/test_polar.py::test_zero_root_offset_required` |
+| 4.10 | 适配器强制根分支长度为 `None` 或 `0`；非零根分支长度显式拒绝并给出两条修复路径；退化树（单叶或全零分支长度）显式报出成因 | `geophylo/adapter/biopython.py::_scan_tree`、`_require_positive_span` | `tests/test_adapter_biopython.py::TestDegenerateTree`、`tests/test_polar.py::test_zero_root_offset_required` |
 | 4.11 | 渲染参数取值域：`thickness_ratio ∈ (0, 0.5]`、`alpha ∈ [0,1]`、`label_size > 0`、`tick_max_count ≥ 1`、`skip` 必须是字符串序列 | `geophylo/validation.py`、`geophylo/render/result.py::validate_render_params` | `tests/test_lifecycle.py::TestUpdateValidation` |
 
 ## 5 渲染层
@@ -81,11 +81,11 @@
 | 7.4 | 宿主视图状态零改动承诺：`add_geo_axis()` 不改 limits、scale、autoscale 和 `dataLim`；`remove()` 不反向改写用户在其间设置的视图 | `geophylo/render/result.py::remove`、`AxesState.matches`、`README.md`、`docs/user-guide.*.md` 第 7 节 | `tests/test_add_geo_axis.py::TestSideEffects`、`tests/test_lifecycle.py::TestRemoveDoesNotStompUserView` |
 | 7.7 | 文档数值纪律：面向用户的文档里的 `<数值> Ma` 必须来自内置快照边界集合；示例脚本不得手写快照边界值 | `docs/user-guide.*.md`、`README.md`、`examples/*.py` | `tests/test_docs_values.py` |
 | 7.8 | 能力声明测试与非阻塞约定：实验性后端的能力测试不阻塞发布门禁 | `geophylo/data/pyrolite_backend.py` 模块 docstring、`pyproject.toml` markers | `tests/test_pyrolite_backend.py` |
-| 7.9 | 仓库文档结构约定：每份 ADR 都写出被否方案；`RELEASE.md` 是编号的两步手动流程；边界取值域在 `models.py` 的类型声明与加载器的校验集合同源 | `docs/adr/ADR-1…5`、`RELEASE.md`、`geophylo/data/models.py` ↔ `geophylo/data/builtin.py` | `tests/test_docs_values.py`（`test_every_adr_documents_its_rejected_alternatives`、`test_release_notes_describe_a_two_step_procedure`、`test_boundary_value_domains_match_between_models_and_loader` 与一条 planted 反例） |
+| 7.9 | 仓库文档结构约定：每份 ADR 都写出被否方案；`RELEASE.md` 是编号的三步手动流程；边界取值域在 `models.py` 的类型声明与加载器的校验集合同源 | `docs/adr/ADR-1…6`、`RELEASE.md`、`geophylo/data/models.py` ↔ `geophylo/data/builtin.py` | `tests/test_docs_values.py`（`test_every_adr_documents_its_rejected_alternatives`、`test_release_notes_describe_a_three_step_procedure`、`test_boundary_value_domains_match_between_models_and_loader` 与一条预埋反例） |
 
-## 8 出处与复现
+## 8 溯源（provenance）与可复现性
 
 | 节号 | 规范性主张（摘要） | 载体 | 可核验方式 |
 | --- | --- | --- | --- |
-| 8.2 | 后端能力矩阵（有无稳定 ID、误差、GSSP 状态和颜色）必须显式声明，“不知道”和“没有”可区分 | `geophylo/data/models.py::BackendMetadata`、两后端的 `metadata` | `tests/test_pyrolite_backend.py`、`tests/test_data_contract.py` |
-| 8.4 | 快照出处（含推导快照 2024/12 的 `derived_from`、生成日志、逐字段 diff）随包发布，并与数据字节互相校验 | `geophylo/data/snapshots/PROVENANCE.md`、`docs/data-policy.md`、`tools/build_snapshot.py` | `tests/test_snapshot_provenance.py` |
+| 8.2 | 后端能力矩阵（有无稳定 ID、误差、GSSP 状态和颜色）必须显式声明，“值未知（unknown）”与“能力缺失（absent）”可区分 | `geophylo/data/models.py::BackendMetadata`、两后端的 `metadata` | `tests/test_pyrolite_backend.py`、`tests/test_data_contract.py` |
+| 8.4 | 快照溯源（含推导快照 2024/12 的 `derived_from`、生成日志、逐字段 diff）随包发布，并与数据字节互相校验 | `geophylo/data/snapshots/PROVENANCE.md`、`docs/data-policy.md`、`tools/build_snapshot.py` | `tests/test_snapshot_provenance.py` |

@@ -47,8 +47,8 @@ deliberately, after running the gate locally with the new version.
   three tiers (100 / 1,000 / 10,000 leaves; the 10,000-leaf tier measures only
   the library's incremental time and does not redraw the host tree), and its
   timing assertion is sensitive to shared-runner noise, so it must not block
-  the release gate. The criteria and the signal-to-noise rule are documented in
-  the `tests/test_performance.py` module docstring.
+  the release gate. The three criteria (A/B/C) are documented in the
+  `tests/test_performance.py` module docstring.
 - `pytest tests/test_architecture.py`: the package import graph must be
   **acyclic**, every edge must point to a lower layer, and sibling layers
   (data/coordinate, render/adapter) must not depend on each other. This guards

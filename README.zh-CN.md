@@ -6,11 +6,14 @@
 [![CI](https://github.com/ZengZichao/GeoPhylo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ZengZichao/GeoPhylo/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/ZengZichao/GeoPhylo/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/ZengZichao/GeoPhylo/actions/workflows/codeql.yml)
 [![PyPI](https://img.shields.io/pypi/v/geophylo.svg?label=PyPI)](https://pypi.org/project/geophylo/)
+[![Python](https://img.shields.io/pypi/pyversions/geophylo)](https://pypi.org/project/geophylo/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![ORCID](https://img.shields.io/badge/ORCID-0000--0001--6553--970X-a6ce39?logo=orcid&logoColor=white)](https://orcid.org/0000-0001-6553-970X)
 
 面向 Matplotlib Axes 的地质时间轴可视化库。它把 ICS（International Commission on
 Stratigraphy，国际地层委员会）发布的《国际年代地层表》（International
-Chronostratigraphic Chart）作为可复现的内置快照，叠加到时间校准树上，也叠加到
-任何以 Ma（百万年）为横轴或纵轴的图上。
+Chronostratigraphic Chart）作为可复现、版本钉定的内置快照，叠加到时间校准树上，
+也叠加到任何以 Ma（百万年）为横轴或纵轴的图上。
 
 R 语言生态中的 `deeptime` 为 ggplot2、ggtree 提供了 `coord_geo()`；`geophylo`
 为 Matplotlib 生态提供等价能力。本库把**坐标语义的正确性与可复现性**放在第一位：
@@ -22,27 +25,27 @@ R 语言生态中的 `deeptime` 为 ggplot2、ggtree 提供了 `coord_geo()`；`
   地质年代等级（geochronologic rank）：Eon、Era、Period、Epoch 和 Age。快照逐边界
   保留 `~` 近似值、定量误差（`±`），以及 GSSP（Global Boundary Stratotype Section
   and Point，全球界线层型剖面和点位）、GSSA（Global Standard Stratigraphic Age，
-  全球标准地层年龄）定义状态。`Timescale(version="2024/12")` 可选用历史快照。
+  全球标准地层年龄）定义状态。`Timescale(version="2024/12")` 可显式启用（opt-in）
+  历史快照。
 - **线性地质时间轴**：`add_geo_axis()` 在宿主 Axes 内部，用内嵌轨道（inset）叠加
   地质时间条带，支持多等级轨道、数值刻度、标签自动降级与自动对比色，并保证宿主
   Axes 的视图状态保持原样。
 - **显式坐标契约**：`CoordinateSpec`（`absolute_age`、`root_distance` 两种
   模式）是坐标语义的唯一真值来源；`spec_from_biophylo()` 从 Bio.Phylo 树构造
   并校验契约。
-- **环形布局（实验性）**：`RadialSpec` + `add_geo_ring()` 在原生极坐标 Axes 上
-  叠加地质时间环；`radial_spec_from_biophylo()` 提供环形适配入口。这部分 API 是
-  实验性的，签名不冻结。
+- **径向布局（实验性）**：`RadialSpec` + `add_geo_ring()` 在原生极坐标 Axes 上
+  叠加地质时间环；`radial_spec_from_biophylo()` 提供径向适配器入口。这部分 API
+  是实验性的，签名不冻结。
 - **强契约异常体系**：全部公共异常继承 `GeophyloError`。`AmbiguousIntervalError`
   是 `IntervalNotFoundError` 的子类，该继承关系为兼容既有 `except` 而保留。因此
   代码要先写 `except AmbiguousIntervalError`，再写
-  `except IntervalNotFoundError`。详见用户手册“异常与捕获顺序”一节。
+  `except IntervalNotFoundError`。详见中文使用文档“异常体系与排错指南”一节（第 12 节）。
 
-## 使用文档
+## 文档
 
 - [中文使用文档](docs/user-guide.zh.md)（完整教程、参数详解、FAQ 和排错指南）
-- [English user guide](docs/user-guide.en.md)（full tutorial, parameter
-  reference, FAQ and troubleshooting）
-- [数据政策](docs/data-policy.zh.md)（ICS 快照的来源、许可、更新和回退；
+- [English user guide](docs/user-guide.en.md)（完整教程、参数详解、FAQ 和排错指南）
+- [数据政策](docs/data-policy.zh.md)（ICS 快照的溯源、许可、更新和回退；
   英文权威版见 [data-policy.md](docs/data-policy.md)）
 - [架构决策记录](docs/adr/README.zh.md)（ADR-1～ADR-6：非显然的选择和已否决的
   替代方案；英文权威版见 [adr/README.md](docs/adr/README.md)）
@@ -54,8 +57,8 @@ R 语言生态中的 `deeptime` 为 ggplot2、ggtree 提供了 `coord_geo()`；`
 
 ```bash
 pip install geophylo            # 核心（仅需 matplotlib + numpy）
-pip install "geophylo[biopython]"   # Bio.Phylo 适配
-pip install "geophylo[iplotx]"      # iplotx 适配（实验性）
+pip install "geophylo[biopython]"   # Bio.Phylo 适配器
+pip install "geophylo[iplotx]"      # iplotx 适配器（实验性）
 pip install "geophylo[pyrolite]"    # 实验性 pyrolite 只读后端
 pip install "geophylo[test]"        # 测试
 ```
@@ -107,7 +110,7 @@ CoordinateSpec.from_data_limits(ax, mode=..., time_axis=...,
                                 acknowledge_inference=True)
 ```
 
-缺省调用会抛出 `CoordinateError`，调用方必须显式传入
+默认调用会抛出 `CoordinateError`，调用方必须显式传入
 `acknowledge_inference=True` 来确认这次推断。
 
 ## 快速上手：数据查询
@@ -127,15 +130,15 @@ list(ts.iter_intervals(ranks=["Epoch"], min_age=0, max_age=66))
 `add_geo_ring()` 必须共用同一个 `RadialSpec` 实例。这样环上某半径处的年龄与树上
 同一半径处的年龄，就在构造上保持一致。
 
-## 数据来源与许可
+## 数据溯源与许可
 
-内置快照由 `tools/build_snapshot.py` 从 ICS 官方版本化数据（CC-BY-4.0）确定性
-生成，随包分发，只增不改。版本间的逐字段机器可读 diff 见
+随包分发的快照由 `tools/build_snapshot.py` 从 ICS 官方版本化数据（CC-BY-4.0）
+确定性生成，只增不改。版本间的逐字段机器可读 diff 见
 `geophylo/data/snapshots/diff-2024-12_to_2026-06.json`（由 `tools/make_diff.py`
-生成），逐快照生成日志见 `tools/build-logs/`，推导快照 `2024/12` 的出处见
-[`geophylo/data/snapshots/PROVENANCE.md`](GeoPhylo/data/snapshots/PROVENANCE.md)。
+生成），逐快照生成日志见 `tools/build-logs/`，推导快照 `2024/12` 的溯源见
+[`geophylo/data/snapshots/PROVENANCE.md`](geophylo/data/snapshots/PROVENANCE.md)。
 
-ICS 数据的引用与归因见 [NOTICE](NOTICE) 与
+ICS 数据的引用与署名要求见 [NOTICE](NOTICE) 与
 [数据政策（中文版）](docs/data-policy.zh.md)。本库代码以 MIT 许可发布
 （见 [LICENSE](LICENSE)），第三方数据文件的许可与代码许可彼此独立。
 
@@ -148,12 +151,12 @@ ICS 数据的引用与归因见 [NOTICE](NOTICE) 与
 ## 稳定性与路线图
 
 - **0.1.0 起稳定**：`Timescale`、`CoordinateSpec`、`add_geo_axis()`、
-  `GeoAxisResult` 与 `spec_from_biophylo()`。0.2.x 不改公共 API，只新增可选关键字
-  参数（`tick_format`、`track_register`、`fallback_truncation`、`min_label_gap`）
-  与公共异常上的 `code`；默认值完全复现 0.1.x 行为。
+  `GeoAxisResult` 与 `spec_from_biophylo()`。0.2.x 不改公共 API，只新增显式启用
+  （opt-in）的关键字参数（`tick_format`、`track_register`、`fallback_truncation`、
+  `min_label_gap`）与公共异常上的 `code`；默认值完全复现 0.1.x 行为。
 - **实验性、未冻结**：`RadialSpec`、`add_geo_ring()`、`radial_spec_from_biophylo()`
   与 `spec_from_iplotx()`。0.2 **不**稳定化这些符号，签名仍可能变化；稳定化排在
-  更晚的 0.x 版本，多级地质年代环在布局模型成立之前不纳入范围。
+  更晚的 0.x 版本，多级径向地质年代环在布局模型成立之前不纳入范围。
 - **不计划支持**：ETE4 与 toytree 适配器（两者都不把树几何交回成 Matplotlib
   Axes），以及图表数据的在线更新。
 
@@ -183,11 +186,12 @@ mypy
 `10.5281/zenodo.23060662`、Version DOI 为 `10.5281/zenodo.23060663`；
 自 v0.1.1 起由 Zenodo GitHub 集成归档在新的 Concept 谱系下——Concept DOI
 为 `10.5281/zenodo.23093968`，v0.1.1 的 Version DOI 为
-`10.5281/zenodo.23093969`），
-并按 [NOTICE](NOTICE) 的要求同时引用《国际年代地层表》。
+`10.5281/zenodo.23093969`，当前版本 v0.2.1 的 Version DOI 为
+`10.5281/zenodo.23689216`）；并按 CC BY 4.0 许可的要求，另行引用
+《国际年代地层表》（署名要求详见 [NOTICE](NOTICE)）。
 
 ## 许可
 
 源代码：MIT（[LICENSE](LICENSE)）。随包 ICS 图表数据：CC-BY-4.0
-（[LICENSES/CC-BY-4.0.txt](LICENSES/CC-BY-4.0.txt)，归因说明见
+（[LICENSES/CC-BY-4.0.txt](LICENSES/CC-BY-4.0.txt)，署名说明见
 [NOTICE](NOTICE)）。

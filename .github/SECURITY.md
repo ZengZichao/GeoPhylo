@@ -2,13 +2,13 @@
 
 ## Supported versions
 
-GeoPhylo is pre-1.0 (`0.1.1`). Only the latest released tag receives security
+GeoPhylo is pre-1.0 (`0.2.1`). Only the latest released tag receives security
 fixes; older tags are not patched.
 
 | Version | Supported |
 | ------- | --------- |
-| 0.1.x   | yes       |
-| < 0.1   | no        |
+| 0.2.x   | yes       |
+| < 0.2   | no        |
 
 ## Reporting a vulnerability
 

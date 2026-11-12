@@ -1,5 +1,7 @@
 # ADR-5: Model each boundary as a triple of orthogonal states, not a bare age
 
+English | [中文](ADR-5-per-boundary-state-model.zh.md)
+
 - **Status**: Accepted (in force since 0.1.0)
 - **Date of record**: 2026-09-11
 - **Code**: `geophylo/data/models.py` (`Boundary`, `Interval`),
@@ -56,7 +58,7 @@ Boundary(age_ma, qualifier, uncertainty_ma, definition, source_iri)
   `DataValidationError`. `qualifier="approximate"` carries the chart's `~`,
   which the extractor reads from the upstream `skos:note "uncertain"` marker of
   a boundary endpoint — including inside a blank node, where the value is matched
-  against the remainder of the line (`_NOTE_RE.search(rest)`) — and
+  against the remainder of the line (`_STRING_RE.match(rest)`) — and
   `boundary_qualifier()` ranks it *above* the GSSP/GSSA test, so a
   GSSP-defined boundary whose published number is explicitly approximate is
   recorded as `approximate` rather than `defined`. Both shipped snapshots carry

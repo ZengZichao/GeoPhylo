@@ -1,5 +1,7 @@
 # ADR-4: Adapters build and validate coordinate contracts; they do not draw
 
+English | [中文](ADR-4-adapters-build-contracts.zh.md)
+
 - **Status**: Accepted (in force since 0.1.0; iplotx and radial entries
   are experimental)
 - **Date of record**: 2026-09-11
@@ -22,9 +24,16 @@ adapter is allowed to do.
 An adapter's job is to **construct and validate a coordinate contract**, never
 to draw.
 
-- `spec_from_biophylo(tree, ax, *, time_axis, age_conversion, root_age)` returns
-  a `CoordinateSpec`; it draws nothing and adds no artists. Rendering stays
-  behind `add_geo_axis(spec=...)`, so the same rendering path serves bundled
+- The entry point is
+
+  ```python
+  spec_from_biophylo(tree, ax, *,
+                     time_axis, age_conversion, root_age,
+                     allow_unit_depth=False)  # True opts in to Bio.Phylo's equal-depth (unit-length) fallback
+  ```
+
+  It returns a `CoordinateSpec`; it draws nothing and adds no artists. Rendering
+  stays behind `add_geo_axis(spec=...)`, so the same rendering path serves bundled
   snapshots, offline JSON and adapters alike.
 - It always produces `mode="root_distance"`. `Phylo.draw()`'s data coordinates
   *are* cumulative distance from the root, so `absolute_age` in that frame would

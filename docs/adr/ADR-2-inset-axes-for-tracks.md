@@ -1,5 +1,7 @@
 # ADR-2: Draw tracks on inset Axes rather than overlaying artists on the host Axes
 
+English | [中文](ADR-2-inset-axes-for-tracks.zh.md)
+
 - **Status**: Accepted (in force since 0.1.0)
 - **Date of record**: 2026-09-11
 - **Code**: `geophylo/render/linear.py` (`_make_track_axes`,

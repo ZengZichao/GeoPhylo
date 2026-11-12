@@ -1,5 +1,7 @@
 # ADR-6: Expose figure-quality knobs as opt-in overrides, keep conservative defaults
 
+English | [中文](ADR-6-render-overrides-opt-in.zh.md)
+
 - **Status**: Accepted (in force since the render-override release; API additive)
 - **Date of record**: 2026-10-26
 - **Code**: `geophylo/render/ticks.py` (`format_age_exact`),

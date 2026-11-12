@@ -47,8 +47,8 @@ error instead of guessing silently.
   inherits from `GeophyloError`. `AmbiguousIntervalError` is a subclass of
   `IntervalNotFoundError`; the inheritance is kept for compatibility with
   existing `except` clauses, so code should catch `AmbiguousIntervalError`
-  before `IntervalNotFoundError`. See the "Exceptions and catch order"
-  section of the user guide.
+  before `IntervalNotFoundError`. See the "Exceptions and troubleshooting"
+  section (section 12) of the user guide.
 
 ## Documentation
 
@@ -152,7 +152,7 @@ versions is `geophylo/data/snapshots/diff-2024-12_to_2026-06.json` (generated
 by `tools/make_diff.py`); per-snapshot generation logs live in
 `tools/build-logs/`; the provenance of the derived `2024/12` snapshot is
 documented in
-[`geophylo/data/snapshots/PROVENANCE.md`](GeoPhylo/data/snapshots/PROVENANCE.md).
+[`geophylo/data/snapshots/PROVENANCE.md`](geophylo/data/snapshots/PROVENANCE.md).
 
 For citation and attribution of the ICS data, see [NOTICE](NOTICE) and
 [docs/data-policy.md](docs/data-policy.md). The library's source code is
@@ -206,9 +206,10 @@ concept DOI `10.5281/zenodo.23060662`, version DOI
 `10.5281/zenodo.23060663` for v0.1.0; releases from v0.1.1 onward are
 archived by the Zenodo GitHub integration under concept DOI
 `10.5281/zenodo.23093968`, version DOI `10.5281/zenodo.23093969` for
-v0.1.1) and, as required by the CC BY
-4.0 license, cite the International Chronostratigraphic Chart separately (see
-[NOTICE](NOTICE) for the required attribution).
+v0.1.1 and the version DOI for the current release v0.2.1 is
+`10.5281/zenodo.23689216`) and, as required by the CC BY 4.0 license, cite the
+International Chronostratigraphic Chart separately (see [NOTICE](NOTICE) for
+the required attribution).
 
 ## License
 

@@ -18,7 +18,7 @@ compliance and update procedure of the ICS snapshots bundled with `geophylo`
   - Upstream file SHA-256:
     `0158959e8fdae2a8bdbb14ca3e424d2370362cd8dfc8af86e7be73c74368b355`
   - Vendored copy: `tools/source/ics-chart-v2026-06.5.ttl`
-- "Pinned input" is not a prose claim but a machine-checkable triple assertion:
+- "Pinned input" is not a prose claim but a machine-checkable quadruple assertion:
   the top-level `pinned_input.{file,sha256,bytes}` of `versions.json` == the
   SHA-256 of the copy archived in the repository == the `source.source_sha256`
   of both snapshots == the result of comparing `--source-sha256` against the

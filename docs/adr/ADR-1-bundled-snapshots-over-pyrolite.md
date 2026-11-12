@@ -1,5 +1,7 @@
 # ADR-1: Ship bundled ICS snapshots as the default data source instead of using pyrolite
 
+English | [中文](ADR-1-bundled-snapshots-over-pyrolite.zh.md)
+
 - **Status**: Accepted (in force since 0.1.0)
 - **Date of record**: 2026-09-11
 - **Code**: `geophylo/data/builtin.py`, `geophylo/data/backend.py`,

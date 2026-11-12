@@ -10,7 +10,7 @@ already prepared; the only value left to fill in is the `CITATION.cff`
 placeholder once Zenodo has minted the concept DOI (see "Paste-in locations"
 below).
 
-The version is currently `0.1.1` and must agree in the following five places
+The version is currently `0.2.1` and must agree in the following five places
 (re-check before releasing): `geophylo/_version.py`, `pyproject.toml`,
 `CITATION.cff`, `.zenodo.json`, and the version heading of `CHANGELOG.md`
 (`test_version_agrees_across_release_files` in `tests/test_packaging.py` pins
@@ -27,7 +27,7 @@ exactly these five).
    the version string prefixed with `v`):
 
    ```bash
-   VERSION=0.1.1   # the version being released
+   VERSION=0.2.1   # the version being released
    git tag -a "v${VERSION}" -m "GeoPhylo ${VERSION}"
    git push origin main "v${VERSION}"
    gh release create "v${VERSION}" --latest --title "GeoPhylo ${VERSION}" --generate-notes
@@ -67,7 +67,7 @@ exactly these five).
    - **Concept DOI** `10.5281/zenodo.XXXXXXXX`: version-independent, for
      long-term citation;
    - **Version DOI**: specific to this release, for exact reproducibility.
-   4. License note: the repository artifacts also contain **CC-BY-4.0** ICS
+4. License note: the repository artifacts also contain **CC-BY-4.0** ICS
    snapshot data, but a Zenodo record accepts only a single `license`, so the
    record is filed as `MIT`. Attribution on the data side is carried jointly by
    three places: the `notes` field of `.zenodo.json`, the in-repo `NOTICE`, and

@@ -2,7 +2,7 @@
 
 [English](ADR-4-adapters-build-contracts.md) | 中文
 
-- **状态**：已接受（自 0.1.0 起生效；iplotx 与环形条目为实验性）
+- **状态**：已接受（自 0.1.0 起生效；iplotx 与径向条目为实验性）
 - **记录日期**：2026-09-11
 - **代码**：`geophylo/adapter/biopython.py`、`geophylo/adapter/iplotx.py`、
   `geophylo/coordinate/spec.py`、`geophylo/coordinate/radial.py`、
@@ -18,10 +18,17 @@
 
 ## 决策
 
-适配器的职责是**构造并校验坐标契约**，永远不画图。
+适配器的职责是**构造并校验坐标契约**，永远不绘图。
 
-- `spec_from_biophylo(tree, ax, *, time_axis, age_conversion, root_age)` 返回
-  一个 `CoordinateSpec`；它什么都不画、不加任何 artist。渲染留在
+- 入口函数是
+
+  ```python
+  spec_from_biophylo(tree, ax, *,
+                     time_axis, age_conversion, root_age,
+                     allow_unit_depth=False)  # 传 True 才显式启用 Bio.Phylo 的等深（单位长度）回退
+  ```
+
+  它返回一个 `CoordinateSpec`；它什么都不画、不加任何 artist。渲染留在
   `add_geo_axis(spec=...)` 之后，因此随包快照、离线 JSON 与适配器走的是同一条
   渲染路径。
 - 它始终产生 `mode="root_distance"`。`Phylo.draw()` 的数据坐标*就是*到根的累计
@@ -41,7 +48,7 @@
 ## 被否决的替代方案
 
 - **`add_geo_axis_to_tree(tree, ax, ...)` 一步到位的便捷绘图。** 否决：它会把
-  两个契约（树布局自由、条带生命周期）焊死在一起，并掩盖本库存在所要暴露的
+  两个契约（树布局自由、条带生命周期）焊死在一起，并掩盖本库本意要暴露的
   模式决策。`adapter → render` 方向不存在任何绘图边：适配器构造契约，绘图
   步骤永远由调用方写。
 - **从坐标轴 limits 推断 `absolute_age` 还是 `root_distance`。** 否决：两种
@@ -61,8 +68,8 @@
   `age_range` 与 `root_age`；iplotx 路径经伪造的 `TreeArtist` 测试。
 - 绘图步骤永远由用户自己写，因此画树的库可替换（`Bio.Phylo`、`iplotx`、
   手绘）。
-- 可选依赖保持可选：导入 `geophylo` 永不导入 `Bio`/`iplotx`；适配器在缺失时
-  抛出带安装提示的 `ImportError`。
+- 可选依赖保持可选：导入 `geophylo` 永不导入 `Bio`/`iplotx`；缺失时适配器抛出
+  `ImportError`，消息里给出要安装的 extra。
 - 第三方失败不得以裸 `TypeError`/`ValueError` 逃逸：适配器把它们转换为
   `CoordinateError` 并保留因果链（见 `geophylo/exceptions.py` 的错误处理契约）。
 - 由于没有绝对年龄的适配器路径，绝对年龄的时间树坐标轴必须用

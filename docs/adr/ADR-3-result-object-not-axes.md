@@ -1,5 +1,7 @@
 # ADR-3: Return a `GeoAxisResult` object instead of the host `Axes`
 
+English | [中文](ADR-3-result-object-not-axes.zh.md)
+
 - **Status**: Accepted (in force since 0.1.0)
 - **Date of record**: 2026-09-11
 - **Code**: `geophylo/render/result.py`, `geophylo/render/linear.py`
