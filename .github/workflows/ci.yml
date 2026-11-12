@@ -22,14 +22,25 @@ permissions:
   contents: read
 
 # 阻塞门禁命令（唯一权威定义；RELEASE.md 与 tests/update_baselines.py 都指向它）：
+# Blocking-gate command (the single authoritative definition; both RELEASE.md and
+# tests/update_baselines.py point here):
 #
 #   pytest -m "not performance" -v --mpl --mpl-baseline-path=tests/baseline_images
 #
 # - `-m "not performance"`：性能基准只在 performance job 里跑（非阻塞）。
+# - `-m "not performance"`: the performance benchmarks run only in the
+#   performance job (non-blocking).
 # - 实验性测试同样进入阻塞门禁：环形路径已是 README/examples 声明的交付能力。
+# - Experimental tests are inside the blocking gate too: the radial path is
+#   already a deliverable declared by README/examples.
 # - `--mpl`：没有这个旗标，pytest-mpl 只执行函数体、不做任何像素比较，
 #   基准图被删或被替换 CI 依然绿。基准图缺失时另有一条测试直接变红
 #   （tests/test_visual.py::test_every_visual_test_has_a_baseline_image）。
+# - `--mpl`: without this flag pytest-mpl only executes the function body and
+#   performs no pixel comparison at all, so CI stays green even when a baseline
+#   image is deleted or replaced. A separate test turns red directly when a
+#   baseline image is missing
+#   (tests/test_visual.py::test_every_visual_test_has_a_baseline_image).
 
 jobs:
   lint:

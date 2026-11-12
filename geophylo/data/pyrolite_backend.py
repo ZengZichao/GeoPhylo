@@ -213,7 +213,12 @@ class PyroliteBackend:
         rank_corrected = 0
         for row_index, row in frame.iterrows():
             name = str(row.get("Name") or "")
-            where = f"{name or '<unnamed>'}（第 {row_index} 行）"
+            # 定位标签必须双语：它同时流入英文条与中文条，单语中文会把「（第 N
+            # 行）」泄漏进英文消息。
+            where = msg(
+                f"{name or '<unnamed>'} (row {row_index})",
+                f"{name or '<unnamed>'}（第 {row_index} 行）",
+            )
             start = _row_age(where, "Start", row["Start"])
             end = _row_age(where, "End", row["End"])
             if not (math.isfinite(start) and math.isfinite(end)):  # pragma: no cover

@@ -214,7 +214,7 @@ class CoordinateSpec:
                     f"{age_hi}] under root_age={root}; root_age must not be smaller than the "
                     f"upper end of the data range",
                     f"宿主 Axes 数据范围 [{lo}, {hi}] 在 root_age={root} 下推出非法 age_range "
-                    f"[{age_lo}, {age_hi}]；root_age 应不小于数据范围上界",
+                    f"[{age_lo}, {age_hi}]；root_age 不得小于数据范围上界",
                 )
             )
         return cls.root_distance(time_axis=time_axis, age_range=(age_lo, age_hi), root_age=root)

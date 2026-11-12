@@ -101,7 +101,7 @@ def add_geo_ring(
                 f"only (no layout model yet for several ranks), got the sequence {rank!r}; see "
                 f"user-guide.en.md FAQ Q11 for the alternative",
                 f"rank 必须是单个字符串；实验性时间环只支持单一 rank（多 rank 尚无成立"
-                f"的布局模型），得到序列 {rank!r}；替代方案见 docs/user-guide.en.md FAQ Q11",
+                f"的布局模型），得到序列 {rank!r}；替代方案见 docs/user-guide.zh.md FAQ Q11",
             )
         )
     from ..validation import CORE_RANKS
@@ -234,7 +234,7 @@ class _PolarResult(GeoAxisResult):
             raise InvalidRadiusError(
                 msg(
                     f"require r_inner < r_outer, got {band_inner}, {band_outer}",
-                    f"require r_inner < r_outer, got {band_inner}, {band_outer}",
+                    f"要求 r_inner < r_outer，得到 {band_inner}, {band_outer}",
                 )
             )
         # 极坐标 Axes 的 r 限制即 ylim（set_rlim 的配对 getter）。

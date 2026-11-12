@@ -350,7 +350,7 @@ def _check_color(color: Any, where: str) -> None:
 
 def validate_snapshot_payload(snapshot: dict[str, Any]) -> list[Interval]:
     """校验快照并构造 ``Interval`` 列表；任何违规抛 ``DataValidationError``。"""
-    _require_keys(snapshot, _TOP_REQUIRED_KEYS, "快照顶层")
+    _require_keys(snapshot, _TOP_REQUIRED_KEYS, msg("the snapshot top level", "快照顶层"))
     hash_field = snapshot["hash"]
     if not isinstance(hash_field, dict):
         # ``hash`` 是字符串/列表等畸形结构时必须抛公共异常，不能让
@@ -378,8 +378,8 @@ def validate_snapshot_payload(snapshot: dict[str, Any]) -> list[Interval]:
             raise DataValidationError(
                 msg("every entry of intervals must be an object", "intervals 的每条记录必须是对象")
             )
-        _require_keys(record, _RECORD_REQUIRED_KEYS, "区间记录")
-        where = f"区间 {record['id']!r}"
+        _require_keys(record, _RECORD_REQUIRED_KEYS, msg("the interval record", "区间记录"))
+        where = msg(f"interval {record['id']!r}", f"区间 {record['id']!r}")
         older = _boundary_from_payload(record["older_boundary"], f"{where}.older_boundary")
         younger = _boundary_from_payload(record["younger_boundary"], f"{where}.younger_boundary")
         if not older.age_ma > younger.age_ma:
@@ -578,30 +578,45 @@ def _check_hierarchy(intervals: list[Interval], by_id: dict[str, Interval]) -> N
         if len(kids) < 2:
             continue
         ordered = sorted(kids, key=lambda i: i.older_ma, reverse=True)
-        defects: list[str] = []
+        # 每条缺陷明细都要双语：defects 同时被拼进英文条与中文条，单语明细会
+        # 把中文泄漏进英文消息（反之亦然）。
+        defects: list[tuple[str, str]] = []
         if abs(ordered[0].older_ma - parent.older_ma) > _TOL:
             defects.append(
-                f"最老子区间 {ordered[0].id} 的老端 {ordered[0].older_ma} 未与父区间老端 "
-                f"{parent.older_ma} 对齐"
+                (
+                    f"the oldest child {ordered[0].id} has older end {ordered[0].older_ma}, "
+                    f"which is not aligned with the parent older end {parent.older_ma}",
+                    f"最老子区间 {ordered[0].id} 的老端 {ordered[0].older_ma} 未与父区间老端 "
+                    f"{parent.older_ma} 对齐",
+                )
             )
         if abs(ordered[-1].younger_ma - parent.younger_ma) > _TOL:
             defects.append(
-                f"最小子区间 {ordered[-1].id} 的年轻端 {ordered[-1].younger_ma} 未与父区间"
-                f"年轻端 {parent.younger_ma} 对齐"
+                (
+                    f"the youngest child {ordered[-1].id} has younger end "
+                    f"{ordered[-1].younger_ma}, which is not aligned with the parent younger end "
+                    f"{parent.younger_ma}",
+                    f"最小子区间 {ordered[-1].id} 的年轻端 {ordered[-1].younger_ma} 未与父区间"
+                    f"年轻端 {parent.younger_ma} 对齐",
+                )
             )
         for older_kid, younger_kid in zip(ordered, ordered[1:], strict=False):
             if abs(older_kid.younger_ma - younger_kid.older_ma) > _TOL:
                 defects.append(
-                    f"{older_kid.id} 的年轻端 {older_kid.younger_ma} 与 {younger_kid.id} 的"
-                    f"老端 {younger_kid.older_ma} 不相接"
+                    (
+                        f"the younger end {older_kid.younger_ma} of {older_kid.id} does not meet "
+                        f"the older end {younger_kid.older_ma} of {younger_kid.id}",
+                        f"{older_kid.id} 的年轻端 {older_kid.younger_ma} 与 {younger_kid.id} 的"
+                        f"老端 {younger_kid.older_ma} 不相接",
+                    )
                 )
         if defects:
             raise DataValidationError(
                 msg(
                     f"the children of parent {parent_id!r} at rank={rank!r} do not cover it "
-                    f"segment by segment: " + "; ".join(defects),
+                    f"segment by segment: " + "; ".join(en for en, _ in defects),
                     f"父区间 {parent_id!r} 的 rank={rank!r} 子区间未逐段完整覆盖："
-                    + "；".join(defects),
+                    + "；".join(zh for _, zh in defects),
                 )
             )
 
@@ -670,15 +685,20 @@ class SnapshotBackend:
             )
         interval = self._by_id.get(interval_id) or self._by_source_iri.get(interval_id)
         if interval is None:
-            hint = ""
+            # hint 必须双语：单语中文 hint 会被拼进英文条，且中文分号会出现在
+            # 英文句子里。
+            hint_en = hint_zh = ""
             folded = interval_id.casefold()
             match = next((i for i in self._intervals if i.name.casefold() == folded), None)
             if match is not None:
-                hint = f"；{interval_id!r} 看起来是名称，请改用 find_by_name()"
+                hint_en = (
+                    f"; {interval_id!r} looks like an interval name, use find_by_name() instead"
+                )
+                hint_zh = f"；{interval_id!r} 看起来是名称，请改用 find_by_name()"
             raise IntervalNotFoundError(
                 msg(
-                    f"unknown interval_id {interval_id!r}{hint}",
-                    f"未知的 interval_id {interval_id!r}{hint}",
+                    f"unknown interval_id {interval_id!r}{hint_en}",
+                    f"未知的 interval_id {interval_id!r}{hint_zh}",
                 )
             )
         return interval

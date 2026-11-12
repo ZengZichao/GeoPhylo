@@ -100,7 +100,8 @@ def spec_from_iplotx(
                 "polar Axes following spec 6.3; see user-guide.en.md FAQ Q13",
                 "检测到 iplotx radial 布局（极坐标形式的布局数据）；"
                 "实验性 API 不承诺通过 add_geo_ring()/spec_from_iplotx() 适配 iplotx radial，"
-                "环形树请按规范 6.3 的配方在原生极坐标 Axes 上自绘；见 user-guide.en.md FAQ Q13",
+                "环形树请按规范 6.3 的配方在原生极坐标 Axes 上自绘；"
+                "见 docs/user-guide.zh.md FAQ Q13",
             )
         )
     ax = artist.axes
@@ -167,7 +168,7 @@ def _reject_radial(artist) -> None:
                     "检测到 iplotx radial 布局（layout_coordinate_system='polar'）；"
                     "实验性 API 不承诺通过 add_geo_ring()/spec_from_iplotx() 适配 iplotx radial，"
                     "环形树请按规范 6.3 的配方在原生极坐标 Axes 上自绘；"
-                    "见 user-guide.en.md FAQ Q13",
+                    "见 docs/user-guide.zh.md FAQ Q13",
                 )
             )
     get_layout_name = getattr(artist, "get_layout_name", None)
@@ -186,7 +187,7 @@ def _reject_radial(artist) -> None:
                     "检测到 iplotx radial 布局（get_layout_name() == 'radial'）；"
                     "实验性 API 不承诺通过 add_geo_ring()/spec_from_iplotx() 适配 iplotx radial，"
                     "环形树请按规范 6.3 的配方在原生极坐标 Axes 上自绘；"
-                    "见 user-guide.en.md FAQ Q13",
+                    "见 docs/user-guide.zh.md FAQ Q13",
                 )
             )
 
