@@ -236,7 +236,10 @@ class TestBandGeometryDrivesRingRadii:
         actual = sorted(
             (float(p.get_y()), float(p.get_y()) + float(p.get_height())) for p in ax.patches
         )
-        assert actual == pytest.approx(expected, abs=1e-12)
+        assert len(actual) == len(expected)
+        # pytest 9.2 起 approx() 不再接受嵌套序列，只能逐对比较（8.x/9.x 通用）。
+        for got, want in zip(actual, expected, strict=True):
+            assert got == pytest.approx(want, abs=1e-12)
         assert all(outer + 1e-12 >= hi and lo >= inner - 1e-12 for lo, hi in actual)
 
     def test_update_moves_the_ring(self, polar_ax):
