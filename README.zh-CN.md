@@ -12,8 +12,8 @@
 
 面向 Matplotlib Axes 的地质时间轴可视化库。它把 ICS（International Commission on
 Stratigraphy，国际地层委员会）发布的《国际年代地层表》（International
-Chronostratigraphic Chart）作为可复现、版本钉定的内置快照，叠加到时间校准树上，
-也叠加到任何以 Ma（百万年）为横轴或纵轴的图上。
+Chronostratigraphic Chart）作为可复现、版本钉定的内置快照，叠加到时间树上，
+也叠加到任何以 Ma（百万年前）为横轴或纵轴的图上。
 
 R 语言生态中的 `deeptime` 为 ggplot2、ggtree 提供了 `coord_geo()`；`geophylo`
 为 Matplotlib 生态提供等价能力。本库把**坐标语义的正确性与可复现性**放在第一位：
@@ -36,9 +36,9 @@ R 语言生态中的 `deeptime` 为 ggplot2、ggtree 提供了 `coord_geo()`；`
 - **径向布局（实验性）**：`RadialSpec` + `add_geo_ring()` 在原生极坐标 Axes 上
   叠加地质时间环；`radial_spec_from_biophylo()` 提供径向适配器入口。这部分 API
   是实验性的，签名不冻结。
-- **强契约异常体系**：全部公共异常继承 `GeophyloError`。`AmbiguousIntervalError`
+- **契约驱动的强异常体系**：全部公共异常继承 `GeophyloError`。`AmbiguousIntervalError`
   是 `IntervalNotFoundError` 的子类，该继承关系为兼容既有 `except` 而保留。因此
-  代码要先写 `except AmbiguousIntervalError`，再写
+  代码应当先写 `except AmbiguousIntervalError`，再写
   `except IntervalNotFoundError`。详见中文使用文档“异常体系与排错指南”一节（第 12 节）。
 
 ## 文档
@@ -63,7 +63,7 @@ pip install "geophylo[pyrolite]"    # 实验性 pyrolite 只读后端
 pip install "geophylo[test]"        # 测试
 ```
 
-## 快速上手：Bio.Phylo 时间校准树
+## 快速上手：Bio.Phylo 时间树
 
 ```python
 from io import StringIO
@@ -102,7 +102,7 @@ plt.tight_layout()
 result.finalize()
 ```
 
-本库不会自行推断坐标范围。唯一的推断入口是
+本库从不自行推断坐标范围。唯一的推断入口是
 `CoordinateSpec.from_data_limits()`：
 
 ```python
@@ -170,7 +170,7 @@ ruff check geophylo tests tools examples
 mypy
 ```
 
-发布（GitHub 公开 + Zenodo DOI）流程见
+发布（公开 GitHub 仓库 + Zenodo DOI）流程见
 [RELEASE.zh-CN.md](RELEASE.zh-CN.md)（英文权威版见
 [RELEASE.md](RELEASE.md)）。
 
@@ -184,8 +184,8 @@ mypy
 若在研究中使用本库，请引用 GeoPhylo（机器可读引用记录见
 [CITATION.cff](CITATION.cff)；v0.1.0 的 Concept DOI 为
 `10.5281/zenodo.23060662`、Version DOI 为 `10.5281/zenodo.23060663`；
-自 v0.1.1 起由 Zenodo GitHub 集成归档在新的 Concept 谱系下——Concept DOI
-为 `10.5281/zenodo.23093968`，v0.1.1 的 Version DOI 为
+自 v0.1.1 起的 release 由 Zenodo GitHub 集成归档在 Concept DOI
+`10.5281/zenodo.23093968` 下，v0.1.1 的 Version DOI 为
 `10.5281/zenodo.23093969`，当前版本 v0.2.1 的 Version DOI 为
 `10.5281/zenodo.23689216`）；并按 CC BY 4.0 许可的要求，另行引用
 《国际年代地层表》（署名要求详见 [NOTICE](NOTICE)）。

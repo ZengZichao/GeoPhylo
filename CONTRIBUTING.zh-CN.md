@@ -24,7 +24,7 @@ pre-commit run --all-files    # 对整棵树跑一遍
 钩子刻意只以 check 模式运行同一批命令（不带 `--fix`），这样“本来就是干净的”和“刚刚被改
 干净”两件事不会混为一谈。如果钩子和 CI 结论不一致，以 CI 为准，并去修配置。
 
-注意 dev extra 给 lint 工具加了上界（ruff>=0.6,<1、mypy>=1.11,<2）。之所以设
+注意 dev extra 给 lint 工具加了上界（ruff>=0.6,<1、mypy>=1.11,<3）。之所以设
 上界：门禁跑的是 formatter 的 check 模式加零告警的类型检查，没有上界时，上游
 一次 formatter 发布就能把门禁弄红，而那与你的改动无关；本地与 CI 还会解析到
 不同版本的工具。抬上界时请刻意进行：先用新版本在本地把门禁跑
@@ -71,8 +71,8 @@ pre-commit run --all-files    # 对整棵树跑一遍
   `matplotlib==3.10.*`、`numpy==1.25.*`）渲染的同两张图；core-min CI 任务跑门禁前
   会把它们拷贝到 `tests/baseline_images/`——3.10 的 Agg 输出与当前版本在抗锯齿
   层面有差异，而容差为零。再生成方法相同，在最低依赖环境里执行：
-  `MPLBACKEND=Agg pytest tests/test_visual.py --mpl --mpl-baseline-path=tests/baseline_images --mpl-results-path=<目录>`，
-  然后把 `<目录>/*/result.png` 拷入 `tests/baseline_images_min/`
+  `MPLBACKEND=Agg pytest tests/test_visual.py --mpl --mpl-baseline-path=tests/baseline_images --mpl-results-path=<dir>`，
+  然后把 `<dir>/*/result.png` 拷入 `tests/baseline_images_min/`
   （matplotlib 3.10 下 pytest-mpl 的 `--mpl-generate-path` 产物与其比较管线不一致）。
 - 视觉基准图必须经过代码评审后，才允许人工覆盖。
 

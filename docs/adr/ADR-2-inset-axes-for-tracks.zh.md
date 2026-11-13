@@ -12,7 +12,7 @@
 ## 背景
 
 地质时间条带必须紧贴宿主面板并共享其时间维度，但宿主面板属于用户：它可能是
-时间树、地层柱或散点图，它的 limits、scale、autoscale 标志和 `dataLim` 对面板
+树、地层柱或散点图，它的 limits、scale、autoscale 标志和 `dataLim` 对面板
 上其他内容都是承重的。Matplotlib 里把条带挂上去的方式有两种：
 
 1. 用宿主的数据坐标，把 `Rectangle`/`Text` artist 直接加到宿主 `Axes` 上。

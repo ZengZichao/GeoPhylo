@@ -16,7 +16,7 @@
   - 上游文件 SHA-256：`0158959e8fdae2a8bdbb14ca3e424d2370362cd8dfc8af86e7be73c74368b355`
   - 仓库内副本：`tools/source/ics-chart-v2026-06.5.ttl`
 - “钉定输入”不是一句文字声明，而是可机器复核的四重断言：`versions.json` 顶层
-  `pinned_input.{file,sha256,bytes}` == 磁盘上随仓库归档的副本的 SHA-256 == 两份
+  `pinned_input.{file,sha256,bytes}` == 随仓库归档的副本的 SHA-256 == 两份
   快照的 `source.source_sha256` == 构建时 `--source-sha256` 与实际读入字节的比对
   结果。四者不符时直接拒绝产出。
 - 守卫代码在 `tools/build_snapshot.py::rebuild_index` 与
@@ -56,22 +56,22 @@
   `--tag`、`--commit`、`--source-sha256`、抓取时间、上游陈述计数（`parse_stats`）、
   边界回退清单、修复清单（`integrity_repairs`）、名称推导清单、别名去重清单、
   qualifier 分布和警告。
-- 生成日志命名规范：`tools/build-logs/<快照名>.log.json`，即
+- 生成日志命名规范：`tools/build-logs/<snapshot-name>.log.json`，即
   `ics_chart-2026-06.log.json`、`ics_chart-2024-12.log.json`。日志默认路径以
   **仓库根**为锚点（`default_log_path()`），在任意子目录执行同一条命令都落在同一
   位置。这些日志随仓库跟踪，属于溯源工件，`.gitignore` 不得忽略它们，也不得引入
-  任何会命中 `tools/build-logs/*.log.json` 的忽略规则。本条为规范性条款，具有约束力。
+  任何会命中 `tools/build-logs/*.log.json` 的忽略规则。本条为规范性条款。
 - 两份快照的生成日志随仓库归档在 `tools/build-logs/`，由上文同一条命令产出。
   重跑 `tools/build_snapshot.py` 必须能逐字节重现快照本身
   （`tests/test_snapshot_provenance.py` 断言这一点），因此日志里的 `retrieved_at`、
   `out` 和 `command` 也是可核对的字面量。
 - 版本之间的机器可读 diff 由 `tools/make_diff.py` 生成。写完快照后，
-  `build_snapshot.py --diff-with <版本>` 也能一并产出该文件，前提是 `--diff-with`
+  `build_snapshot.py --diff-with <version>` 也能一并产出该文件，前提是 `--diff-with`
   与本次 `--chart-version` 不同值——同值会被直接拒绝。基线与推导版的 diff 归档为
   `geophylo/data/snapshots/diff-2024-12_to_2026-06.json`。
   - 头部记录双方的图表版本、`snapshot_revision`、`payload_sha256` 和
     `source_sha256`，正文逐字段列出每条受影响记录的变化。
-  - `boundary_age_changes` 一节把同一共享边界在多条目上的传播收敛为一处变化；
+  - `boundary_age_changes` 一节把同一共享边界在多条记录上的传播收敛为一处变化；
     共享边界上出现两种不同的误差迁移时显式失败，绝不静默保留首条。
   - 该文件不得手改：`tests/test_snapshot_provenance.py` 会在内存里重算，并与随包
     发布的字节比对。
@@ -81,11 +81,11 @@
 上游 changeNote（`skos:changeNote "2026-06: hasBeginning 246.7 -> 247.0"` 等）
 记录了 2026/06 相对 2024/12 的三处边界更新：
 
-1. 三叠纪底（安尼西阶底界，Triassic base Anisian）：246.7 → 247.0 Ma
+1. 三叠纪底（安尼阶底界，Triassic base Anisian）：246.7 → 247.0 Ma
 2. 奥伦尼克阶底界（base Olenekian）：249.9 → 250.8 Ma
 3. 二叠纪底（吴家坪阶底界，Permian base Wuchiapingian）：259.51 ±0.21 → 259.857 ±0.084 Ma
 
-`--to 2024/12` 按这些 changeNote 逐条回退，并恢复 Wuchiapingian 底界的误差
+`--to 2024/12` 按这些 changeNote 逐条回退，并恢复吴家坪阶底界的误差
 （0.084 → 0.21，上游 changeNote 只记录了年龄变化，未记录误差变化）。恢复的误差并非杜撰：259.51 ± 0.21 Ma 是 Shen et al.（2024，*Episodes* 47(1)，147–177，峨眉山玄武岩顶部 U-Pb）为瓜达卢普统—乐平统界线采用的值，也是国际地层委员会二叠纪分会 GSSP 表所列的吴家坪阶底界值；完整引用见 `geophylo/data/snapshots/PROVENANCE.md`。
 
 `--to` 是回退集合的**唯一决定者**：过滤条件不得内嵌任何具体的图表版本字面量，
@@ -95,7 +95,7 @@
 - 每条 changeNote 必须带 `YYYY-MM:` 前缀，否则构建失败。上游换写法不会悄悄改变
   回退范围。
 - `--to` 必须与 `--chart-version` 同值，且目标必须是 `DERIVED_SNAPSHOTS` 中登记过
-  的版本；一条回退都没有时直接失败，禁止把基线数据贴上更早的标签。因此
+  的版本；一条边界回退都没有时直接失败，禁止把基线数据贴上更早的标签。因此
   `--to 2026/06`、`--to 2030/01`、`--to 1999/01` 和 `--to nonsense` 一律拒绝构建。
 - `derived_from.reverted_boundary_count` 由本次构建的**实际**回退条数写入，
   `rebuild_index()` 再拿它与生成日志的 `reverted_boundaries` 实长对账；对不上就
@@ -125,7 +125,7 @@
   即同一条界线的三种结构关系：父底界 ≡ 最老子区间底界；父顶界 ≡ 最年亲子区间顶界；
   同父相邻子区间的公共界面。
   - 生效条件：类内两个写法相差不超过 0.05、少数派在全库只出现一次、主流写法至少
-    出现两次（如 Aquitanian 底界 23.03 vs Miocene 底界及其四条同界记录的 23.04）。
+    出现两次（如 Aquitanian 底界 23.03 vs Miocene 底界及其四条同边界记录的 23.04）。
   - 判据只看结构等值类，不做全局计数：全局计数与年代地层学无关，会把 Quaternary
     的 0.0117、0.0082、0.0042 和 0.0 当成“少数派”。这些值安全，是因为它们在各自
     结构类内部本就一致。判据不足时构建失败，构建器不做猜测。吸附之后
@@ -173,12 +173,12 @@
   是本项目的推导值，不是上游给出的标识符；改推导规则会改 ID，因此是一次数据变更。
 - 官方短代码（notation）作为 `aliases`；ICS 以大小写区分 epoch 级（`T3`）与 age 级
   （`t3`）代码。大小写折叠冲突时按 rank 优先级消解（Super-Eon < Eon < Era < Period
-  < Sub-Period < Epoch < Age），同 rank 内按 id 字典序，落选者逐条记入
+  < Sub-Period < Epoch < Age），同 rank 内按 `id` 字典序，落选者逐条记入
   `derivation.dropped_aliases`（35 条）和生成日志。**这是一处有意的数据损失**：
   `ics:age:anisian` 等 35 条记录的 `aliases` 因此为空，而 `find_by_name("T3")` 只
   命中世级记录。哪一级应当持有共享代码，需按 ICS 图表确认；确认之前不改动优先级，
   但丢失清单必须随包可见。
-- `Pridoli` 同时声明 Age 与 Epoch（官方如此，图表在两个行位显示），快照为每个声明
+- `Pridoli` 同时声明 Age 与 Epoch（官方如此，图表把它排在两行），快照为每个声明
   rank 各生成一条记录（`ics:age:pridoli` 与 `ics:epoch:pridoli`）。
 - 端点级 `source_iri` 恒为 `null`：ICS 图表把端点写成空节点（blank node），没有可
   引用的稳定 IRI，该字段留给能给出端点 IRI 的外部后端。区间级 `source_iri`
@@ -203,11 +203,11 @@
 
 ## 许可合规
 
-- ICS 官方图表数据以 **CC-BY-4.0** 发布，版权和归属 International Commission on
+- ICS 官方图表数据以 **CC-BY-4.0** 发布，著作权与署名 International Commission on
   Stratigraphy。快照的 `license` 元数据、`LICENSES/CC-BY-4.0.txt` 和 `NOTICE` 记录
-  归属与引用要求；sdist 和 wheel 均包含这些文件。
+  署名与引用要求；sdist 和 wheel 均包含这些文件。
 - 本库代码以 MIT 发布；代码许可不覆盖第三方数据文件。
-- `ete4`（GPL-3.0-or-later）不是本库的**必需**依赖：只有当用户显式安装 `geophylo[iplotx]`
+- `ete4`（GPL-3.0-or-later）**不是**本库的必需依赖：只有当用户显式安装 `geophylo[iplotx]`
   这一可选附加包（optional extra）时才会被拉入（iplotx 运行时 import 它却不自行声明，故由本库补进该
   extra）。核心安装与 MIT 代码本身不含 GPL 组件。
 - 本库仅在 `geophylo[pyrolite]` 安装时导入 `pyrolite`，把它作为运行时可选后端；

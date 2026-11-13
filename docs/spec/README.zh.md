@@ -4,7 +4,7 @@
 
 本仓库的源码注释和 docstring 里出现的“规范 N.N”（以及紧随其后的裸节号，如
 `（4.8）`、`（5.2 硬约束）`）都指向本页的同名条目；每条规范性主张都必须随包发布，
-这样代码声称实现的契约可以直接被查阅与核验。每个节号有两个去处：写进它所约束代码
+这样代码声称实现的契约可以直接被查阅与核验。每个节号恰好有两个去处：写进它所约束代码
 的 docstring（可直接执行、可直接测试），或者写进本页。**仓库之外不存在需要查阅的
 开发文档**。
 
@@ -64,7 +64,7 @@
 | 5.6 | 逐边界状态模型：`qualifier`（数值性质）与 `definition`（界线定义方式）正交；`unknown` 一律 `uncertainty_ma=None` | `geophylo/data/models.py`（`Boundary` docstring）、`docs/adr/ADR-5-*.md` | `tests/test_models.py`、`tests/test_data_contract.py` |
 | 5.7 | 快照生成与哈希：`payload_sha256` 覆盖 `intervals` 数组（元数据不受保护，见 `PROVENANCE.md`）；加载即校验 | `geophylo/data/builtin.py`（`canonical_payload_bytes`、`load_snapshot`、`SnapshotBackend`）、`docs/data-policy.md` | `tests/test_data_contract.py`、`tests/test_snapshot_provenance.py` |
 
-## 6 适配与配方
+## 6 适配器与配方
 
 | 节号 | 规范性主张（摘要） | 载体 | 可核验方式 |
 | --- | --- | --- | --- |

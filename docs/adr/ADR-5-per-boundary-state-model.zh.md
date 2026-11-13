@@ -1,4 +1,4 @@
-# ADR-5：把每个边界建模为三元正交状态，而不是一个裸年龄
+# ADR-5：把每个边界建模为正交状态的三元组，而不是一个裸年龄
 
 [English](ADR-5-per-boundary-state-model.md) | 中文
 
@@ -24,12 +24,12 @@
 
 如果把这一切都压成一个浮点数，两类不同的事实就被混为一谈：
 
-1. **边界是如何定义的** —— 经批准的 GSSP、GSSA、数值估计、以现今（`present`）
+1. **界线是如何定义的** —— 经批准的 GSSP、GSSA、数值估计、以现今（`present`）
    定义，或根本没有说明。
 2. **数值的认识论状态是什么** —— 有声明误差约束、精确定义、显式近似（`~`）、
    现今，或未知。
 
-在下游，“0.0 的误差”与“未公布误差”的区别，正是会静默变成图注里虚假精度陈述的
+在下游，“`0.0` 的误差”与“未公布误差”的区别，正是会静默变成图注里虚假精度陈述的
 那类差别。
 
 ## 决策
@@ -42,7 +42,7 @@ Boundary(age_ma, qualifier, uncertainty_ma, definition, source_iri)
 
 - `qualifier ∈ {defined, constrained, approximate, present, unknown}` 描述
   **数字本身的性质**；`definition ∈ {gssp, gssa, numeric_estimate, present,
-  unknown}` 描述**边界是如何定义的**。二者分开存储，查询时谁也不从谁派生。
+  unknown}` 描述**界线是如何定义的**。二者分开存储，查询时谁也不从谁派生。
 - `uncertainty_ma` 是 `float | None`；`None` 表示上游未公布定量误差，显式
   **不**表示误差为零。
 - 派生属性保持两条轴一致：`is_defined` 仅对 GSSP/GSSA 为真；`is_numeric` 要求
@@ -52,7 +52,7 @@ Boundary(age_ma, qualifier, uncertainty_ma, definition, source_iri)
   `qualifier="approximate"` 承载图表的 `~`，提取器从边界端点的上游
   `skos:note "uncertain"` 标记读取它——包括空白节点内部的情形，此时对行的剩余
   部分做匹配（`_STRING_RE.match(rest)`）——并且 `boundary_qualifier()` 把它排在
-  GSSP/GSSA 判定*之上*，因此一条 GSSP 定义、但其公布数值被上游明示为近似的
+  GSSP/GSSA 判定*之前*，因此一条 GSSP 定义、但其公布数值被上游明示为近似的
   边界被记为 `approximate` 而不是 `defined`。两份随包快照都携带全部 36 个这样的
   端点。因为这些值位于 `intervals` 内部，改动这一语义就会改动 payload 字节，
   进而牵动 `versions.json`、哨兵计数以及任何打印这些 qualifier 的图件：它是

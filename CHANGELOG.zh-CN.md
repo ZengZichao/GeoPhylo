@@ -37,7 +37,7 @@
 - `add_geo_axis(min_label_gap=...)`：同轨相邻标签沿时间维的最小净距（默认 0，只判
   相交）；净距在放置阶段执行，放不开的标签沿降级阶梯退让，而不是先画上再丢弃。
 - `GeoAxisResult` 新增 `labels_shortened_n` / `labels_rotated_n`（**可见**标签计数），
-  图注可直接引用；`labels_shortened`/`labels_rotated` 仍是“是否发生过”的布尔位。
+  图注可直接引用；`labels_shortened` / `labels_rotated` 仍是“是否发生过”的布尔位。
 - 新增 `docs/adr/ADR-6-render-overrides-opt-in.md`（中英），记录四个显式启用覆写的取舍
   与被否方案；ADR 份数守卫与各处编号引用同步更新。
 - 下游作图脚本不再需要携带补丁：`relabel_boundaries`（刻度精度覆写）、
@@ -94,5 +94,5 @@
 
 ### 数据
 - 随包基线快照 `2026/06`（ICS 图表 v2026-06.5，来源 commit 已钉定）与推导快照
-  `2024/12`（经上游 changeNotes 回推，含已记录的 Wuchiapingian 误差
+  `2024/12`（经上游 changeNotes 回推，含已记录的吴家坪阶（Wuchiapingian）误差
   恢复）；见 docs/data-policy.zh.md。

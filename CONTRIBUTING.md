@@ -27,7 +27,7 @@ so "already clean" and "cleaned just now" stay distinguishable. If a hook and
 CI disagree, CI wins and the configuration is what needs fixing.
 
 Note that the dev extra pins the lint tools with upper bounds (ruff>=0.6,<1
-and mypy>=1.11,<2). The pins exist because the gate runs the formatter in
+and mypy>=1.11,<3). The pins exist because the gate runs the formatter in
 check mode plus a zero-warning type check: without them, a formatter release
 can turn the gate red for reasons that have nothing to do with your change,
 and local and CI can resolve to different tool versions. Raise a bound
@@ -130,3 +130,16 @@ Procedure for a new major:
 4. Wait for a fully green CI before merging. Do not relax the `ignore` block
    as a shortcut - if the major genuinely cannot be adopted yet, say so in a
    comment on the block so the next person knows it was considered.
+
+## Governance documents (English only for now)
+
+[`.github/CODE_OF_CONDUCT.md`](.github/CODE_OF_CONDUCT.md) (code of conduct),
+[`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) (PR
+template) and [`.github/SECURITY.md`](.github/SECURITY.md) (security policy)
+have no Chinese counterpart yet: **the English text is authoritative**. The
+PR-template checklist requires that a change to public behaviour updates both
+`CHANGELOG.md` and `CHANGELOG.zh-CN.md`, that a public API change updates both
+`docs/user-guide.en.md` and `docs/user-guide.zh.md`, and that a non-obvious
+trade-off is recorded in `docs/adr/` as an ADR in both languages - in other
+words, every *content* document in this repository is bilingual, and only the
+governance documents under `.github/` are English-only.

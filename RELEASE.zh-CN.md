@@ -7,7 +7,7 @@ DOI（步骤 2），以及**只需一次**的 PyPI Trusted Publishing 登记（�
 每次发布都自动完成）。仓库内已把所有元数据准备好，唯一待填的是 Zenodo 铸出
 Concept DOI 后的 `CITATION.cff` 占位符（见下方“粘贴位置”）。
 
-版本号当前为 `0.2.1`，以下五处保持一致（发布前请再次核对）：
+版本号当前为 `0.2.1`，必须在以下五处保持一致（发布前请再次核对）：
 `geophylo/_version.py`、`pyproject.toml`、`CITATION.cff`、`.zenodo.json`
 和 `CHANGELOG.md` 的版本标题（`tests/test_packaging.py` 的
 `test_version_agrees_across_release_files` 正是钉这五处）。
