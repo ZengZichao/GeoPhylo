@@ -122,7 +122,7 @@ spec = spec_from_biophylo(tree, ax, time_axis="x", age_conversion=1.0, root_age=
 result = add_geo_axis(ax, spec=spec, position="bottom",
                       ranks=["Period", "Epoch"], tick_style="boundaries")
 plt.tight_layout()
-result.finalize()   # run the precise label layout now, then freeze it
+result.finalize()   # run the precise label layout once before savefig, then freeze
 fig.savefig("timetree_with_geo.png", dpi=300)
 ```
 

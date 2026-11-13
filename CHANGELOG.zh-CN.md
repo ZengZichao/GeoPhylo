@@ -44,8 +44,9 @@
   `uniform_track_register`（整轨统一）、`prefix_fallback`（前缀回退）三处已删除，
   改用 `tick_format="exact"` / `track_register="uniform"` / `fallback_truncation=3`。
   等价重跑的产物逐字节一致。
-- 新增 `examples/figures/fig2.py`、`fig3.py`、`fig4.py`、`figb3.py`：纯 ASCII 入口，供无法
-  键入中文路径的环境复现论文数据图（输出仍按归档脚本的 stem 命名，重跑字节一致）。
+- 新增 `examples/figures/run_script.py`：通用的纯 ASCII 启动器，接收脚本 stem（或显式路径）
+  作为参数，再用 `runpy` 原样运行目标脚本，供无法键入非 ASCII 路径的环境复跑数据图。它不含
+  任何项目专属内容，论文数据图脚本本身不随本仓库分发。
 
 ### 变更
 - 异常与警告消息默认改为英文，`GEOPHYLO_LANG=zh` 切回中文（`geophylo._i18n.msg`，

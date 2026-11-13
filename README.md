@@ -184,8 +184,9 @@ third-party data files are independent of the code license.
 
 ```bash
 pip install -e ".[dev]"
-pytest                       # full test suite (blocking gate)
-pytest -m "not experimental" # stable API only
+pytest                        # full suite; without --mpl only test bodies run
+pytest -m "not performance"   # the blocking CI gate (it adds --mpl flags)
+pytest -m "not experimental"  # stable API only
 ruff check geophylo tests tools examples
 mypy
 ```

@@ -68,10 +68,11 @@ SHA-256 hashes byte for byte).
   workarounds were removed in favour of `tick_format="exact"` /
   `track_register="uniform"` / `fallback_truncation=3`. Equivalent re-runs
   produce byte-identical artefacts.
-- Added `examples/figures/fig2.py`, `fig3.py`, `fig4.py`, `figb3.py`:
-  pure-ASCII entry points for reproducing the paper's data figures from
-  environments that cannot type Chinese paths (output is still named after
-  the archiving scripts' stems; re-runs are byte-identical).
+- Added `examples/figures/run_script.py`: a generic pure-ASCII launcher that
+  takes a script stem (or an explicit path) as an argument and runs the target
+  verbatim with `runpy`, so data figures can be re-run from environments that
+  cannot type non-ASCII paths. It encodes nothing project-specific, and the
+  paper's own figure scripts are not shipped in this repository.
 
 ### Changed
 - Exception and warning messages are English by default, with

@@ -131,6 +131,20 @@ Procedure for a new major:
    as a shortcut - if the major genuinely cannot be adopted yet, say so in a
    comment on the block so the next person knows it was considered.
 
+## Cross-language links
+
+Every Chinese document translates an English counterpart, and the English text
+stays authoritative. Links follow one rule: prose a reader is meant to read is
+linked to its Chinese counterpart inside the Chinese document, with the English
+authoritative version named alongside it (the `（英文权威版见 …）` pattern), while a
+reference to a *verifiable location* - a `**代码**:` line, a spec table's carrier
+cell, a test or file path - keeps the English path even inside a Chinese
+document. Each pair also links to the other language in both directions.
+`tests/test_docs_parity.py` freezes the mechanical consequences of this layout:
+fenced code stays identical across a pair once comments are stripped, headings
+and in-page anchors match one-for-one, `<placeholders>` in shell blocks stay
+ASCII, and the 边界/界线 split keeps formal GSSP/GSSA boundaries as 界线.
+
 ## Governance documents (English only for now)
 
 [`.github/CODE_OF_CONDUCT.md`](.github/CODE_OF_CONDUCT.md) (code of conduct),

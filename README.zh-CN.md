@@ -164,8 +164,9 @@ ICS 数据的引用与署名要求见 [NOTICE](NOTICE) 与
 
 ```bash
 pip install -e ".[dev]"
-pytest                       # 全部测试（阻塞门禁）
-pytest -m "not experimental" # 只跑稳定 API
+pytest                        # 全部测试；缺 --mpl 时只执行函数体
+pytest -m "not performance"   # CI 阻塞门禁实际执行的命令（另带 --mpl 旗标）
+pytest -m "not experimental"  # 只跑稳定 API
 ruff check geophylo tests tools examples
 mypy
 ```
