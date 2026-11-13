@@ -115,4 +115,6 @@ Dependabot 永远不会提醒你。必须有人手工把版本号挪过去，否
 其中 PR 模板的检查清单要求：改动公共行为须同步更新 `CHANGELOG.md` 与
 `CHANGELOG.zh-CN.md`、公共 API 变化须同步更新 `docs/user-guide.en.md` 与
 `docs/user-guide.zh.md`、不显然的取舍须以中英两份 ADR 记入 `docs/adr/`——也
-就是说，本仓库的**内容**文档一律双语，只有 `.github/` 下的治理文档是英文单语。
+就是说，`docs/` 下的**内容**文档与根目录四对（README、CHANGELOG、RELEASE、
+CONTRIBUTING）一律双语；英文单语的只有 `.github/` 下的治理文档、`NOTICE`，以及
+`geophylo/data/snapshots/PROVENANCE.md` 的快照溯源说明。

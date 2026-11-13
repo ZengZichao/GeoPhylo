@@ -1,4 +1,4 @@
-# 发布流程（GitHub 公开 + Zenodo DOI + PyPI）
+# 发布流程（公开 GitHub 仓库 + Zenodo DOI + PyPI）
 
 [English](RELEASE.md) | 中文
 

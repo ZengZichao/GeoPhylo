@@ -53,7 +53,7 @@ Boundary(age_ma, qualifier, uncertainty_ma, definition, source_iri)
   `skos:note "uncertain"` 标记读取它——包括空白节点内部的情形，此时对行的剩余
   部分做匹配（`_STRING_RE.match(rest)`）——并且 `boundary_qualifier()` 把它排在
   GSSP/GSSA 判定*之前*，因此一条 GSSP 定义、但其公布数值被上游明示为近似的
-  边界被记为 `approximate` 而不是 `defined`。两份随包快照都携带全部 36 个这样的
+  界线被记为 `approximate` 而不是 `defined`。两份随包快照都携带全部 36 个这样的
   端点。因为这些值位于 `intervals` 内部，改动这一语义就会改动 payload 字节，
   进而牵动 `versions.json`、哨兵计数以及任何打印这些 qualifier 的图件：它是
   一次**数据变更**，必须按数据变更的流程发布（见 `docs/data-policy.zh.md` 的
@@ -70,7 +70,7 @@ Boundary(age_ma, qualifier, uncertainty_ma, definition, source_iri)
 - **单个合并字段（`"201.4 ± 0.2"`、`"~201.4"`、字符串 `"GSSP"`）。** 否决：
   契约上不可解析，而且共享边界一致性检查将无从做起。
 - **把 definition 与 qualifier 合并成一个“精度”枚举。** 否决：两组状态是真
-  正交的——GSSP 定义的边界可以带定量的放射测年误差，数值估计也可以被标记为
+  正交的——GSSP 定义的界线可以带定量的放射测年误差，数值估计也可以被标记为
   近似——合并恰好会丢掉图注需要的那部分信息。
 - **用邻近 rank 或 pyrolite 回填缺失元数据。** 否决：能保持诚实的替代做法就是
   写 `unknown`，这也正是实验性 pyrolite 后端被要求做到的（ADR-1）。

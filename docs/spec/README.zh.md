@@ -11,7 +11,7 @@
 约定：
 
 * “载体”列给出该条规范当前写在哪段代码或哪份文档里。主张以该处的文字为准，本页
-  只做**索引 + 不可下沉到代码的部分**（跨模块不变量、取值理由、验收口径）。
+  只做**索引 + 不可下沉到代码的部分**（跨模块不变量、取值理由、验收标准）。
 * “可核验方式”列给出证明该条成立的测试或探针。新增规范条目必须同时给出可核验
   方式，否则该条目只是一句口号。
 * 未被本页收录的节号就是失效引用，请按缺陷处理并修正。
@@ -22,7 +22,7 @@
 | --- | --- | --- | --- |
 | 1.3 | 本库只绘制地质时间轴，不绘制树；树由调用方绘制，坐标语义经 `CoordinateSpec` 或 `RadialSpec` 传入 | `geophylo/__init__.py`、`docs/user-guide.*.md` 第 1～2 节 | `examples/circular_tree.py`（树自绘 + `add_geo_ring`）；`tests/test_polar.py::TestCircularTreeRecipe` |
 | 1.4 | 稳定性矩阵：稳定 API = `Timescale`、`Interval`、`Boundary`、`CoordinateSpec`、`spec_from_biophylo`、`add_geo_axis`、`GeoAxisResult`、`TimescaleBackend` 和 `GeophyloError`；实验性符号 = `add_geo_ring`、`RadialSpec`、`radial_spec_from_biophylo` 和 `spec_from_iplotx`（API 不冻结） | `geophylo/__init__.py` docstring；`README.md` 功能总览 | `tests/test_packaging.py`（顶层导出面）；`pyproject.toml` 的 `experimental` marker |
-| 1.5 | 验收口径：12×8 英寸、`label_size=6`、`ranks=["Period","Epoch"]` 基准图上，隐藏的区间名标签 ≤ 20% | `docs/user-guide.*.md` 第 6 节 | `tests/test_add_geo_axis.py::TestLayoutInvariants::test_label_visibility_baseline` |
+| 1.5 | 验收标准：12×8 英寸、`label_size=6`、`ranks=["Period","Epoch"]` 基准图上，隐藏的区间名标签 ≤ 20% | `docs/user-guide.*.md` 第 6 节 | `tests/test_add_geo_axis.py::TestLayoutInvariants::test_label_visibility_baseline` |
 
 ## 2 数据后端
 

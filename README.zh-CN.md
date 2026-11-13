@@ -12,7 +12,7 @@
 
 面向 Matplotlib Axes 的地质时间轴可视化库。它把 ICS（International Commission on
 Stratigraphy，国际地层委员会）发布的《国际年代地层表》（International
-Chronostratigraphic Chart）作为可复现、版本钉定的内置快照，叠加到时间树上，
+Chronostratigraphic Chart）作为可复现、版本钉定的内置快照，叠加到时间校准树上，
 也叠加到任何以 Ma（百万年前）为横轴或纵轴的图上。
 
 R 语言生态中的 `deeptime` 为 ggplot2、ggtree 提供了 `coord_geo()`；`geophylo`

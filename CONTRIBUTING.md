@@ -141,5 +141,7 @@ PR-template checklist requires that a change to public behaviour updates both
 `CHANGELOG.md` and `CHANGELOG.zh-CN.md`, that a public API change updates both
 `docs/user-guide.en.md` and `docs/user-guide.zh.md`, and that a non-obvious
 trade-off is recorded in `docs/adr/` as an ADR in both languages - in other
-words, every *content* document in this repository is bilingual, and only the
-governance documents under `.github/` are English-only.
+words, every *content* document under `docs/` and the four root pairs (README,
+CHANGELOG, RELEASE, CONTRIBUTING) are bilingual; the English-only files are the
+governance documents under `.github/`, `NOTICE`, and the snapshot provenance
+notes in `geophylo/data/snapshots/PROVENANCE.md`.
