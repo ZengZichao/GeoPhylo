@@ -26,7 +26,7 @@ repos:
     # 钩子若钉在旧档，本地就会跑出一个 CI 永远不会复现的结果——这正是
     # CONTRIBUTING.md 里「工具漂移让门禁失去意义」那条警告的同一种故障。
     # 升 ruff 时同步抬这里。
-    rev: v0.16.9
+    rev: v0.17.5
     hooks:
       # types_or 是必需的，不是洁癖：ruff 0.16 起会格式化 Markdown 里的
       # Python 代码块。CI 的门禁范围是四棵显式子树，不含 docs/ 与 README，
